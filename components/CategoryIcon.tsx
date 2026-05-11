@@ -1,8 +1,8 @@
 import {
   Calculator,
-  Dice5,
   Flask,
-  HeartBeat,
+  Heart,
+  Spade,
   Wallet,
   Wrench,
 } from 'phosphor-react-native';
@@ -11,8 +11,8 @@ const ICONS = {
   basic: Calculator,
   science: Flask,
   wealth: Wallet,
-  gambling: Dice5,
-  health: HeartBeat,
+  gambling: Spade,
+  health: Heart,
   life: Wrench,
 } as const;
 

@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { ArrowRight, Lock } from 'phosphor-react-native';
+import { CaretRight, Lock } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../../components/CategoryIcon';
 import { getCategoryById } from '../../data/categories';
@@ -51,7 +51,7 @@ export default function CategoryScreen() {
             {calc.comingSoon ? (
               <Lock size={18} color="#807868" weight="duotone" />
             ) : (
-              <ArrowRight size={20} color={category.accent} weight="bold" />
+              <CaretRight size={20} color={category.accent} weight="bold" />
             )}
           </TouchableOpacity>
         ))}

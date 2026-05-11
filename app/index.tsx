@@ -1,6 +1,5 @@
 import { useRouter } from 'expo-router';
-import LottieView from 'lottie-react-native';
-import { ArrowUpRight } from 'phosphor-react-native';
+import { CaretRight } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../components/CategoryIcon';
 import { CATEGORIES } from '../data/categories';
@@ -13,10 +12,6 @@ const formatDate = () => {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [hero, ...rest] = CATEGORIES;
-  const gridItems = rest.slice(0, 4);
-  const last = rest[4];
-
   const go = (id: string) => router.push(`/category/${id}` as any);
 
   return (
@@ -25,71 +20,33 @@ export default function HomeScreen() {
       <Text style={styles.title}>計算機.</Text>
       <Text style={styles.subtitle}>六種類型工具，每天都用得到。</Text>
 
-      <TouchableOpacity
-        style={styles.hero}
-        onPress={() => go(hero.id)}
-        activeOpacity={0.85}
-      >
-        <View style={styles.heroLottie}>
-          <LottieView
-            source={require('../assets/animations/hero.json')}
-            autoPlay
-            loop
-            style={{ width: 200, height: 200 }}
-          />
-        </View>
-        <View style={styles.heroNumber}>
-          <Text style={styles.indexNum}>01</Text>
-          <Text style={[styles.indexEn, { color: hero.accent }]}>{hero.nameEn}</Text>
-        </View>
-        <View style={styles.heroBottom}>
-          <Text style={styles.heroTitle}>{hero.title}</Text>
-          <Text style={styles.heroDesc}>{hero.subtitle}</Text>
-          <View style={styles.heroFooter}>
-            <Text style={styles.toolCount}>{hero.calculators.length} TOOLS</Text>
-            <ArrowUpRight size={22} color={hero.accent} weight="bold" />
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <View style={styles.grid}>
-        {gridItems.map((cat, i) => (
+      <View style={styles.list}>
+        {CATEGORIES.map((cat, i) => (
           <TouchableOpacity
             key={cat.id}
-            style={styles.card}
+            style={styles.row}
             onPress={() => go(cat.id)}
-            activeOpacity={0.85}
+            activeOpacity={0.6}
           >
-            <View style={styles.cardTop}>
-              <View>
-                <Text style={styles.indexNum}>{String(i + 2).padStart(2, '0')}</Text>
-                <Text style={[styles.indexEn, { color: cat.accent }]}>{cat.nameEn}</Text>
+            <Text style={styles.rowNum}>{String(i + 1).padStart(2, '0')}</Text>
+
+            <View style={styles.rowIcon}>
+              <CategoryIcon id={cat.id} size={32} color={cat.accent} />
+            </View>
+
+            <View style={styles.rowMid}>
+              <Text style={styles.rowTitle}>{cat.title}</Text>
+              <View style={styles.rowMetaWrap}>
+                <Text style={[styles.rowMetaEn, { color: cat.accent }]}>{cat.nameEn}</Text>
+                <Text style={styles.rowMetaDot}>·</Text>
+                <Text style={styles.rowMetaCount}>{cat.calculators.length} TOOLS</Text>
               </View>
-              <CategoryIcon id={cat.id} size={26} color={cat.accent} />
             </View>
-            <View>
-              <Text style={styles.cardTitle}>{cat.title}</Text>
-              <Text style={styles.toolCount}>{cat.calculators.length} TOOLS</Text>
-            </View>
+
+            <CaretRight size={18} color="#807868" weight="bold" />
           </TouchableOpacity>
         ))}
       </View>
-
-      <TouchableOpacity
-        style={[styles.card, styles.cardWide]}
-        onPress={() => go(last.id)}
-        activeOpacity={0.85}
-      >
-        <View style={styles.cardWideLeft}>
-          <Text style={styles.indexNum}>06</Text>
-          <Text style={[styles.indexEn, { color: last.accent }]}>{last.nameEn}</Text>
-          <Text style={[styles.cardTitle, { marginTop: 6 }]}>{last.title}</Text>
-        </View>
-        <View style={styles.cardWideRight}>
-          <CategoryIcon id={last.id} size={32} color={last.accent} />
-          <Text style={[styles.toolCount, { marginTop: 10 }]}>{last.calculators.length} TOOLS</Text>
-        </View>
-      </TouchableOpacity>
 
       <View style={styles.footer}>
         <View style={styles.footerLine} />
@@ -102,7 +59,6 @@ export default function HomeScreen() {
 
 const C = {
   bg: '#0d0d0d',
-  card: '#161614',
   border: '#2a2826',
   text: '#f5f1e8',
   textMuted: '#807868',
@@ -136,117 +92,67 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: C.textMuted,
-    marginBottom: 36,
+    marginBottom: 40,
     lineHeight: 22,
   },
-  hero: {
-    backgroundColor: C.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    borderRadius: 28,
-    padding: 24,
-    marginBottom: 12,
-    height: 360,
-    overflow: 'hidden',
-    position: 'relative',
+  list: {
+    borderBottomWidth: 1,
+    borderBottomColor: C.border,
   },
-  heroLottie: {
-    position: 'absolute',
-    top: -10,
-    right: -10,
-    opacity: 0.95,
-  },
-  heroNumber: {
+  row: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 10,
+    alignItems: 'center',
+    paddingVertical: 22,
+    borderTopWidth: 1,
+    borderTopColor: C.border,
+    gap: 16,
   },
-  indexNum: {
+  rowNum: {
     fontFamily: 'Fraunces_400Regular',
-    fontSize: 13,
+    fontSize: 14,
     color: C.textMuted,
-    letterSpacing: 2,
+    width: 26,
+    letterSpacing: 1,
   },
-  indexEn: {
-    fontSize: 11,
-    letterSpacing: 3,
-    fontWeight: '700',
-  },
-  heroBottom: {
-    marginTop: 'auto',
-  },
-  heroTitle: {
-    fontFamily: 'Fraunces_700Bold',
-    fontSize: 48,
-    color: C.text,
-    letterSpacing: -2,
-    marginBottom: 8,
-  },
-  heroDesc: {
-    fontSize: 13,
-    color: C.textMuted,
-    marginBottom: 18,
-    lineHeight: 20,
-    maxWidth: '85%',
-  },
-  heroFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  rowIcon: {
+    width: 40,
     alignItems: 'center',
   },
-  toolCount: {
-    fontSize: 10,
-    color: C.text,
-    letterSpacing: 2.5,
-    fontWeight: '700',
+  rowMid: {
+    flex: 1,
   },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 12,
-  },
-  card: {
-    width: '48%',
-    aspectRatio: 1,
-    backgroundColor: C.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    borderRadius: 24,
-    padding: 18,
-    justifyContent: 'space-between',
-  },
-  cardTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  cardTitle: {
+  rowTitle: {
     fontFamily: 'Fraunces_700Bold',
-    fontSize: 26,
+    fontSize: 28,
     color: C.text,
     letterSpacing: -0.8,
     marginBottom: 4,
   },
-  cardWide: {
-    width: '100%',
-    aspectRatio: undefined,
-    padding: 22,
+  rowMetaWrap: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    gap: 8,
   },
-  cardWideLeft: {
-    flex: 1,
+  rowMetaEn: {
+    fontSize: 11,
+    letterSpacing: 2.5,
+    fontWeight: '700',
   },
-  cardWideRight: {
-    alignItems: 'flex-end',
+  rowMetaDot: {
+    fontSize: 11,
+    color: C.textMuted,
+  },
+  rowMetaCount: {
+    fontSize: 10,
+    color: C.textMuted,
+    letterSpacing: 2,
+    fontWeight: '700',
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 28,
+    marginTop: 32,
     gap: 12,
   },
   footerLine: {
