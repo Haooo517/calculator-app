@@ -205,12 +205,14 @@ const styles = StyleSheet.create({
     color: C.text,
     letterSpacing: -0.5,
     marginBottom: 6,
+    textAlign: 'center',
   },
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
     color: C.muted,
     marginBottom: 22,
+    textAlign: 'center',
   },
   groupRow: {
     flexDirection: 'row',

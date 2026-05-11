@@ -4,7 +4,7 @@ import {
   Feather,
   Heart,
   IconProps,
-  Plus,
+  Smiley,
   Stethoscope,
   Warning,
   WarningOctagon,
@@ -99,7 +99,7 @@ export default function BMICalculator() {
           </View>
         ) : (
           <View style={styles.placeholderCard}>
-            <Plus size={32} color="#c8b8a8" weight="bold" />
+            <Smiley size={36} color="#c8b8a8" weight="duotone" />
             <Text style={styles.placeholderText}>填好上面兩格就會出現結果</Text>
           </View>
         )}
@@ -137,12 +137,14 @@ const styles = StyleSheet.create({
     color: '#2d2520',
     letterSpacing: -0.5,
     marginBottom: 6,
+    textAlign: 'center',
   },
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
     color: '#8a7a6c',
     marginBottom: 24,
+    textAlign: 'center',
   },
   inputCard: {
     backgroundColor: '#fff',

@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     padding: 24,
     marginBottom: 18,
+    alignItems: 'center',
     shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,
@@ -88,12 +89,14 @@ const styles = StyleSheet.create({
     fontSize: 32,
     letterSpacing: -0.5,
     marginBottom: 4,
+    textAlign: 'center',
   },
   heroSubtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
     opacity: 0.85,
     lineHeight: 20,
+    textAlign: 'center',
   },
   list: {
     gap: 10,

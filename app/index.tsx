@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   greetRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 6,
     marginBottom: 4,
   },
@@ -79,11 +80,13 @@ const styles = StyleSheet.create({
     color: '#2d2520',
     letterSpacing: -0.5,
     marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 15,
     color: '#8a7a6c',
+    textAlign: 'center',
   },
   list: {
     gap: 12,

@@ -27,7 +27,7 @@ export const CATEGORIES: Category[] = [
     calculators: [
       { id: 'basic', title: '基本計算機', subtitle: '加減乘除', route: '/calculator/basic' },
       { id: 'percent', title: '百分比計算', subtitle: '折扣、稅金、增減', route: '/calculator/percent' },
-      { id: 'date', title: '日期計算', subtitle: '日期間隔', comingSoon: true },
+      { id: 'date', title: '日期計算', subtitle: '日期間隔、推算', route: '/calculator/date' },
     ],
   },
   {
@@ -52,9 +52,9 @@ export const CATEGORIES: Category[] = [
     bg: '#ffe082',
     accent: '#8d6e00',
     calculators: [
+      { id: 'loan', title: '貸款試算', subtitle: '月付、利息', route: '/calculator/loan' },
       { id: 'currency', title: '匯率換算', subtitle: '即時匯率', comingSoon: true },
       { id: 'bookkeeping', title: '記帳', subtitle: '收支管理', comingSoon: true },
-      { id: 'loan', title: '貸款試算', subtitle: '月付、利息', comingSoon: true },
       { id: 'money-score', title: '金錢評分', subtitle: '理財健康分數', comingSoon: true },
     ],
   },
@@ -80,8 +80,8 @@ export const CATEGORIES: Category[] = [
     accent: '#c2456a',
     calculators: [
       { id: 'bmi', title: 'BMI 計算', subtitle: '身體質量指數', route: '/calculator/bmi' },
-      { id: 'calorie', title: '熱量計算', subtitle: '每日所需', comingSoon: true },
-      { id: 'pregnancy', title: '預產期', subtitle: '懷孕週數', comingSoon: true },
+      { id: 'calorie', title: '熱量計算', subtitle: '每日所需熱量', route: '/calculator/calorie' },
+      { id: 'pregnancy', title: '預產期', subtitle: '懷孕週數', route: '/calculator/pregnancy' },
     ],
   },
   {
@@ -93,8 +93,8 @@ export const CATEGORIES: Category[] = [
     accent: '#2c5fa8',
     calculators: [
       { id: 'age', title: '年齡計算', subtitle: '虛歲、實歲、活了幾天', route: '/calculator/age' },
-      { id: 'timezone', title: '時區換算', subtitle: '世界時間', comingSoon: true },
-      { id: 'gas', title: '油耗計算', subtitle: '加油花費', comingSoon: true },
+      { id: 'timezone', title: '時區換算', subtitle: '世界時間', route: '/calculator/timezone' },
+      { id: 'gas', title: '油耗計算', subtitle: '加油花費', route: '/calculator/gas' },
     ],
   },
 ];
