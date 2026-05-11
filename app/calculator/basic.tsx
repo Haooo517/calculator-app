@@ -38,6 +38,16 @@ export default function BasicCalculator() {
     if (!display.includes('.')) setDisplay(display + '.');
   };
 
+  const calculate = (a: number, b: number, op: Operator): number => {
+    switch (op) {
+      case '+': return a + b;
+      case '−': return a - b;
+      case '×': return a * b;
+      case '÷': return b !== 0 ? a / b : 0;
+      default: return b;
+    }
+  };
+
   const handleOperator = (op: Operator) => {
     const current = parseFloat(display);
     if (prevValue !== null && !waitingForOperand) {
@@ -49,16 +59,6 @@ export default function BasicCalculator() {
     }
     setOperator(op);
     setWaitingForOperand(true);
-  };
-
-  const calculate = (a: number, b: number, op: Operator): number => {
-    switch (op) {
-      case '+': return a + b;
-      case '−': return a - b;
-      case '×': return a * b;
-      case '÷': return b !== 0 ? a / b : 0;
-      default: return b;
-    }
   };
 
   const handleEquals = () => {
@@ -81,14 +81,8 @@ export default function BasicCalculator() {
     setWaitingForOperand(false);
   };
 
-  const handleSign = () => {
-    setDisplay(String(parseFloat(display) * -1));
-  };
-
-  const handlePercent = () => {
-    setDisplay(String(parseFloat(display) / 100));
-  };
-
+  const handleSign = () => setDisplay(String(parseFloat(display) * -1));
+  const handlePercent = () => setDisplay(String(parseFloat(display) / 100));
   const handleBackspace = () => {
     if (display.length > 1) setDisplay(display.slice(0, -1));
     else setDisplay('0');
@@ -105,11 +99,13 @@ export default function BasicCalculator() {
     if (btn === '⌫') return handleBackspace();
   };
 
-  const isOperatorActive = (btn: string) => OPERATORS.includes(btn) && btn === operator && waitingForOperand;
+  const isOperatorActive = (btn: string) =>
+    OPERATORS.includes(btn) && btn === operator && waitingForOperand;
 
   const getButtonStyle = (btn: string) => {
     if (btn === '=') return [styles.btn, styles.btnEquals];
-    if (OPERATORS.includes(btn)) return [styles.btn, styles.btnOperator, isOperatorActive(btn) && styles.btnOperatorActive];
+    if (OPERATORS.includes(btn))
+      return [styles.btn, styles.btnOperator, isOperatorActive(btn) && styles.btnOperatorActive];
     if (['C', '±', '%'].includes(btn)) return [styles.btn, styles.btnFunction];
     return [styles.btn, styles.btnNumber];
   };
@@ -193,27 +189,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  btnNumber: {
-    backgroundColor: '#16213e',
-  },
-  btnOperator: {
-    backgroundColor: '#e67e22',
-  },
-  btnOperatorActive: {
-    backgroundColor: '#fff',
-  },
-  btnEquals: {
-    backgroundColor: '#e67e22',
-  },
-  btnFunction: {
-    backgroundColor: '#2c3e50',
-  },
+  btnNumber: { backgroundColor: '#16213e' },
+  btnOperator: { backgroundColor: '#e67e22' },
+  btnOperatorActive: { backgroundColor: '#fff' },
+  btnEquals: { backgroundColor: '#e67e22' },
+  btnFunction: { backgroundColor: '#2c3e50' },
   btnText: {
     fontSize: 24,
     color: '#fff',
     fontWeight: '500',
   },
-  btnTextFunction: {
-    color: '#ecf0f1',
-  },
+  btnTextFunction: { color: '#ecf0f1' },
 });
