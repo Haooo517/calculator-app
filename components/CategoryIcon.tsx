@@ -8,6 +8,7 @@ import {
 } from 'phosphor-react-native';
 
 const ICONS = {
+  basic: Calculator,
   science: Flask,
   wealth: Wallet,
   gambling: PokerChip,
