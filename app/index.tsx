@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { Sparkle } from 'phosphor-react-native';
+import { CaretRight, Sparkle } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../components/CategoryIcon';
 import { CATEGORIES } from '../data/categories';
@@ -12,30 +12,35 @@ export default function HomeScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <View style={styles.greetRow}>
+          <Sparkle size={20} color="#ffb84d" weight="fill" />
           <Text style={styles.greet}>嗨！</Text>
-          <Sparkle size={28} color="#ffb84d" weight="fill" />
         </View>
         <Text style={styles.title}>挑一個工具吧</Text>
-        <Text style={styles.subtitle}>有 6 種類型，全部都很好用 ✿</Text>
+        <Text style={styles.subtitle}>有 6 種類型，全部都很好用</Text>
       </View>
 
-      <View style={styles.grid}>
+      <View style={styles.list}>
         {CATEGORIES.map((cat) => (
           <TouchableOpacity
             key={cat.id}
-            style={[styles.card, { backgroundColor: cat.bg }]}
+            style={styles.row}
             onPress={() => go(cat.id)}
-            activeOpacity={0.85}
+            activeOpacity={0.8}
           >
-            <View style={styles.iconWrap}>
-              <CategoryIcon id={cat.id} size={42} color={cat.accent} weight="fill" />
+            <View style={[styles.iconBox, { backgroundColor: cat.bg }]}>
+              <CategoryIcon id={cat.id} size={28} color={cat.accent} weight="fill" />
             </View>
-            <View>
-              <Text style={[styles.cardTitle, { color: cat.accent }]}>{cat.title}</Text>
-              <Text style={[styles.cardCount, { color: cat.accent }]}>
-                {cat.calculators.length} 個工具
-              </Text>
+
+            <View style={styles.rowMid}>
+              <Text style={styles.rowTitle}>{cat.title}</Text>
+              <View style={styles.rowMetaWrap}>
+                <Text style={[styles.rowMetaEn, { color: cat.accent }]}>{cat.nameEn}</Text>
+                <View style={[styles.dot, { backgroundColor: cat.accent }]} />
+                <Text style={styles.rowMetaCount}>{cat.calculators.length} 個工具</Text>
+              </View>
             </View>
+
+            <CaretRight size={20} color="#a3897a" weight="bold" />
           </TouchableOpacity>
         ))}
       </View>
@@ -55,17 +60,17 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 4,
-    marginBottom: 24,
+    marginBottom: 28,
   },
   greetRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 6,
+    gap: 6,
+    marginBottom: 4,
   },
   greet: {
     fontFamily: 'Fredoka_500Medium',
-    fontSize: 18,
+    fontSize: 16,
     color: '#8a7a6c',
   },
   title: {
@@ -80,40 +85,58 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#8a7a6c',
   },
-  grid: {
+  list: {
+    gap: 12,
+  },
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 14,
-  },
-  card: {
-    width: '48%',
-    aspectRatio: 1,
-    borderRadius: 28,
-    padding: 20,
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    padding: 16,
+    gap: 16,
     shadowColor: '#a3897a',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 3,
   },
-  iconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255,255,255,0.45)',
+  iconBox: {
+    width: 58,
+    height: 58,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cardTitle: {
-    fontFamily: 'Fredoka_700Bold',
-    fontSize: 24,
-    letterSpacing: -0.3,
-    marginBottom: 2,
+  rowMid: {
+    flex: 1,
   },
-  cardCount: {
+  rowTitle: {
+    fontFamily: 'Fredoka_700Bold',
+    fontSize: 22,
+    color: '#2d2520',
+    letterSpacing: -0.3,
+    marginBottom: 3,
+  },
+  rowMetaWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  rowMetaEn: {
+    fontFamily: 'Fredoka_600SemiBold',
+    fontSize: 11,
+    letterSpacing: 1.5,
+  },
+  dot: {
+    width: 3,
+    height: 3,
+    borderRadius: 2,
+    opacity: 0.5,
+  },
+  rowMetaCount: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 13,
-    opacity: 0.75,
+    color: '#8a7a6c',
   },
 });

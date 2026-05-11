@@ -1,22 +1,32 @@
 import { Stack } from 'expo-router';
-import { useMemo, useState } from 'react';
+import {
+  Cloud,
+  Feather,
+  Heart,
+  IconProps,
+  Plus,
+  Stethoscope,
+  Warning,
+  WarningOctagon,
+} from 'phosphor-react-native';
+import { ComponentType, useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 type Status = {
   label: string;
-  emoji: string;
+  Icon: ComponentType<IconProps>;
   bg: string;
   fg: string;
   tip: string;
 };
 
 const classify = (bmi: number): Status => {
-  if (bmi < 18.5) return { label: '體重過輕', emoji: '🍞', bg: '#b8d8ff', fg: '#2c5fa8', tip: '多吃點，加油！' };
-  if (bmi < 24) return { label: '健康體重', emoji: '✨', bg: '#b8e6d2', fg: '#2d8765', tip: '保持下去，超棒的！' };
-  if (bmi < 27) return { label: '體重過重', emoji: '🌿', bg: '#ffe082', fg: '#8d6e00', tip: '稍微運動一下吧～' };
-  if (bmi < 30) return { label: '輕度肥胖', emoji: '🍂', bg: '#ffd4ba', fg: '#c4623a', tip: '可以開始注意飲食' };
-  if (bmi < 35) return { label: '中度肥胖', emoji: '🌸', bg: '#ffc4d4', fg: '#c2456a', tip: '建議調整生活習慣' };
-  return { label: '重度肥胖', emoji: '🌺', bg: '#d4baf0', fg: '#6a3da8', tip: '建議諮詢專業醫師' };
+  if (bmi < 18.5) return { label: '體重過輕', Icon: Feather, bg: '#b8d8ff', fg: '#2c5fa8', tip: '多吃點，加油！' };
+  if (bmi < 24) return { label: '健康體重', Icon: Heart, bg: '#b8e6d2', fg: '#2d8765', tip: '保持下去，超棒的！' };
+  if (bmi < 27) return { label: '體重過重', Icon: Cloud, bg: '#ffe082', fg: '#8d6e00', tip: '稍微運動一下吧～' };
+  if (bmi < 30) return { label: '輕度肥胖', Icon: Warning, bg: '#ffd4ba', fg: '#c4623a', tip: '可以開始注意飲食' };
+  if (bmi < 35) return { label: '中度肥胖', Icon: WarningOctagon, bg: '#ffc4d4', fg: '#c2456a', tip: '建議調整生活習慣' };
+  return { label: '重度肥胖', Icon: Stethoscope, bg: '#d4baf0', fg: '#6a3da8', tip: '建議諮詢專業醫師' };
 };
 
 export default function BMICalculator() {
@@ -40,7 +50,7 @@ export default function BMICalculator() {
       <Stack.Screen options={{ title: 'BMI 計算' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>來算 BMI 吧</Text>
-        <Text style={styles.subtitle}>輸入身高體重，馬上知道結果 ✨</Text>
+        <Text style={styles.subtitle}>輸入身高體重，馬上知道結果</Text>
 
         <View style={styles.inputCard}>
           <View style={styles.inputRow}>
@@ -80,14 +90,16 @@ export default function BMICalculator() {
 
         {status && bmi !== null ? (
           <View style={[styles.resultCard, { backgroundColor: status.bg }]}>
-            <Text style={[styles.resultEmoji]}>{status.emoji}</Text>
+            <View style={styles.resultIconWrap}>
+              <status.Icon size={36} color={status.fg} weight="fill" />
+            </View>
             <Text style={[styles.resultBmi, { color: status.fg }]}>{bmi.toFixed(1)}</Text>
             <Text style={[styles.resultLabel, { color: status.fg }]}>{status.label}</Text>
             <Text style={[styles.resultTip, { color: status.fg }]}>{status.tip}</Text>
           </View>
         ) : (
           <View style={styles.placeholderCard}>
-            <Text style={styles.placeholderEmoji}>📊</Text>
+            <Plus size={32} color="#c8b8a8" weight="bold" />
             <Text style={styles.placeholderText}>填好上面兩格就會出現結果</Text>
           </View>
         )}
@@ -191,9 +203,14 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 4,
   },
-  resultEmoji: {
-    fontSize: 44,
-    marginBottom: 6,
+  resultIconWrap: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.55)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
   },
   resultBmi: {
     fontFamily: 'Fredoka_700Bold',
@@ -217,14 +234,11 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     padding: 36,
     alignItems: 'center',
+    gap: 10,
     marginBottom: 16,
     borderWidth: 2,
     borderColor: '#f1e3d0',
     borderStyle: 'dashed',
-  },
-  placeholderEmoji: {
-    fontSize: 36,
-    marginBottom: 8,
   },
   placeholderText: {
     fontFamily: 'Fredoka_500Medium',

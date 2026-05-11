@@ -1,13 +1,16 @@
 import { Stack } from 'expo-router';
+import { Backspace } from 'phosphor-react-native';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+const BACK = 'BACK';
 
 const BUTTONS = [
   ['C', '±', '%', '÷'],
   ['7', '8', '9', '×'],
   ['4', '5', '6', '−'],
   ['1', '2', '3', '+'],
-  ['0', '.', '⌫', '='],
+  ['0', '.', BACK, '='],
 ];
 
 const OPERATORS = ['÷', '×', '−', '+'];
@@ -96,7 +99,7 @@ export default function BasicCalculator() {
     if (btn === 'C') return handleClear();
     if (btn === '±') return handleSign();
     if (btn === '%') return handlePercent();
-    if (btn === '⌫') return handleBackspace();
+    if (btn === BACK) return handleBackspace();
   };
 
   const isOperatorActive = (btn: string) =>
@@ -106,7 +109,7 @@ export default function BasicCalculator() {
     if (btn === '=') return [styles.btn, styles.btnEquals];
     if (OPERATORS.includes(btn))
       return [styles.btn, styles.btnOperator, isOperatorActive(btn) && styles.btnOperatorActive];
-    if (['C', '±', '%', '⌫'].includes(btn)) return [styles.btn, styles.btnFunction];
+    if (['C', '±', '%', BACK].includes(btn)) return [styles.btn, styles.btnFunction];
     return [styles.btn, styles.btnNumber];
   };
 
@@ -114,7 +117,7 @@ export default function BasicCalculator() {
     if (btn === '=') return [styles.btnText, styles.btnTextEquals];
     if (OPERATORS.includes(btn))
       return [styles.btnText, styles.btnTextOperator, isOperatorActive(btn) && styles.btnTextOperatorActive];
-    if (['C', '±', '%', '⌫'].includes(btn)) return [styles.btnText, styles.btnTextFunction];
+    if (['C', '±', '%'].includes(btn)) return [styles.btnText, styles.btnTextFunction];
     return [styles.btnText, styles.btnTextNumber];
   };
 
@@ -145,7 +148,11 @@ export default function BasicCalculator() {
                 onPress={() => handlePress(btn)}
                 activeOpacity={0.75}
               >
-                <Text style={getTextStyle(btn)}>{btn}</Text>
+                {btn === BACK ? (
+                  <Backspace size={26} color="#8a6a4a" weight="bold" />
+                ) : (
+                  <Text style={getTextStyle(btn)}>{btn}</Text>
+                )}
               </TouchableOpacity>
             ))}
           </View>
