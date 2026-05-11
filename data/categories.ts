@@ -18,26 +18,14 @@ export type Category = {
 
 export const CATEGORIES: Category[] = [
   {
-    id: 'basic',
-    title: '基本',
-    nameEn: 'BASIC',
-    subtitle: '日常加減乘除，最常用的計算工具。',
-    bg: '#ffd4ba',
-    accent: '#c4623a',
-    calculators: [
-      { id: 'basic', title: '基本計算機', subtitle: '加減乘除', route: '/calculator/basic' },
-      { id: 'percent', title: '百分比計算', subtitle: '折扣、稅金', comingSoon: true },
-      { id: 'date', title: '日期計算', subtitle: '日期間隔', comingSoon: true },
-    ],
-  },
-  {
     id: 'science',
     title: '科學',
     nameEn: 'SCIENCE',
-    subtitle: '工程、科學、數學專業工具。',
+    subtitle: '基本到工程的數學計算工具。',
     bg: '#b8e6d2',
     accent: '#2d8765',
     calculators: [
+      { id: 'basic', title: '基本計算機', subtitle: '加減乘除', route: '/calculator/basic' },
       { id: 'scientific', title: '科學計算機', subtitle: '三角函數、對數', comingSoon: true },
       { id: 'engineering', title: '工程計算機', subtitle: '進位、邏輯運算', comingSoon: true },
       { id: 'unit', title: '單位換算', subtitle: '長度、重量、溫度', comingSoon: true },
@@ -48,15 +36,16 @@ export const CATEGORIES: Category[] = [
     id: 'wealth',
     title: '財富',
     nameEn: 'WEALTH',
-    subtitle: '理財、匯率、貸款相關計算。',
+    subtitle: '理財、消費、貸款相關計算。',
     bg: '#ffe082',
     accent: '#8d6e00',
     calculators: [
+      { id: 'tip', title: '小費計算', subtitle: 'AA、含稅', route: '/calculator/tip' },
+      { id: 'percent', title: '百分比計算', subtitle: '折扣、稅金', comingSoon: true },
       { id: 'currency', title: '匯率換算', subtitle: '即時匯率', comingSoon: true },
       { id: 'bookkeeping', title: '記帳', subtitle: '收支管理', comingSoon: true },
-      { id: 'money-score', title: '金錢評分', subtitle: '理財健康分數', comingSoon: true },
       { id: 'loan', title: '貸款試算', subtitle: '月付、利息', comingSoon: true },
-      { id: 'tip', title: '小費計算', subtitle: 'AA、含稅', comingSoon: true },
+      { id: 'money-score', title: '金錢評分', subtitle: '理財健康分數', comingSoon: true },
     ],
   },
   {
@@ -93,6 +82,7 @@ export const CATEGORIES: Category[] = [
     bg: '#b8d8ff',
     accent: '#2c5fa8',
     calculators: [
+      { id: 'date', title: '日期計算', subtitle: '日期間隔', comingSoon: true },
       { id: 'age', title: '年齡計算', subtitle: '虛歲、實歲', comingSoon: true },
       { id: 'timezone', title: '時區換算', subtitle: '世界時間', comingSoon: true },
       { id: 'gas', title: '油耗計算', subtitle: '加油花費', comingSoon: true },

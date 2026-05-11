@@ -16,7 +16,7 @@ export default function HomeScreen() {
           <Text style={styles.greet}>嗨！</Text>
         </View>
         <Text style={styles.title}>挑一個工具吧</Text>
-        <Text style={styles.subtitle}>有 6 種類型，全部都很好用</Text>
+        <Text style={styles.subtitle}>有 5 種類型，全部都很好用</Text>
       </View>
 
       <View style={styles.list}>
