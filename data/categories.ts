@@ -11,6 +11,7 @@ export type Category = {
   title: string;
   nameEn: string;
   subtitle: string;
+  bg: string;
   accent: string;
   calculators: Calculator[];
 };
@@ -21,7 +22,8 @@ export const CATEGORIES: Category[] = [
     title: '基本',
     nameEn: 'BASIC',
     subtitle: '日常加減乘除，最常用的計算工具。',
-    accent: '#ff6b35',
+    bg: '#ffd4ba',
+    accent: '#c4623a',
     calculators: [
       { id: 'basic', title: '基本計算機', subtitle: '加減乘除', route: '/calculator/basic' },
       { id: 'percent', title: '百分比計算', subtitle: '折扣、稅金', comingSoon: true },
@@ -33,7 +35,8 @@ export const CATEGORIES: Category[] = [
     title: '科學',
     nameEn: 'SCIENCE',
     subtitle: '工程、科學、數學專業工具。',
-    accent: '#5eead4',
+    bg: '#b8e6d2',
+    accent: '#2d8765',
     calculators: [
       { id: 'scientific', title: '科學計算機', subtitle: '三角函數、對數', comingSoon: true },
       { id: 'engineering', title: '工程計算機', subtitle: '進位、邏輯運算', comingSoon: true },
@@ -46,7 +49,8 @@ export const CATEGORIES: Category[] = [
     title: '財富',
     nameEn: 'WEALTH',
     subtitle: '理財、匯率、貸款相關計算。',
-    accent: '#fbbf24',
+    bg: '#ffe082',
+    accent: '#8d6e00',
     calculators: [
       { id: 'currency', title: '匯率換算', subtitle: '即時匯率', comingSoon: true },
       { id: 'bookkeeping', title: '記帳', subtitle: '收支管理', comingSoon: true },
@@ -60,7 +64,8 @@ export const CATEGORIES: Category[] = [
     title: '博弈',
     nameEn: 'GAMBLING',
     subtitle: '撲克、麻將、桌遊計分工具。',
-    accent: '#f472b6',
+    bg: '#d4baf0',
+    accent: '#6a3da8',
     calculators: [
       { id: 'big2', title: '大老二點數', subtitle: '四人計分', comingSoon: true },
       { id: 'mahjong', title: '麻將台數', subtitle: '台數查詢', comingSoon: true },
@@ -72,9 +77,10 @@ export const CATEGORIES: Category[] = [
     title: '健康',
     nameEn: 'HEALTH',
     subtitle: '身體數據與健康指標。',
-    accent: '#34d399',
+    bg: '#ffc4d4',
+    accent: '#c2456a',
     calculators: [
-      { id: 'bmi', title: 'BMI 計算', subtitle: '身體質量指數', comingSoon: true },
+      { id: 'bmi', title: 'BMI 計算', subtitle: '身體質量指數', route: '/calculator/bmi' },
       { id: 'calorie', title: '熱量計算', subtitle: '每日所需', comingSoon: true },
       { id: 'pregnancy', title: '預產期', subtitle: '懷孕週數', comingSoon: true },
     ],
@@ -84,7 +90,8 @@ export const CATEGORIES: Category[] = [
     title: '生活',
     nameEn: 'LIFESTYLE',
     subtitle: '日常生活實用小工具。',
-    accent: '#a78bfa',
+    bg: '#b8d8ff',
+    accent: '#2c5fa8',
     calculators: [
       { id: 'age', title: '年齡計算', subtitle: '虛歲、實歲', comingSoon: true },
       { id: 'timezone', title: '時區換算', subtitle: '世界時間', comingSoon: true },

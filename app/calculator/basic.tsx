@@ -106,16 +106,19 @@ export default function BasicCalculator() {
     if (btn === '=') return [styles.btn, styles.btnEquals];
     if (OPERATORS.includes(btn))
       return [styles.btn, styles.btnOperator, isOperatorActive(btn) && styles.btnOperatorActive];
-    if (['C', '±', '%'].includes(btn)) return [styles.btn, styles.btnFunction];
+    if (['C', '±', '%', '⌫'].includes(btn)) return [styles.btn, styles.btnFunction];
     return [styles.btn, styles.btnNumber];
   };
 
   const getTextStyle = (btn: string) => {
-    if (['C', '±', '%'].includes(btn)) return [styles.btnText, styles.btnTextFunction];
-    return styles.btnText;
+    if (btn === '=') return [styles.btnText, styles.btnTextEquals];
+    if (OPERATORS.includes(btn))
+      return [styles.btnText, styles.btnTextOperator, isOperatorActive(btn) && styles.btnTextOperatorActive];
+    if (['C', '±', '%', '⌫'].includes(btn)) return [styles.btnText, styles.btnTextFunction];
+    return [styles.btnText, styles.btnTextNumber];
   };
 
-  const fontSize = display.length > 9 ? 36 : display.length > 6 ? 48 : 64;
+  const fontSize = display.length > 9 ? 44 : display.length > 6 ? 60 : 76;
 
   return (
     <View style={styles.container}>
@@ -140,7 +143,7 @@ export default function BasicCalculator() {
                 key={btn}
                 style={getButtonStyle(btn)}
                 onPress={() => handlePress(btn)}
-                activeOpacity={0.7}
+                activeOpacity={0.75}
               >
                 <Text style={getTextStyle(btn)}>{btn}</Text>
               </TouchableOpacity>
@@ -155,32 +158,34 @@ export default function BasicCalculator() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#fff8ed',
   },
   displayArea: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    paddingHorizontal: 24,
-    paddingBottom: 24,
+    paddingHorizontal: 28,
+    paddingBottom: 28,
   },
   expression: {
-    fontSize: 20,
-    color: '#8892b0',
+    fontFamily: 'Fredoka_500Medium',
+    fontSize: 22,
+    color: '#a3897a',
     marginBottom: 4,
   },
   display: {
-    color: '#fff',
-    fontWeight: '300',
+    fontFamily: 'Fredoka_700Bold',
+    color: '#2d2520',
+    letterSpacing: -2,
   },
   buttons: {
-    padding: 12,
-    gap: 10,
+    padding: 14,
+    gap: 12,
     paddingBottom: 32,
   },
   row: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 12,
   },
   btn: {
     flex: 1,
@@ -188,16 +193,45 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#a3897a',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  btnNumber: { backgroundColor: '#16213e' },
-  btnOperator: { backgroundColor: '#e67e22' },
-  btnOperatorActive: { backgroundColor: '#fff' },
-  btnEquals: { backgroundColor: '#e67e22' },
-  btnFunction: { backgroundColor: '#2c3e50' },
+  btnNumber: {
+    backgroundColor: '#fff',
+  },
+  btnOperator: {
+    backgroundColor: '#ffd4ba',
+  },
+  btnOperatorActive: {
+    backgroundColor: '#c4623a',
+  },
+  btnEquals: {
+    backgroundColor: '#c4623a',
+  },
+  btnFunction: {
+    backgroundColor: '#f1e3d0',
+  },
   btnText: {
-    fontSize: 24,
-    color: '#fff',
-    fontWeight: '500',
+    fontFamily: 'Fredoka_600SemiBold',
+    fontSize: 28,
   },
-  btnTextFunction: { color: '#ecf0f1' },
+  btnTextNumber: {
+    color: '#2d2520',
+  },
+  btnTextOperator: {
+    color: '#c4623a',
+  },
+  btnTextOperatorActive: {
+    color: '#fff',
+  },
+  btnTextEquals: {
+    color: '#fff',
+  },
+  btnTextFunction: {
+    color: '#8a6a4a',
+    fontSize: 22,
+  },
 });

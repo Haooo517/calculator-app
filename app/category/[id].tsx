@@ -20,157 +20,125 @@ export default function CategoryScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Stack.Screen options={{ title: category.title, headerTransparent: true }} />
+      <Stack.Screen options={{ title: category.title }} />
 
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <View>
-            <Text style={styles.indexNum}>SECTION</Text>
-            <Text style={[styles.indexEn, { color: category.accent }]}>{category.nameEn}</Text>
-          </View>
-          <CategoryIcon id={category.id} size={40} color={category.accent} />
+      <View style={[styles.hero, { backgroundColor: category.bg }]}>
+        <View style={styles.heroIconWrap}>
+          <CategoryIcon id={category.id} size={48} color={category.accent} weight="fill" />
         </View>
-        <Text style={styles.title}>{category.title}</Text>
-        <Text style={styles.subtitle}>{category.subtitle}</Text>
-        <View style={[styles.accentBar, { backgroundColor: category.accent }]} />
+        <Text style={[styles.heroTitle, { color: category.accent }]}>{category.title}</Text>
+        <Text style={[styles.heroSubtitle, { color: category.accent }]}>{category.subtitle}</Text>
       </View>
 
       <View style={styles.list}>
-        {category.calculators.map((calc, i) => (
+        {category.calculators.map((calc) => (
           <TouchableOpacity
             key={calc.id}
             style={[styles.row, calc.comingSoon && styles.rowDisabled]}
             onPress={() => calc.route && router.push(calc.route as any)}
-            activeOpacity={calc.comingSoon ? 1 : 0.6}
+            activeOpacity={calc.comingSoon ? 1 : 0.75}
           >
-            <Text style={styles.rowNum}>{String(i + 1).padStart(2, '0')}</Text>
+            <View style={[styles.rowDot, { backgroundColor: category.bg }]} />
             <View style={styles.rowText}>
               <Text style={styles.rowTitle}>{calc.title}</Text>
               <Text style={styles.rowSub}>{calc.subtitle}</Text>
             </View>
             {calc.comingSoon ? (
-              <Lock size={18} color="#807868" weight="duotone" />
+              <Lock size={18} color="#a3897a" weight="duotone" />
             ) : (
               <CaretRight size={20} color={category.accent} weight="bold" />
             )}
           </TouchableOpacity>
         ))}
       </View>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>· {category.calculators.length} TOOLS ·</Text>
-      </View>
     </ScrollView>
   );
 }
 
-const C = {
-  bg: '#0d0d0d',
-  border: '#2a2826',
-  text: '#f5f1e8',
-  textMuted: '#807868',
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: C.bg,
+    backgroundColor: '#fff8ed',
   },
   content: {
-    paddingBottom: 60,
+    padding: 20,
+    paddingBottom: 48,
   },
-  header: {
-    paddingHorizontal: 24,
-    paddingTop: 110,
-    paddingBottom: 36,
+  hero: {
+    borderRadius: 28,
+    padding: 24,
+    marginBottom: 18,
+    shadowColor: '#a3897a',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 4,
   },
-  headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 16,
+  heroIconWrap: {
+    width: 72,
+    height: 72,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255,255,255,0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 14,
   },
-  indexNum: {
-    fontFamily: 'Fraunces_400Regular',
-    fontSize: 11,
-    color: C.textMuted,
-    letterSpacing: 2.5,
+  heroTitle: {
+    fontFamily: 'Fredoka_700Bold',
+    fontSize: 32,
+    letterSpacing: -0.5,
     marginBottom: 4,
   },
-  indexEn: {
-    fontSize: 12,
-    letterSpacing: 3,
-    fontWeight: '700',
-  },
-  title: {
-    fontFamily: 'Fraunces_700Bold',
-    fontSize: 56,
-    color: C.text,
-    letterSpacing: -2,
-    lineHeight: 60,
-    marginBottom: 10,
-  },
-  subtitle: {
+  heroSubtitle: {
+    fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
-    color: C.textMuted,
-    lineHeight: 22,
-    marginBottom: 22,
-  },
-  accentBar: {
-    height: 3,
-    width: 48,
-    borderRadius: 2,
+    opacity: 0.85,
+    lineHeight: 20,
   },
   list: {
-    paddingHorizontal: 24,
+    gap: 10,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 22,
-    borderTopWidth: 1,
-    borderTopColor: C.border,
-    gap: 18,
+    backgroundColor: '#fff',
+    paddingVertical: 18,
+    paddingHorizontal: 18,
+    borderRadius: 20,
+    gap: 14,
+    shadowColor: '#a3897a',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 2,
   },
   rowDisabled: {
-    opacity: 0.4,
+    opacity: 0.55,
   },
-  rowNum: {
-    fontFamily: 'Fraunces_400Regular',
-    fontSize: 14,
-    color: C.textMuted,
-    width: 24,
-    letterSpacing: 1,
+  rowDot: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
   },
   rowText: {
     flex: 1,
   },
   rowTitle: {
-    fontFamily: 'Fraunces_700Bold',
-    fontSize: 22,
-    color: C.text,
-    letterSpacing: -0.5,
+    fontFamily: 'Fredoka_600SemiBold',
+    fontSize: 17,
+    color: '#2d2520',
     marginBottom: 2,
   },
   rowSub: {
+    fontFamily: 'Fredoka_400Regular',
     fontSize: 13,
-    color: C.textMuted,
-  },
-  footer: {
-    alignItems: 'center',
-    marginTop: 28,
-    paddingHorizontal: 24,
-  },
-  footerText: {
-    fontSize: 10,
-    color: C.textMuted,
-    letterSpacing: 4,
-    fontWeight: '700',
+    color: '#8a7a6c',
   },
   notFound: {
-    color: C.text,
+    color: '#2d2520',
     textAlign: 'center',
     marginTop: 100,
     fontSize: 18,
+    fontFamily: 'Fredoka_500Medium',
   },
 });
