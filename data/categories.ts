@@ -38,10 +38,10 @@ export const CATEGORIES: Category[] = [
     bg: '#b8e6d2',
     accent: '#2d8765',
     calculators: [
+      { id: 'scientific', title: '科學計算機', subtitle: '三角函數、對數', route: '/calculator/scientific' },
+      { id: 'engineering', title: '工程計算機', subtitle: '進位、位元運算', route: '/calculator/engineering' },
       { id: 'unit', title: '單位換算', subtitle: '長度、重量、溫度', route: '/calculator/unit' },
-      { id: 'scientific', title: '科學計算機', subtitle: '三角函數、對數', comingSoon: true },
-      { id: 'engineering', title: '工程計算機', subtitle: '進位、邏輯運算', comingSoon: true },
-      { id: 'equation', title: '方程式求解', subtitle: '一元、二元方程式', comingSoon: true },
+      { id: 'equation', title: '方程式求解', subtitle: '一元、二元方程式', route: '/calculator/equation' },
     ],
   },
   {
@@ -52,10 +52,10 @@ export const CATEGORIES: Category[] = [
     bg: '#ffe082',
     accent: '#8d6e00',
     calculators: [
+      { id: 'currency', title: '匯率換算', subtitle: '即時匯率', route: '/calculator/currency' },
       { id: 'loan', title: '貸款試算', subtitle: '月付、利息', route: '/calculator/loan' },
-      { id: 'currency', title: '匯率換算', subtitle: '即時匯率', comingSoon: true },
+      { id: 'money-score', title: '金錢評分', subtitle: '理財健康分數', route: '/calculator/money-score' },
       { id: 'bookkeeping', title: '記帳', subtitle: '收支管理', comingSoon: true },
-      { id: 'money-score', title: '金錢評分', subtitle: '理財健康分數', comingSoon: true },
     ],
   },
   {
@@ -67,7 +67,7 @@ export const CATEGORIES: Category[] = [
     accent: '#6a3da8',
     calculators: [
       { id: 'big2', title: '大老二點數', subtitle: '四人計分', route: '/calculator/big2' },
-      { id: 'mahjong', title: '麻將台數', subtitle: '台數查詢', comingSoon: true },
+      { id: 'mahjong', title: '麻將台數', subtitle: '台數計算', route: '/calculator/mahjong' },
       { id: 'poker-odds', title: '撲克勝率', subtitle: '德州撲克', comingSoon: true },
     ],
   },
