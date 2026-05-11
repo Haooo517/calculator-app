@@ -1,134 +1,263 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import LottieView from 'lottie-react-native';
+import { ArrowUpRight } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { CategoryIcon, IconStyle } from '../components/CategoryIcon';
+import { CategoryIcon } from '../components/CategoryIcon';
 import { CATEGORIES } from '../data/categories';
 
-const STYLES: { id: IconStyle; label: string }[] = [
-  { id: 'emoji', label: 'Emoji' },
-  { id: 'lucide', label: 'Lucide' },
-  { id: 'phosphor', label: 'Phosphor' },
-];
+const formatDate = () => {
+  const d = new Date();
+  const m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  return `${m[d.getMonth()]} ${String(d.getDate()).padStart(2, '0')} · ${d.getFullYear()}`;
+};
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [iconStyle, setIconStyle] = useState<IconStyle>('lucide');
+  const [hero, ...rest] = CATEGORIES;
+  const gridItems = rest.slice(0, 4);
+  const last = rest[4];
+
+  const go = (id: string) => router.push(`/category/${id}` as any);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>計算機集合</Text>
-        <Text style={styles.subtitle}>選擇分類</Text>
-      </View>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Text style={styles.dateLabel}>{formatDate()}</Text>
+      <Text style={styles.title}>計算機.</Text>
+      <Text style={styles.subtitle}>六種類型工具，每天都用得到。</Text>
 
-      <View style={styles.switcher}>
-        {STYLES.map((s) => (
-          <TouchableOpacity
-            key={s.id}
-            style={[styles.switchBtn, iconStyle === s.id && styles.switchBtnActive]}
-            onPress={() => setIconStyle(s.id)}
-          >
-            <Text style={[styles.switchText, iconStyle === s.id && styles.switchTextActive]}>
-              {s.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <TouchableOpacity
+        style={styles.hero}
+        onPress={() => go(hero.id)}
+        activeOpacity={0.85}
+      >
+        <View style={styles.heroLottie}>
+          <LottieView
+            source={require('../assets/animations/hero.json')}
+            autoPlay
+            loop
+            style={{ width: 200, height: 200 }}
+          />
+        </View>
+        <View style={styles.heroNumber}>
+          <Text style={styles.indexNum}>01</Text>
+          <Text style={[styles.indexEn, { color: hero.accent }]}>{hero.nameEn}</Text>
+        </View>
+        <View style={styles.heroBottom}>
+          <Text style={styles.heroTitle}>{hero.title}</Text>
+          <Text style={styles.heroDesc}>{hero.subtitle}</Text>
+          <View style={styles.heroFooter}>
+            <Text style={styles.toolCount}>{hero.calculators.length} TOOLS</Text>
+            <ArrowUpRight size={22} color={hero.accent} weight="bold" />
+          </View>
+        </View>
+      </TouchableOpacity>
 
-      <ScrollView contentContainerStyle={styles.grid}>
-        {CATEGORIES.map((cat) => (
+      <View style={styles.grid}>
+        {gridItems.map((cat, i) => (
           <TouchableOpacity
             key={cat.id}
-            style={[styles.card, { backgroundColor: cat.color }]}
-            onPress={() => router.push(`/category/${cat.id}` as any)}
-            activeOpacity={0.8}
+            style={styles.card}
+            onPress={() => go(cat.id)}
+            activeOpacity={0.85}
           >
-            <CategoryIcon categoryId={cat.id} style={iconStyle} size={44} />
+            <View style={styles.cardTop}>
+              <View>
+                <Text style={styles.indexNum}>{String(i + 2).padStart(2, '0')}</Text>
+                <Text style={[styles.indexEn, { color: cat.accent }]}>{cat.nameEn}</Text>
+              </View>
+              <CategoryIcon id={cat.id} size={26} color={cat.accent} />
+            </View>
             <View>
               <Text style={styles.cardTitle}>{cat.title}</Text>
-              <Text style={styles.cardSubtitle}>{cat.subtitle}</Text>
-              <Text style={styles.cardCount}>{cat.calculators.length} 個工具</Text>
+              <Text style={styles.toolCount}>{cat.calculators.length} TOOLS</Text>
             </View>
           </TouchableOpacity>
         ))}
-      </ScrollView>
-    </View>
+      </View>
+
+      <TouchableOpacity
+        style={[styles.card, styles.cardWide]}
+        onPress={() => go(last.id)}
+        activeOpacity={0.85}
+      >
+        <View style={styles.cardWideLeft}>
+          <Text style={styles.indexNum}>06</Text>
+          <Text style={[styles.indexEn, { color: last.accent }]}>{last.nameEn}</Text>
+          <Text style={[styles.cardTitle, { marginTop: 6 }]}>{last.title}</Text>
+        </View>
+        <View style={styles.cardWideRight}>
+          <CategoryIcon id={last.id} size={32} color={last.accent} />
+          <Text style={[styles.toolCount, { marginTop: 10 }]}>{last.calculators.length} TOOLS</Text>
+        </View>
+      </TouchableOpacity>
+
+      <View style={styles.footer}>
+        <View style={styles.footerLine} />
+        <Text style={styles.footerText}>END</Text>
+        <View style={styles.footerLine} />
+      </View>
+    </ScrollView>
   );
 }
+
+const C = {
+  bg: '#0d0d0d',
+  card: '#161614',
+  border: '#2a2826',
+  text: '#f5f1e8',
+  textMuted: '#807868',
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: C.bg,
   },
-  header: {
-    paddingHorizontal: 24,
-    paddingTop: 48,
-    paddingBottom: 12,
+  content: {
+    padding: 24,
+    paddingTop: 60,
+    paddingBottom: 60,
+  },
+  dateLabel: {
+    fontSize: 11,
+    color: C.textMuted,
+    letterSpacing: 3,
+    fontWeight: '600',
+    marginBottom: 24,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 4,
+    fontFamily: 'Fraunces_700Bold',
+    fontSize: 64,
+    color: C.text,
+    letterSpacing: -2,
+    lineHeight: 68,
+    marginBottom: 12,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#8892b0',
+    fontSize: 14,
+    color: C.textMuted,
+    marginBottom: 36,
+    lineHeight: 22,
   },
-  switcher: {
-    flexDirection: 'row',
-    marginHorizontal: 24,
+  hero: {
+    backgroundColor: C.card,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 28,
+    padding: 24,
     marginBottom: 12,
-    backgroundColor: '#0f1729',
-    borderRadius: 12,
-    padding: 4,
-    gap: 4,
+    height: 360,
+    overflow: 'hidden',
+    position: 'relative',
   },
-  switchBtn: {
-    flex: 1,
-    paddingVertical: 8,
-    borderRadius: 8,
+  heroLottie: {
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    opacity: 0.95,
+  },
+  heroNumber: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: 10,
+  },
+  indexNum: {
+    fontFamily: 'Fraunces_400Regular',
+    fontSize: 13,
+    color: C.textMuted,
+    letterSpacing: 2,
+  },
+  indexEn: {
+    fontSize: 11,
+    letterSpacing: 3,
+    fontWeight: '700',
+  },
+  heroBottom: {
+    marginTop: 'auto',
+  },
+  heroTitle: {
+    fontFamily: 'Fraunces_700Bold',
+    fontSize: 48,
+    color: C.text,
+    letterSpacing: -2,
+    marginBottom: 8,
+  },
+  heroDesc: {
+    fontSize: 13,
+    color: C.textMuted,
+    marginBottom: 18,
+    lineHeight: 20,
+    maxWidth: '85%',
+  },
+  heroFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  switchBtnActive: {
-    backgroundColor: '#e67e22',
-  },
-  switchText: {
-    color: '#8892b0',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  switchTextActive: {
-    color: '#fff',
+  toolCount: {
+    fontSize: 10,
+    color: C.text,
+    letterSpacing: 2.5,
+    fontWeight: '700',
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 12,
     gap: 12,
+    marginBottom: 12,
   },
   card: {
-    width: '47%',
+    width: '48%',
     aspectRatio: 1,
-    borderRadius: 20,
-    padding: 20,
+    backgroundColor: C.card,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 24,
+    padding: 18,
     justifyContent: 'space-between',
   },
+  cardTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
   cardTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 2,
+    fontFamily: 'Fraunces_700Bold',
+    fontSize: 26,
+    color: C.text,
+    letterSpacing: -0.8,
+    marginBottom: 4,
   },
-  cardSubtitle: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.7)',
-    marginBottom: 6,
+  cardWide: {
+    width: '100%',
+    aspectRatio: undefined,
+    padding: 22,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
-  cardCount: {
-    fontSize: 11,
-    color: 'rgba(255,255,255,0.5)',
-    fontWeight: '600',
+  cardWideLeft: {
+    flex: 1,
+  },
+  cardWideRight: {
+    alignItems: 'flex-end',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 28,
+    gap: 12,
+  },
+  footerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: C.border,
+  },
+  footerText: {
+    fontSize: 10,
+    color: C.textMuted,
+    letterSpacing: 4,
+    fontWeight: '700',
   },
 });

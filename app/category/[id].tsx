@@ -1,5 +1,7 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { ArrowRight, Lock } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { CategoryIcon } from '../../components/CategoryIcon';
 import { getCategoryById } from '../../data/categories';
 
 export default function CategoryScreen() {
@@ -10,128 +12,163 @@ export default function CategoryScreen() {
   if (!category) {
     return (
       <View style={styles.container}>
-        <Stack.Screen options={{ title: '找不到分類' }} />
+        <Stack.Screen options={{ title: '' }} />
         <Text style={styles.notFound}>找不到這個分類</Text>
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: category.color }]}>
-      <Stack.Screen
-        options={{
-          title: category.title,
-          headerStyle: { backgroundColor: category.color },
-        }}
-      />
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Stack.Screen options={{ title: category.title, headerTransparent: true }} />
 
       <View style={styles.header}>
-        <Text style={styles.headerIcon}>{category.icon}</Text>
-        <Text style={styles.headerTitle}>{category.title}</Text>
-        <Text style={styles.headerSubtitle}>{category.subtitle}</Text>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.indexNum}>SECTION</Text>
+            <Text style={[styles.indexEn, { color: category.accent }]}>{category.nameEn}</Text>
+          </View>
+          <CategoryIcon id={category.id} size={40} color={category.accent} />
+        </View>
+        <Text style={styles.title}>{category.title}</Text>
+        <Text style={styles.subtitle}>{category.subtitle}</Text>
+        <View style={[styles.accentBar, { backgroundColor: category.accent }]} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.list}>
-        {category.calculators.map((calc) => (
+      <View style={styles.list}>
+        {category.calculators.map((calc, i) => (
           <TouchableOpacity
             key={calc.id}
-            style={[styles.item, calc.comingSoon && styles.itemDisabled]}
+            style={[styles.row, calc.comingSoon && styles.rowDisabled]}
             onPress={() => calc.route && router.push(calc.route as any)}
-            activeOpacity={calc.comingSoon ? 1 : 0.7}
+            activeOpacity={calc.comingSoon ? 1 : 0.6}
           >
-            <Text style={styles.itemIcon}>{calc.icon}</Text>
-            <View style={styles.itemText}>
-              <Text style={styles.itemTitle}>{calc.title}</Text>
-              <Text style={styles.itemSubtitle}>{calc.subtitle}</Text>
+            <Text style={styles.rowNum}>{String(i + 1).padStart(2, '0')}</Text>
+            <View style={styles.rowText}>
+              <Text style={styles.rowTitle}>{calc.title}</Text>
+              <Text style={styles.rowSub}>{calc.subtitle}</Text>
             </View>
             {calc.comingSoon ? (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>即將推出</Text>
-              </View>
+              <Lock size={18} color="#807868" weight="duotone" />
             ) : (
-              <Text style={styles.chevron}>›</Text>
+              <ArrowRight size={20} color={category.accent} weight="bold" />
             )}
           </TouchableOpacity>
         ))}
-      </ScrollView>
-    </View>
+      </View>
+
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>· {category.calculators.length} TOOLS ·</Text>
+      </View>
+    </ScrollView>
   );
 }
+
+const C = {
+  bg: '#0d0d0d',
+  border: '#2a2826',
+  text: '#f5f1e8',
+  textMuted: '#807868',
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: C.bg,
+  },
+  content: {
+    paddingBottom: 60,
   },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 24,
+    paddingTop: 110,
+    paddingBottom: 36,
   },
-  headerIcon: {
-    fontSize: 48,
-    marginBottom: 8,
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
   },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
+  indexNum: {
+    fontFamily: 'Fraunces_400Regular',
+    fontSize: 11,
+    color: C.textMuted,
+    letterSpacing: 2.5,
     marginBottom: 4,
   },
-  headerSubtitle: {
+  indexEn: {
+    fontSize: 12,
+    letterSpacing: 3,
+    fontWeight: '700',
+  },
+  title: {
+    fontFamily: 'Fraunces_700Bold',
+    fontSize: 56,
+    color: C.text,
+    letterSpacing: -2,
+    lineHeight: 60,
+    marginBottom: 10,
+  },
+  subtitle: {
     fontSize: 14,
-    color: 'rgba(255,255,255,0.7)',
+    color: C.textMuted,
+    lineHeight: 22,
+    marginBottom: 22,
+  },
+  accentBar: {
+    height: 3,
+    width: 48,
+    borderRadius: 2,
   },
   list: {
-    padding: 12,
-    gap: 10,
+    paddingHorizontal: 24,
   },
-  item: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    padding: 16,
-    borderRadius: 16,
-    gap: 14,
+    paddingVertical: 22,
+    borderTopWidth: 1,
+    borderTopColor: C.border,
+    gap: 18,
   },
-  itemDisabled: {
-    opacity: 0.5,
+  rowDisabled: {
+    opacity: 0.4,
   },
-  itemIcon: {
-    fontSize: 28,
-    width: 44,
-    textAlign: 'center',
+  rowNum: {
+    fontFamily: 'Fraunces_400Regular',
+    fontSize: 14,
+    color: C.textMuted,
+    width: 24,
+    letterSpacing: 1,
   },
-  itemText: {
+  rowText: {
     flex: 1,
   },
-  itemTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#fff',
+  rowTitle: {
+    fontFamily: 'Fraunces_700Bold',
+    fontSize: 22,
+    color: C.text,
+    letterSpacing: -0.5,
     marginBottom: 2,
   },
-  itemSubtitle: {
+  rowSub: {
     fontSize: 13,
-    color: 'rgba(255,255,255,0.6)',
+    color: C.textMuted,
   },
-  chevron: {
-    fontSize: 28,
-    color: 'rgba(255,255,255,0.5)',
-    fontWeight: '300',
+  footer: {
+    alignItems: 'center',
+    marginTop: 28,
+    paddingHorizontal: 24,
   },
-  badge: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-  },
-  badgeText: {
-    fontSize: 11,
-    color: 'rgba(255,255,255,0.8)',
-    fontWeight: '600',
+  footerText: {
+    fontSize: 10,
+    color: C.textMuted,
+    letterSpacing: 4,
+    fontWeight: '700',
   },
   notFound: {
-    color: '#fff',
+    color: C.text,
     textAlign: 'center',
     marginTop: 100,
     fontSize: 18,
