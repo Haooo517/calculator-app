@@ -1,18 +1,30 @@
 import {
   Calculator,
+  Clock,
+  CookingPot,
   Flask,
+  GameController,
+  GraduationCap,
   Heartbeat,
   HouseLine,
+  Palette,
   PokerChip,
+  PushPin,
   Wallet,
 } from 'phosphor-react-native';
 
 const ICONS = {
-  general: HouseLine,
+  favorites: PushPin,
+  life: HouseLine,
   science: Flask,
   wealth: Wallet,
   gambling: PokerChip,
   health: Heartbeat,
+  design: Palette,
+  time: Clock,
+  education: GraduationCap,
+  cooking: CookingPot,
+  game: GameController,
 } as const;
 
 type Props = {

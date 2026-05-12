@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { CaretRight, Sparkle } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../components/CategoryIcon';
@@ -10,13 +10,14 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.header}>
         <View style={styles.greetRow}>
           <Sparkle size={20} color="#ffb84d" weight="fill" />
           <Text style={styles.greet}>嗨！</Text>
         </View>
         <Text style={styles.title}>挑一個工具吧</Text>
-        <Text style={styles.subtitle}>有 5 種類型，全部都很好用</Text>
+        <Text style={styles.subtitle}>有 {CATEGORIES.length} 種類型，全部都很好用</Text>
       </View>
 
       <View style={styles.list}>
