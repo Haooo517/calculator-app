@@ -24,13 +24,7 @@ export const CATEGORIES: Category[] = [
     subtitle: '最常用的工具，一鍵打開。',
     bg: '#ffd4ba',
     accent: '#c4623a',
-    calculators: [
-      { id: 'basic', title: '基本計算機', subtitle: '加減乘除', route: '/calculator/basic' },
-      { id: 'percent', title: '百分比計算', subtitle: '折扣、稅金、增減', route: '/calculator/percent' },
-      { id: 'bmi', title: 'BMI 計算', subtitle: '身體質量指數', route: '/calculator/bmi' },
-      { id: 'unit', title: '單位換算', subtitle: '長度、重量、溫度', route: '/calculator/unit' },
-      { id: 'currency', title: '匯率換算', subtitle: '即時匯率', route: '/calculator/currency' },
-    ],
+    calculators: [],
   },
   {
     id: 'life',

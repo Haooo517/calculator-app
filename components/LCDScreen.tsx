@@ -4,9 +4,9 @@ import { Mascot } from './Mascot';
 
 const MESSAGES = [
   '嗨！我是 Allcu',
+  '其實叫 Allculator',
   '今天想算什麼？',
   '挑一個工具吧',
-  '11 個類型隨你選',
   '什麼都能算給你',
 ];
 
@@ -75,7 +75,7 @@ export function LCDScreen() {
       <View style={styles.brandRow}>
         <View style={styles.ledWrap}>
           <View style={styles.led} />
-          <Text style={styles.brand}>ALLCU</Text>
+          <Text style={styles.brand}>ALLCULATOR</Text>
         </View>
         <Text style={styles.sparkle}>✦ V1</Text>
       </View>

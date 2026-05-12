@@ -4,9 +4,11 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { CategoryIcon } from '../components/CategoryIcon';
 import { LCDScreen } from '../components/LCDScreen';
 import { CATEGORIES } from '../data/categories';
+import { usePins } from '../lib/pins';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { pins } = usePins();
   const go = (id: string) => router.push(`/category/${id}` as any);
 
   return (
@@ -31,7 +33,9 @@ export default function HomeScreen() {
               <View style={styles.rowMetaWrap}>
                 <Text style={[styles.rowMetaEn, { color: cat.accent }]}>{cat.nameEn}</Text>
                 <View style={[styles.dot, { backgroundColor: cat.accent }]} />
-                <Text style={styles.rowMetaCount}>{cat.calculators.length} 個工具</Text>
+                <Text style={styles.rowMetaCount}>
+                  {cat.id === 'favorites' ? pins.size : cat.calculators.length} 個工具
+                </Text>
               </View>
             </View>
 
