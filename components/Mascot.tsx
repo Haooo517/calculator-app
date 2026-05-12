@@ -2,12 +2,18 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
+  Platform,
   StyleProp,
   StyleSheet,
   Text,
-  View,
   ViewStyle,
 } from 'react-native';
+
+const MONO_FONT = Platform.select({
+  ios: 'Menlo',
+  android: 'monospace',
+  default: 'monospace',
+});
 
 export type MascotExpression =
   | 'default'
@@ -130,14 +136,14 @@ export function Mascot({
         {face.hat}
       </Text>
       <Text
-        style={[styles.line, { fontSize: eyeSize, color, lineHeight: eyeSize * 1 }]}
+        style={[styles.mono, { fontSize: eyeSize, color, lineHeight: eyeSize * 1.1 }]}
       >
-        {`<  ${face.eyes}  >`}
+        {`⌈  ${face.eyes}  ⌉`}
       </Text>
       <Text
-        style={[styles.line, { fontSize: mouthSize, color, lineHeight: mouthSize * 1.05 }]}
+        style={[styles.mono, { fontSize: mouthSize, color, lineHeight: mouthSize * 1.1 }]}
       >
-        {face.mouth}
+        {`⌊     ${face.mouth}     ⌋`}
       </Text>
     </Animated.View>
   );
@@ -150,5 +156,11 @@ const styles = StyleSheet.create({
   line: {
     fontFamily: 'Fredoka_700Bold',
     textAlign: 'center',
+  },
+  mono: {
+    fontFamily: MONO_FONT,
+    fontWeight: '700',
+    textAlign: 'center',
+    letterSpacing: 0,
   },
 });
