@@ -137,7 +137,7 @@ export function Mascot({
       <Text
         style={[styles.mono, { fontSize: faceSize, color, lineHeight: faceSize * 1.15 }]}
       >
-        {`[ ${face.eyes} ]`}
+        {`\\[ ${face.eyes} ]/`}
       </Text>
     </Animated.View>
   );

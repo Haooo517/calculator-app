@@ -1,32 +1,23 @@
 import { Stack } from 'expo-router';
-import {
-  Cloud,
-  Feather,
-  Heart,
-  IconProps,
-  Smiley,
-  Stethoscope,
-  Warning,
-  WarningOctagon,
-} from 'phosphor-react-native';
-import { ComponentType, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Mascot, MascotExpression } from '../../components/Mascot';
 
 type Status = {
   label: string;
-  Icon: ComponentType<IconProps>;
+  expression: MascotExpression;
   bg: string;
   fg: string;
   tip: string;
 };
 
 const classify = (bmi: number): Status => {
-  if (bmi < 18.5) return { label: '體重過輕', Icon: Feather, bg: '#b8d8ff', fg: '#2c5fa8', tip: '多吃點，加油！' };
-  if (bmi < 24) return { label: '健康體重', Icon: Heart, bg: '#b8e6d2', fg: '#2d8765', tip: '保持下去，超棒的！' };
-  if (bmi < 27) return { label: '體重過重', Icon: Cloud, bg: '#ffe082', fg: '#8d6e00', tip: '稍微運動一下吧～' };
-  if (bmi < 30) return { label: '輕度肥胖', Icon: Warning, bg: '#ffd4ba', fg: '#c4623a', tip: '可以開始注意飲食' };
-  if (bmi < 35) return { label: '中度肥胖', Icon: WarningOctagon, bg: '#ffc4d4', fg: '#c2456a', tip: '建議調整生活習慣' };
-  return { label: '重度肥胖', Icon: Stethoscope, bg: '#d4baf0', fg: '#6a3da8', tip: '建議諮詢專業醫師' };
+  if (bmi < 18.5) return { label: '體重過輕', expression: 'thinking', bg: '#b8d8ff', fg: '#2c5fa8', tip: '多吃點，加油！' };
+  if (bmi < 24) return { label: '健康體重', expression: 'happy', bg: '#b8e6d2', fg: '#2d8765', tip: '保持下去，超棒的！' };
+  if (bmi < 27) return { label: '體重過重', expression: 'thinking', bg: '#ffe082', fg: '#8d6e00', tip: '稍微運動一下吧～' };
+  if (bmi < 30) return { label: '輕度肥胖', expression: 'sad', bg: '#ffd4ba', fg: '#c4623a', tip: '可以開始注意飲食' };
+  if (bmi < 35) return { label: '中度肥胖', expression: 'sad', bg: '#ffc4d4', fg: '#c2456a', tip: '建議調整生活習慣' };
+  return { label: '重度肥胖', expression: 'surprised', bg: '#d4baf0', fg: '#6a3da8', tip: '建議諮詢專業醫師' };
 };
 
 export default function BMICalculator() {
@@ -90,17 +81,15 @@ export default function BMICalculator() {
 
         {status && bmi !== null ? (
           <View style={[styles.resultCard, { backgroundColor: status.bg }]}>
-            <View style={styles.resultIconWrap}>
-              <status.Icon size={36} color={status.fg} weight="fill" />
-            </View>
-            <Text style={[styles.resultBmi, { color: status.fg }]}>{bmi.toFixed(1)}</Text>
+            <Mascot expression={status.expression} color={status.fg} size={56} />
+            <Text style={[styles.resultBmi, { color: status.fg, marginTop: 10 }]}>{bmi.toFixed(1)}</Text>
             <Text style={[styles.resultLabel, { color: status.fg }]}>{status.label}</Text>
             <Text style={[styles.resultTip, { color: status.fg }]}>{status.tip}</Text>
           </View>
         ) : (
           <View style={styles.placeholderCard}>
-            <Smiley size={36} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>填好上面兩格就會出現結果</Text>
+            <Mascot expression="sleepy" color="#a3897a" size={52} />
+            <Text style={[styles.placeholderText, { marginTop: 6 }]}>填好上面兩格就會出現結果</Text>
           </View>
         )}
 

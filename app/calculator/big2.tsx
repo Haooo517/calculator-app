@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
-import { Crown, Minus, Plus, Trophy } from 'phosphor-react-native';
+import { Crown, Minus, Plus } from 'phosphor-react-native';
+import { Mascot } from '../../components/Mascot';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -143,7 +144,7 @@ export default function Big2Calculator() {
 
         {summary ? (
           <View style={styles.totalCard}>
-            <Trophy size={26} color="#6a3da8" weight="fill" />
+            <Mascot expression="excited" color="#6a3da8" size={56} />
             <View style={{ flex: 1 }}>
               <Text style={styles.totalLabel}>玩家 {summary.winnerIdx + 1} 勝出</Text>
               <Text style={styles.totalValue}>共贏 {summary.total} 點</Text>
@@ -151,8 +152,8 @@ export default function Big2Calculator() {
           </View>
         ) : (
           <View style={styles.placeholderCard}>
-            <Trophy size={28} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>
+            <Mascot expression="thinking" color="#a3897a" size={48} />
+            <Text style={[styles.placeholderText, { marginTop: 4 }]}>
               {cards.filter((c) => c === 0).length === 0
                 ? '把贏家的張數調成 0'
                 : '只能有一位贏家（張數為 0）'}
