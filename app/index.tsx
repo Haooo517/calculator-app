@@ -2,6 +2,7 @@ import { Stack, useRouter } from 'expo-router';
 import { CaretRight, Sparkle } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../components/CategoryIcon';
+import { Mascot } from '../components/Mascot';
 import { CATEGORIES } from '../data/categories';
 
 export default function HomeScreen() {
@@ -16,9 +17,9 @@ export default function HomeScreen() {
         <Sparkle size={12} color="#c4623a" weight="fill" />
       </View>
       <View style={styles.header}>
+        <Mascot size={64} style={styles.mascot} />
         <View style={styles.greetRow}>
-          <Sparkle size={20} color="#ffb84d" weight="fill" />
-          <Text style={styles.greet}>嗨！</Text>
+          <Text style={styles.greet}>嗨！我是 Allcu</Text>
         </View>
         <Text style={styles.title}>挑一個工具吧</Text>
         <Text style={styles.subtitle}>有 {CATEGORIES.length} 種類型，全部都很好用</Text>
@@ -80,6 +81,10 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 4,
     marginBottom: 28,
+    alignItems: 'center',
+  },
+  mascot: {
+    marginBottom: 10,
   },
   greetRow: {
     flexDirection: 'row',
