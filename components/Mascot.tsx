@@ -125,8 +125,7 @@ export function Mascot({
   const face = FACES[current];
 
   const hatSize = size * 0.32;
-  const eyeSize = size * 0.42;
-  const mouthSize = size * 0.4;
+  const faceSize = size * 0.42;
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY }] }, style]}>
@@ -136,14 +135,9 @@ export function Mascot({
         {face.hat}
       </Text>
       <Text
-        style={[styles.mono, { fontSize: eyeSize, color, lineHeight: eyeSize * 1.1 }]}
+        style={[styles.mono, { fontSize: faceSize, color, lineHeight: faceSize * 1.15 }]}
       >
-        {`⌈  ${face.eyes}  ⌉`}
-      </Text>
-      <Text
-        style={[styles.mono, { fontSize: mouthSize, color, lineHeight: mouthSize * 1.1 }]}
-      >
-        {`⌊     ${face.mouth}     ⌋`}
+        {`╭  ${face.eyes}  ╮\n╰     ${face.mouth}     ╯`}
       </Text>
     </Animated.View>
   );
