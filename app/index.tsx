@@ -11,6 +11,10 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Stack.Screen options={{ headerShown: false }} />
+      <View style={styles.brand}>
+        <Text style={styles.brandText}>Allcu</Text>
+        <Sparkle size={12} color="#c4623a" weight="fill" />
+      </View>
       <View style={styles.header}>
         <View style={styles.greetRow}>
           <Sparkle size={20} color="#ffb84d" weight="fill" />
@@ -58,6 +62,20 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 56,
     paddingBottom: 48,
+  },
+  brand: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    gap: 4,
+    paddingRight: 4,
+    marginBottom: 12,
+  },
+  brandText: {
+    fontFamily: 'Fredoka_700Bold',
+    fontSize: 14,
+    color: '#c4623a',
+    letterSpacing: 0.5,
   },
   header: {
     paddingHorizontal: 4,
