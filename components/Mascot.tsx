@@ -143,11 +143,11 @@ export function Mascot({
         {face.hat}
       </Text>
       <View style={styles.faceRow}>
-        <Text style={[styles.mono, monoStyle]}>{'\\['}</Text>
+        <Text style={[styles.mono, monoStyle]}>{'\\[ '}</Text>
         <Animated.Text style={[styles.mono, monoStyle, faceTransform && { transform: faceTransform }]}>
-          {` ${face.eyes} `}
+          {face.eyes}
         </Animated.Text>
-        <Text style={[styles.mono, monoStyle]}>{']/'}</Text>
+        <Text style={[styles.mono, monoStyle]}>{' ]/'}</Text>
       </View>
     </Animated.View>
   );
@@ -170,5 +170,6 @@ const styles = StyleSheet.create({
   faceRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'center',
   },
 });
