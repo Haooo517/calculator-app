@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
-import { FunctionIcon } from 'phosphor-react-native';
 import { useMemo, useState } from 'react';
+import { Mascot } from '../../components/Mascot';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -120,25 +120,24 @@ export default function EquationCalculator() {
     if (!result) {
       return (
         <View style={styles.placeholderCard}>
-          <FunctionIcon size={32} color="#c8b8a8" weight="duotone" />
-          <Text style={styles.placeholderText}>輸入係數就會出現解</Text>
+          <Mascot expression="sleepy" color="#a3897a" size={48} />
+          <Text style={[styles.placeholderText, { marginTop: 4 }]}>輸入係數就會出現解</Text>
         </View>
       );
     }
     if ('error' in result && result.error) {
       return (
         <View style={[styles.resultCard, { backgroundColor: '#ffd4ba' }]}>
-          <Text style={[styles.resultLabel, { color: '#c4623a' }]}>{result.error}</Text>
+          <Mascot expression="thinking" color="#c4623a" size={48} />
+          <Text style={[styles.resultLabel, { color: '#c4623a', marginTop: 8 }]}>{result.error}</Text>
         </View>
       );
     }
     if ('pair' in result && result.pair) {
       return (
         <View style={styles.resultCard}>
-          <View style={styles.resultIconWrap}>
-            <FunctionIcon size={28} color="#2d8765" weight="fill" />
-          </View>
-          <View style={styles.rootsRow}>
+          <Mascot expression="happy" color="#2d8765" size={52} />
+          <View style={[styles.rootsRow, { marginTop: 10 }]}>
             <View style={styles.rootBox}>
               <Text style={styles.rootVar}>x =</Text>
               <Text style={styles.rootVal}>{fmt(result.pair.x)}</Text>
@@ -155,10 +154,8 @@ export default function EquationCalculator() {
       const { real, imag } = result.complex;
       return (
         <View style={styles.resultCard}>
-          <View style={styles.resultIconWrap}>
-            <FunctionIcon size={28} color="#2d8765" weight="fill" />
-          </View>
-          <Text style={styles.resultLabel}>兩個複數解</Text>
+          <Mascot expression="surprised" color="#2d8765" size={48} />
+          <Text style={[styles.resultLabel, { marginTop: 6 }]}>兩個複數解</Text>
           <Text style={styles.rootVal}>{fmt(real)} ± {fmt(imag)}i</Text>
           <Text style={styles.discText}>判別式 = {fmt(result.disc!)}</Text>
         </View>
@@ -167,10 +164,8 @@ export default function EquationCalculator() {
     if ('roots' in result && result.roots) {
       return (
         <View style={styles.resultCard}>
-          <View style={styles.resultIconWrap}>
-            <FunctionIcon size={28} color="#2d8765" weight="fill" />
-          </View>
-          <Text style={styles.resultLabel}>
+          <Mascot expression="happy" color="#2d8765" size={48} />
+          <Text style={[styles.resultLabel, { marginTop: 6 }]}>
             {result.roots.length === 1 ? '解' : `兩個實數解`}
           </Text>
           <View style={result.roots.length === 1 ? null : styles.rootsRow}>

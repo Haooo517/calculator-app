@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { ArrowsClockwise, CurrencyDollar } from 'phosphor-react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Mascot } from '../../components/Mascot';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -140,19 +141,20 @@ export default function CurrencyCalculator() {
 
         {error ? (
           <View style={styles.errorCard}>
-            <Text style={styles.errorText}>{error}</Text>
+            <Mascot expression="sad" color="#c2456a" size={48} />
+            <Text style={[styles.errorText, { marginTop: 4 }]}>{error}</Text>
             <TouchableOpacity onPress={() => load(from)} style={styles.retryBtn}>
               <Text style={styles.retryText}>重試</Text>
             </TouchableOpacity>
           </View>
         ) : results.length === 0 ? (
           <View style={styles.placeholderCard}>
-            {loading ? (
-              <ActivityIndicator color="#8d6e00" />
-            ) : (
-              <CurrencyDollar size={32} color="#c8b8a8" weight="duotone" />
-            )}
-            <Text style={styles.placeholderText}>
+            <Mascot
+              expression={loading ? 'thinking' : 'sleepy'}
+              color="#a3897a"
+              size={48}
+            />
+            <Text style={[styles.placeholderText, { marginTop: 4 }]}>
               {loading ? '正在載入匯率' : '輸入金額看換算'}
             </Text>
           </View>

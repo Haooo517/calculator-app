@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { Baby } from 'phosphor-react-native';
+import { Mascot } from '../../components/Mascot';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -76,10 +77,8 @@ export default function PregnancyCalculator() {
         {result ? (
           <>
             <View style={styles.mainCard}>
-              <View style={styles.mainIconWrap}>
-                <Baby size={32} color="#c2456a" weight="fill" />
-              </View>
-              <Text style={styles.mainLabel}>預產期</Text>
+              <Mascot expression="love" color="#c2456a" size={56} />
+              <Text style={[styles.mainLabel, { marginTop: 8 }]}>預產期</Text>
               <Text style={styles.mainValue}>{formatDate(result.dueDate)}</Text>
               <View style={styles.bar}>
                 <View style={[styles.barFill, { width: `${result.progress}%` }]} />
@@ -104,8 +103,8 @@ export default function PregnancyCalculator() {
           </>
         ) : (
           <View style={styles.placeholderCard}>
-            <Baby size={32} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>填好日期就會出現結果</Text>
+            <Mascot expression="sleepy" color="#a3897a" size={48} />
+            <Text style={[styles.placeholderText, { marginTop: 4 }]}>填好日期就會出現結果</Text>
           </View>
         )}
       </ScrollView>

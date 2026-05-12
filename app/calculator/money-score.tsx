@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
-import { CheckCircle, Coins, TrendDown, TrendUp, Wallet } from 'phosphor-react-native';
+import { Coins, TrendDown, TrendUp, Wallet } from 'phosphor-react-native';
 import { ComponentType, useMemo, useState } from 'react';
+import { Mascot, MascotExpression } from '../../components/Mascot';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -19,14 +20,15 @@ type Tier = {
   bg: string;
   fg: string;
   tip: string;
+  expression: MascotExpression;
 };
 
 const classify = (score: number): Tier => {
-  if (score >= 85) return { label: '非常棒', range: '85-100', bg: '#b8e6d2', fg: '#2d8765', tip: '理財狀況超優秀，繼續保持！' };
-  if (score >= 70) return { label: '良好', range: '70-84', bg: '#fff0a8', fg: '#8d6e00', tip: '已經很穩，再加把勁更好。' };
-  if (score >= 50) return { label: '普通', range: '50-69', bg: '#ffd4ba', fg: '#c4623a', tip: '可以多存一點，少花一點。' };
-  if (score >= 30) return { label: '需注意', range: '30-49', bg: '#ffc4d4', fg: '#c2456a', tip: '建議調整支出和負債。' };
-  return { label: '需改善', range: '0-29', bg: '#d4baf0', fg: '#6a3da8', tip: '建議重新規劃理財。' };
+  if (score >= 85) return { label: '非常棒', range: '85-100', bg: '#b8e6d2', fg: '#2d8765', tip: '理財狀況超優秀，繼續保持！', expression: 'excited' };
+  if (score >= 70) return { label: '良好', range: '70-84', bg: '#fff0a8', fg: '#8d6e00', tip: '已經很穩，再加把勁更好。', expression: 'happy' };
+  if (score >= 50) return { label: '普通', range: '50-69', bg: '#ffd4ba', fg: '#c4623a', tip: '可以多存一點，少花一點。', expression: 'thinking' };
+  if (score >= 30) return { label: '需注意', range: '30-49', bg: '#ffc4d4', fg: '#c2456a', tip: '建議調整支出和負債。', expression: 'sad' };
+  return { label: '需改善', range: '0-29', bg: '#d4baf0', fg: '#6a3da8', tip: '建議重新規劃理財。', expression: 'surprised' };
 };
 
 type BreakItem = {
@@ -144,10 +146,8 @@ export default function MoneyScoreCalculator() {
         {result ? (
           <>
             <View style={[styles.mainCard, { backgroundColor: result.tier.bg }]}>
-              <View style={styles.mainIconWrap}>
-                <CheckCircle size={32} color={result.tier.fg} weight="fill" />
-              </View>
-              <Text style={[styles.mainLabel, { color: result.tier.fg }]}>你的分數</Text>
+              <Mascot expression={result.tier.expression} color={result.tier.fg} size={56} />
+              <Text style={[styles.mainLabel, { color: result.tier.fg, marginTop: 8 }]}>你的分數</Text>
               <Text style={[styles.mainValue, { color: result.tier.fg }]}>
                 {result.total}
                 <Text style={styles.mainUnit}> / 100</Text>
@@ -179,8 +179,8 @@ export default function MoneyScoreCalculator() {
           </>
         ) : (
           <View style={styles.placeholderCard}>
-            <Wallet size={32} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>填好 5 項數字就會出現分數</Text>
+            <Mascot expression="sleepy" color="#a3897a" size={48} />
+            <Text style={[styles.placeholderText, { marginTop: 4 }]}>填好 5 項數字就會出現分數</Text>
           </View>
         )}
       </ScrollView>

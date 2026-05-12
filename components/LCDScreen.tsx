@@ -1,6 +1,18 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Mascot } from './Mascot';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Mascot, MascotExpression } from './Mascot';
+
+const TAP_EXPRESSIONS: MascotExpression[] = [
+  'happy', 'excited', 'thinking', 'wink', 'surprised', 'love', 'cool', 'cute',
+];
+
+const getTimeExpression = (): MascotExpression => {
+  const h = new Date().getHours();
+  if (h >= 6 && h < 11) return 'happy';     // 早上
+  if (h >= 11 && h < 18) return 'default';  // 白天
+  if (h >= 18 && h < 22) return 'cool';     // 傍晚
+  return 'sleepy';                           // 晚上 / 半夜
+};
 
 const MESSAGES = [
   '嗨！我是歐古！',
@@ -60,18 +72,32 @@ function BlinkingCursor() {
 
 export function LCDScreen() {
   const text = useTypewriter();
+  const [expression, setExpression] = useState<MascotExpression>(getTimeExpression);
+
+  // 每分鐘檢查時段是否變了
+  useEffect(() => {
+    const id = setInterval(() => setExpression(getTimeExpression()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const handleTap = () => {
+    const others = TAP_EXPRESSIONS.filter((e) => e !== expression);
+    const pick = others[Math.floor(Math.random() * others.length)];
+    setExpression(pick);
+    setTimeout(() => setExpression(getTimeExpression()), 2800);
+  };
 
   return (
     <View style={styles.frame}>
-      <View style={styles.screen}>
+      <TouchableOpacity style={styles.screen} onPress={handleTap} activeOpacity={0.92}>
         <View style={styles.scanlines} pointerEvents="none" />
-        <Mascot size={56} style={styles.mascot} />
+        <Mascot expression={expression} size={56} style={styles.mascot} />
         <View style={styles.textRow}>
           <Text style={styles.prompt}>{'>'}</Text>
           <Text style={styles.text} numberOfLines={1}>{text}</Text>
           <BlinkingCursor />
         </View>
-      </View>
+      </TouchableOpacity>
       <View style={styles.brandRow}>
         <View style={styles.ledWrap}>
           <View style={styles.led} />

@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { Fire } from 'phosphor-react-native';
+import { Mascot } from '../../components/Mascot';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -125,10 +126,8 @@ export default function CalorieCalculator() {
         {result ? (
           <>
             <View style={styles.mainCard}>
-              <View style={styles.mainIconWrap}>
-                <Fire size={32} color="#c2456a" weight="fill" />
-              </View>
-              <Text style={styles.mainLabel}>每日所需 (TDEE)</Text>
+              <Mascot expression="happy" color="#c2456a" size={56} />
+              <Text style={[styles.mainLabel, { marginTop: 8 }]}>每日所需 (TDEE)</Text>
               <Text style={styles.mainValue}>
                 {fmt(result.tdee)}
                 <Text style={styles.kcal}> kcal</Text>
@@ -156,8 +155,8 @@ export default function CalorieCalculator() {
           </>
         ) : (
           <View style={styles.placeholderCard}>
-            <Fire size={32} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>填好上面資料就會出現結果</Text>
+            <Mascot expression="sleepy" color="#a3897a" size={48} />
+            <Text style={[styles.placeholderText, { marginTop: 4 }]}>填好上面資料就會出現結果</Text>
           </View>
         )}
       </ScrollView>

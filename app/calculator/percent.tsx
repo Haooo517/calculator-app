@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { Percent } from 'phosphor-react-native';
+import { Mascot } from '../../components/Mascot';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -134,10 +135,8 @@ export default function PercentCalculator() {
             </View>
           ) : (
             <View style={styles.resultCard}>
-              <View style={styles.resultIconWrap}>
-                <Percent size={32} color="#c4623a" weight="fill" />
-              </View>
-              <Text style={styles.resultFormula}>{result.formula}</Text>
+              <Mascot expression="happy" color="#c4623a" size={52} />
+              <Text style={[styles.resultFormula, { marginTop: 8 }]}>{result.formula}</Text>
               <Text style={styles.resultMain}>
                 {format(result.main!)}
                 {result.suffix && <Text style={styles.resultSuffix}>{result.suffix}</Text>}
@@ -146,8 +145,8 @@ export default function PercentCalculator() {
           )
         ) : (
           <View style={styles.placeholderCard}>
-            <Percent size={32} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>輸入數字就會出現結果</Text>
+            <Mascot expression="sleepy" color="#a3897a" size={48} />
+            <Text style={[styles.placeholderText, { marginTop: 4 }]}>輸入數字就會出現結果</Text>
           </View>
         )}
       </ScrollView>

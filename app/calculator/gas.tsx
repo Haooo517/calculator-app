@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { GasPump } from 'phosphor-react-native';
+import { Mascot } from '../../components/Mascot';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -67,10 +68,8 @@ export default function GasCalculator() {
         {result ? (
           <>
             <View style={styles.mainCard}>
-              <View style={styles.mainIconWrap}>
-                <GasPump size={32} color="#2c5fa8" weight="fill" />
-              </View>
-              <Text style={styles.mainLabel}>每公升可跑</Text>
+              <Mascot expression="cool" color="#2c5fa8" size={56} />
+              <Text style={[styles.mainLabel, { marginTop: 8 }]}>每公升可跑</Text>
               <Text style={styles.mainValue}>
                 {fmt(result.efficiency)}
                 <Text style={styles.unit}> km</Text>
@@ -93,8 +92,8 @@ export default function GasCalculator() {
           </>
         ) : (
           <View style={styles.placeholderCard}>
-            <GasPump size={32} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>填好距離跟加油量就會出現結果</Text>
+            <Mascot expression="sleepy" color="#a3897a" size={48} />
+            <Text style={[styles.placeholderText, { marginTop: 4 }]}>填好距離跟加油量就會出現結果</Text>
           </View>
         )}
       </ScrollView>
