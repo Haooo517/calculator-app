@@ -92,7 +92,7 @@ export function LCDScreen() {
   const handleTap = () => {
     clearPendingTimeouts();
 
-    // 睡著時被點：驚醒 → 搖頭環顧 → 慢慢閉眼睡回去
+    // 睡著時被點：驚醒 → 搖臉環顧 → 慢慢閉眼睡回去
     if (expression === 'sleepy') {
       setExpression('surprised');
 
@@ -100,17 +100,17 @@ export function LCDScreen() {
         setTimeout(() => {
           setExpression('default');
           Animated.sequence([
-            Animated.timing(shakeAnim, { toValue: -5, duration: 90, useNativeDriver: true }),
-            Animated.timing(shakeAnim, { toValue: 5, duration: 120, useNativeDriver: true }),
-            Animated.timing(shakeAnim, { toValue: -4, duration: 110, useNativeDriver: true }),
-            Animated.timing(shakeAnim, { toValue: 3, duration: 110, useNativeDriver: true }),
-            Animated.timing(shakeAnim, { toValue: 0, duration: 90, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: -5, duration: 220, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 5, duration: 280, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: -4, duration: 260, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 3, duration: 240, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
           ]).start();
-        }, 380)
+        }, 900)
       );
 
-      timeouts.current.push(setTimeout(() => setExpression('drowsy'), 1500));
-      timeouts.current.push(setTimeout(() => setExpression('sleepy'), 1950));
+      timeouts.current.push(setTimeout(() => setExpression('drowsy'), 3200));
+      timeouts.current.push(setTimeout(() => setExpression('sleepy'), 4200));
       return;
     }
 
@@ -127,9 +127,7 @@ export function LCDScreen() {
     <View style={styles.frame}>
       <TouchableOpacity style={styles.screen} onPress={handleTap} activeOpacity={0.92}>
         <View style={styles.scanlines} pointerEvents="none" />
-        <Animated.View style={[styles.mascot, { transform: [{ translateX: shakeAnim }] }]}>
-          <Mascot expression={expression} size={56} />
-        </Animated.View>
+        <Mascot expression={expression} size={56} style={styles.mascot} faceShake={shakeAnim} />
         <View style={styles.textRow}>
           <Text style={styles.prompt}>{'>'}</Text>
           <Text style={styles.text} numberOfLines={1}>{text}</Text>

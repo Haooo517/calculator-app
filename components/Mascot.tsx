@@ -6,6 +6,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  View,
   ViewStyle,
 } from 'react-native';
 
@@ -37,8 +38,8 @@ const FACES: Record<MascotExpression | 'blink', Face> = {
   happy: { hat: 'π', eyes: '^ U ^' },
   excited: { hat: 'π', eyes: '* o *' },
   thinking: { hat: '?', eyes: '· ~ o' },
-  sleepy: { hat: 'π', eyes: '— ~ —' },
-  drowsy: { hat: 'π', eyes: '— U —' },
+  sleepy: { hat: 'Z', eyes: '— ~ —' },
+  drowsy: { hat: 'z', eyes: '— U —' },
   wink: { hat: 'π', eyes: '· U ;' },
   surprised: { hat: '!', eyes: 'O o O' },
   love: { hat: 'π', eyes: '♥︎ u ♥︎' },
@@ -54,6 +55,7 @@ type Props = {
   bob?: boolean;
   autoBlink?: boolean;
   style?: StyleProp<ViewStyle>;
+  faceShake?: Animated.Value;
 };
 
 export function Mascot({
@@ -63,6 +65,7 @@ export function Mascot({
   bob = true,
   autoBlink = true,
   style,
+  faceShake,
 }: Props) {
   const [current, setCurrent] = useState<MascotExpression | 'blink'>(expression);
   const bobAnim = useRef(new Animated.Value(0)).current;
@@ -129,6 +132,9 @@ export function Mascot({
   const hatSize = size * 0.32;
   const faceSize = size * 0.42;
 
+  const monoStyle = { fontSize: faceSize, color, lineHeight: faceSize * 1.15 };
+  const faceTransform = faceShake ? [{ translateX: faceShake }] : undefined;
+
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY }] }, style]}>
       <Text
@@ -136,11 +142,13 @@ export function Mascot({
       >
         {face.hat}
       </Text>
-      <Text
-        style={[styles.mono, { fontSize: faceSize, color, lineHeight: faceSize * 1.15 }]}
-      >
-        {`\\[ ${face.eyes} ]/`}
-      </Text>
+      <View style={styles.faceRow}>
+        <Text style={[styles.mono, monoStyle]}>{'\\['}</Text>
+        <Animated.Text style={[styles.mono, monoStyle, faceTransform && { transform: faceTransform }]}>
+          {` ${face.eyes} `}
+        </Animated.Text>
+        <Text style={[styles.mono, monoStyle]}>{']/'}</Text>
+      </View>
     </Animated.View>
   );
 }
@@ -158,5 +166,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     letterSpacing: 0,
+  },
+  faceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
