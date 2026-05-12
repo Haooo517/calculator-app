@@ -22,21 +22,21 @@ export type MascotExpression =
   | 'cute'
   | 'sad';
 
-type Face = { antenna: string; eyes: string; mouth: string };
+type Face = { hat: string; eyes: string; mouth: string };
 
 const FACES: Record<MascotExpression | 'blink', Face> = {
-  default: { antenna: 'π', eyes: '·  ·', mouth: 'U' },
-  blink: { antenna: 'π', eyes: '−  −', mouth: 'U' },
-  happy: { antenna: 'π', eyes: '^  ^', mouth: 'U' },
-  excited: { antenna: 'π', eyes: '*  *', mouth: 'o' },
-  thinking: { antenna: 'π', eyes: '·  o', mouth: '~' },
-  sleepy: { antenna: 'π', eyes: '—  —', mouth: '~' },
-  wink: { antenna: 'π', eyes: '·  ;', mouth: 'U' },
-  surprised: { antenna: 'π', eyes: 'O  O', mouth: 'o' },
-  love: { antenna: 'π', eyes: '♥  ♥', mouth: 'u' },
-  cool: { antenna: 'π', eyes: '▬  ▬', mouth: 'u' },
-  cute: { antenna: 'π', eyes: '>  <', mouth: 'v' },
-  sad: { antenna: 'π', eyes: '·  ·', mouth: '∩' },
+  default: { hat: 'π', eyes: '·     ·', mouth: 'U' },
+  blink: { hat: 'π', eyes: '−     −', mouth: 'U' },
+  happy: { hat: 'π', eyes: '^     ^', mouth: 'U' },
+  excited: { hat: 'π', eyes: '*     *', mouth: 'o' },
+  thinking: { hat: 'π', eyes: '·     o', mouth: '~' },
+  sleepy: { hat: 'π', eyes: '—     —', mouth: '~' },
+  wink: { hat: 'π', eyes: '·     ;', mouth: 'U' },
+  surprised: { hat: 'π', eyes: 'O     O', mouth: 'o' },
+  love: { hat: 'π', eyes: '♥     ♥', mouth: 'u' },
+  cool: { hat: 'π', eyes: '▬     ▬', mouth: 'u' },
+  cute: { hat: 'π', eyes: '★     ★', mouth: 'v' },
+  sad: { hat: 'π', eyes: '·     ·', mouth: '∩' },
 };
 
 type Props = {
@@ -118,33 +118,24 @@ export function Mascot({
   const translateY = bobAnim.interpolate({ inputRange: [0, 1], outputRange: [0, -3] });
   const face = FACES[current];
 
-  const antennaSize = size * 0.32;
-  const eyeSize = size * 0.46;
+  const hatSize = size * 0.32;
+  const eyeSize = size * 0.42;
   const mouthSize = size * 0.4;
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY }] }, style]}>
       <Text
-        style={[
-          styles.line,
-          { fontSize: antennaSize, color, lineHeight: antennaSize * 1.05 },
-        ]}
+        style={[styles.line, { fontSize: hatSize, color, lineHeight: hatSize * 1.05 }]}
       >
-        {face.antenna}
+        {face.hat}
       </Text>
       <Text
-        style={[
-          styles.line,
-          { fontSize: eyeSize, color, lineHeight: eyeSize * 0.95, letterSpacing: -1 },
-        ]}
+        style={[styles.line, { fontSize: eyeSize, color, lineHeight: eyeSize * 1 }]}
       >
-        {`<${face.eyes}>`}
+        {`<  ${face.eyes}  >`}
       </Text>
       <Text
-        style={[
-          styles.line,
-          { fontSize: mouthSize, color, lineHeight: mouthSize * 1.05 },
-        ]}
+        style={[styles.line, { fontSize: mouthSize, color, lineHeight: mouthSize * 1.05 }]}
       >
         {face.mouth}
       </Text>
