@@ -3,11 +3,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Mascot } from './Mascot';
 
 const MESSAGES = [
-  '嗨！我是 Allcu',
-  '其實叫 Allculator',
+  '嗨！我是歐古！',
+  '我的英文名字是 Allcu 喔！',
   '今天想算什麼？',
-  '挑一個工具吧',
-  '什麼都能算給你',
+  '挑一個工具吧！',
+  '什麼都能算給你！',
 ];
 
 const TYPE_MS = 100;
