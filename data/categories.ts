@@ -125,8 +125,8 @@ export const CATEGORIES: Category[] = [
     title: '時間',
     nameEn: 'TIME',
     subtitle: '計時、工時、年資管理。',
-    bg: '#c4cfff',
-    accent: '#4a5fd6',
+    bg: '#d4d8e0',
+    accent: '#4a5868',
     calculators: [
       { id: 'countdown', title: '倒數計時', subtitle: '設定提醒', comingSoon: true },
       { id: 'pomodoro', title: '番茄鐘', subtitle: '專注計時', comingSoon: true },

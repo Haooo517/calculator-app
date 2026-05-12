@@ -8,6 +8,7 @@ import {
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
+import { BackButton } from '../components/BackButton';
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -27,7 +28,10 @@ export default function RootLayout() {
           headerStyle: { backgroundColor: '#fff8ed' },
           headerTintColor: '#2d2520',
           headerTitleStyle: { fontFamily: 'Fredoka_700Bold', fontSize: 20 },
+          headerTitleAlign: 'center',
           headerShadowVisible: false,
+          headerBackButtonDisplayMode: 'minimal',
+          headerLeft: ({ canGoBack }) => (canGoBack ? <BackButton /> : null),
           contentStyle: { backgroundColor: '#fff8ed' },
         }}
       />

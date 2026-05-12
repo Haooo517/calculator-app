@@ -1,8 +1,8 @@
 import { Stack, useRouter } from 'expo-router';
-import { CaretRight, Sparkle } from 'phosphor-react-native';
+import { CaretRight } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../components/CategoryIcon';
-import { Mascot } from '../components/Mascot';
+import { LCDScreen } from '../components/LCDScreen';
 import { CATEGORIES } from '../data/categories';
 
 export default function HomeScreen() {
@@ -12,18 +12,7 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={styles.brand}>
-        <Text style={styles.brandText}>Allcu</Text>
-        <Sparkle size={12} color="#c4623a" weight="fill" />
-      </View>
-      <View style={styles.header}>
-        <Mascot size={64} style={styles.mascot} />
-        <View style={styles.greetRow}>
-          <Text style={styles.greet}>嗨！我是 Allcu</Text>
-        </View>
-        <Text style={styles.title}>挑一個工具吧</Text>
-        <Text style={styles.subtitle}>有 {CATEGORIES.length} 種類型，全部都很好用</Text>
-      </View>
+      <LCDScreen />
 
       <View style={styles.list}>
         {CATEGORIES.map((cat) => (
@@ -63,54 +52,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 56,
     paddingBottom: 48,
-  },
-  brand: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    gap: 4,
-    paddingRight: 4,
-    marginBottom: 12,
-  },
-  brandText: {
-    fontFamily: 'Fredoka_700Bold',
-    fontSize: 14,
-    color: '#c4623a',
-    letterSpacing: 0.5,
-  },
-  header: {
-    paddingHorizontal: 4,
-    marginBottom: 28,
-    alignItems: 'center',
-  },
-  mascot: {
-    marginBottom: 10,
-  },
-  greetRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    marginBottom: 4,
-  },
-  greet: {
-    fontFamily: 'Fredoka_500Medium',
-    fontSize: 16,
-    color: '#8a7a6c',
-  },
-  title: {
-    fontFamily: 'Fredoka_700Bold',
-    fontSize: 38,
-    color: '#2d2520',
-    letterSpacing: -0.5,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontFamily: 'Fredoka_400Regular',
-    fontSize: 15,
-    color: '#8a7a6c',
-    textAlign: 'center',
   },
   list: {
     gap: 12,
