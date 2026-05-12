@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Mascot, MascotExpression } from './Mascot';
 
 const TAP_EXPRESSIONS: MascotExpression[] = [
@@ -73,6 +73,13 @@ function BlinkingCursor() {
 export function LCDScreen() {
   const text = useTypewriter();
   const [expression, setExpression] = useState<MascotExpression>(getTimeExpression);
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+  const timeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearPendingTimeouts = () => {
+    timeouts.current.forEach(clearTimeout);
+    timeouts.current = [];
+  };
 
   // 每分鐘檢查時段是否變了
   useEffect(() => {
@@ -80,18 +87,49 @@ export function LCDScreen() {
     return () => clearInterval(id);
   }, []);
 
+  useEffect(() => () => clearPendingTimeouts(), []);
+
   const handleTap = () => {
+    clearPendingTimeouts();
+
+    // 睡著時被點：驚醒 → 搖頭環顧 → 慢慢閉眼睡回去
+    if (expression === 'sleepy') {
+      setExpression('surprised');
+
+      timeouts.current.push(
+        setTimeout(() => {
+          setExpression('default');
+          Animated.sequence([
+            Animated.timing(shakeAnim, { toValue: -5, duration: 90, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 5, duration: 120, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: -4, duration: 110, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 3, duration: 110, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 0, duration: 90, useNativeDriver: true }),
+          ]).start();
+        }, 380)
+      );
+
+      timeouts.current.push(setTimeout(() => setExpression('drowsy'), 1500));
+      timeouts.current.push(setTimeout(() => setExpression('sleepy'), 1950));
+      return;
+    }
+
+    // 其他時候：換隨機表情，3 秒後回到時段表情
     const others = TAP_EXPRESSIONS.filter((e) => e !== expression);
     const pick = others[Math.floor(Math.random() * others.length)];
     setExpression(pick);
-    setTimeout(() => setExpression(getTimeExpression()), 2800);
+    timeouts.current.push(
+      setTimeout(() => setExpression(getTimeExpression()), 2800)
+    );
   };
 
   return (
     <View style={styles.frame}>
       <TouchableOpacity style={styles.screen} onPress={handleTap} activeOpacity={0.92}>
         <View style={styles.scanlines} pointerEvents="none" />
-        <Mascot expression={expression} size={56} style={styles.mascot} />
+        <Animated.View style={[styles.mascot, { transform: [{ translateX: shakeAnim }] }]}>
+          <Mascot expression={expression} size={56} />
+        </Animated.View>
         <View style={styles.textRow}>
           <Text style={styles.prompt}>{'>'}</Text>
           <Text style={styles.text} numberOfLines={1}>{text}</Text>
