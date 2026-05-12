@@ -2,18 +2,17 @@ import {
   Calculator,
   Flask,
   Heartbeat,
+  HouseLine,
   PokerChip,
   Wallet,
-  Wrench,
 } from 'phosphor-react-native';
 
 const ICONS = {
-  basic: Calculator,
+  general: HouseLine,
   science: Flask,
   wealth: Wallet,
   gambling: PokerChip,
   health: Heartbeat,
-  life: Wrench,
 } as const;
 
 type Props = {

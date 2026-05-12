@@ -18,16 +18,19 @@ export type Category = {
 
 export const CATEGORIES: Category[] = [
   {
-    id: 'basic',
-    title: '基本',
-    nameEn: 'BASIC',
-    subtitle: '日常加減乘除、百分比、日期。',
-    bg: '#ffd4ba',
-    accent: '#c4623a',
+    id: 'general',
+    title: '一般',
+    nameEn: 'GENERAL',
+    subtitle: '日常會用到的計算工具。',
+    bg: '#b8d8ff',
+    accent: '#2c5fa8',
     calculators: [
       { id: 'basic', title: '基本計算機', subtitle: '加減乘除', route: '/calculator/basic' },
       { id: 'percent', title: '百分比計算', subtitle: '折扣、稅金、增減', route: '/calculator/percent' },
       { id: 'date', title: '日期計算', subtitle: '日期間隔、推算', route: '/calculator/date' },
+      { id: 'age', title: '年齡計算', subtitle: '虛歲、實歲、活了幾天', route: '/calculator/age' },
+      { id: 'timezone', title: '時區換算', subtitle: '世界時間', route: '/calculator/timezone' },
+      { id: 'gas', title: '油耗計算', subtitle: '加油花費', route: '/calculator/gas' },
     ],
   },
   {
@@ -82,19 +85,6 @@ export const CATEGORIES: Category[] = [
       { id: 'bmi', title: 'BMI 計算', subtitle: '身體質量指數', route: '/calculator/bmi' },
       { id: 'calorie', title: '熱量計算', subtitle: '每日所需熱量', route: '/calculator/calorie' },
       { id: 'pregnancy', title: '預產期', subtitle: '懷孕週數', route: '/calculator/pregnancy' },
-    ],
-  },
-  {
-    id: 'life',
-    title: '生活',
-    nameEn: 'LIFESTYLE',
-    subtitle: '日常生活實用小工具。',
-    bg: '#b8d8ff',
-    accent: '#2c5fa8',
-    calculators: [
-      { id: 'age', title: '年齡計算', subtitle: '虛歲、實歲、活了幾天', route: '/calculator/age' },
-      { id: 'timezone', title: '時區換算', subtitle: '世界時間', route: '/calculator/timezone' },
-      { id: 'gas', title: '油耗計算', subtitle: '加油花費', route: '/calculator/gas' },
     ],
   },
 ];
