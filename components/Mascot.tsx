@@ -28,21 +28,21 @@ export type MascotExpression =
   | 'cute'
   | 'sad';
 
-type Face = { hat: string; eyes: string; mouth: string };
+type Face = { hat: string; eyes: string };
 
 const FACES: Record<MascotExpression | 'blink', Face> = {
-  default: { hat: 'π', eyes: '·     ·', mouth: 'U' },
-  blink: { hat: 'π', eyes: '−     −', mouth: 'U' },
-  happy: { hat: 'π', eyes: '^     ^', mouth: 'U' },
-  excited: { hat: 'π', eyes: '*     *', mouth: 'o' },
-  thinking: { hat: 'π', eyes: '·     o', mouth: '~' },
-  sleepy: { hat: 'π', eyes: '—     —', mouth: '~' },
-  wink: { hat: 'π', eyes: '·     ;', mouth: 'U' },
-  surprised: { hat: 'π', eyes: 'O     O', mouth: 'o' },
-  love: { hat: 'π', eyes: '♥     ♥', mouth: 'u' },
-  cool: { hat: 'π', eyes: '▬     ▬', mouth: 'u' },
-  cute: { hat: 'π', eyes: '★     ★', mouth: 'v' },
-  sad: { hat: 'π', eyes: '·     ·', mouth: '∩' },
+  default: { hat: 'π', eyes: '· U ·' },
+  blink: { hat: 'π', eyes: '− U −' },
+  happy: { hat: 'π', eyes: '^ U ^' },
+  excited: { hat: 'π', eyes: '* o *' },
+  thinking: { hat: 'π', eyes: '· ~ o' },
+  sleepy: { hat: 'π', eyes: '— ~ —' },
+  wink: { hat: 'π', eyes: '· U ;' },
+  surprised: { hat: 'π', eyes: 'O o O' },
+  love: { hat: 'π', eyes: '♥︎ u ♥︎' },
+  cool: { hat: 'π', eyes: '▬ u ▬' },
+  cute: { hat: 'π', eyes: '★︎ v ★︎' },
+  sad: { hat: 'π', eyes: '· ∩ ·' },
 };
 
 type Props = {
@@ -137,7 +137,7 @@ export function Mascot({
       <Text
         style={[styles.mono, { fontSize: faceSize, color, lineHeight: faceSize * 1.15 }]}
       >
-        {`╭  ${face.eyes}  ╮\n╰     ${face.mouth}     ╯`}
+        {`[ ${face.eyes} ]`}
       </Text>
     </Animated.View>
   );
