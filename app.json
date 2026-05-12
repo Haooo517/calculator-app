@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "calculator-app",
-    "slug": "calculator-app",
-    "scheme": "calculator-app",
+    "name": "Allcu",
+    "slug": "allcu",
+    "scheme": "allcu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fff8ed"
     },
     "ios": {
       "supportsTablet": true
