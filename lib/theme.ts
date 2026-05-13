@@ -49,6 +49,13 @@ export type Theme = {
   // optional decorative borders for card surfaces
   cardBorder?: { color: string; width: number };
   iconBoxBorder?: { color: string; width: number };
+  // gold-style gradient fill for iconBox
+  iconBoxGradient?: string[];
+  // mascot rendering variant
+  mascotVariant?: 'default' | 'cat';
+  // page background overlay pattern
+  bgPattern?: 'dots' | 'stripes';
+  bgPatternColor?: string;
 };
 
 export function categoryColors(
@@ -126,6 +133,8 @@ const candy: Theme = {
     display: 'PixelifySans_700Bold',
     mono: 'PixelifySans_700Bold',
   },
+  bgPattern: 'dots',
+  bgPatternColor: '#ff80a8',
   categoryPalette: {
     favorites: { bg: '#ffd4e8', accent: '#ff3a80' },
     life: { bg: '#c8e8ff', accent: '#2090ff' },
@@ -160,19 +169,19 @@ const chocolate: Theme = {
   lcdBorder: '#7a4a30',
   lcdText: '#f4d8a8',
   lcdLed: '#ffb050',
-  // 11 distinct coffee / chocolate / nut tones
+  // 全部統一深咖啡底色，靠 icon 色（不同烘焙度 / 堅果風味）區分
   categoryPalette: {
-    favorites: { bg: '#1a0f08', accent: '#3d2418' }, // espresso
-    life: { bg: '#6b4423', accent: '#f4e0c8' }, // latte
-    science: { bg: '#4a3a18', accent: '#d4b86a' }, // matcha mocha
-    wealth: { bg: '#7a4a18', accent: '#ffc878' }, // caramel
-    gambling: { bg: '#1a0e04', accent: '#a05828' }, // dark chocolate
-    health: { bg: '#5a2418', accent: '#e89878' }, // rose mocha
-    design: { bg: '#6a3a1a', accent: '#e8b070' }, // hazelnut
-    time: { bg: '#a07a4a', accent: '#fff0d8' }, // cappuccino
-    education: { bg: '#3a2010', accent: '#a88060' }, // walnut
-    cooking: { bg: '#5a2010', accent: '#c84830' }, // brick red
-    game: { bg: '#3a3020', accent: '#a0c878' }, // pistachio
+    favorites: { bg: '#3d2418', accent: '#3d2418' }, // 濃縮咖啡
+    life: { bg: '#3d2418', accent: '#f4e0c8' }, // 拿鐵奶白
+    science: { bg: '#3d2418', accent: '#d4b86a' }, // 抹茶摩卡
+    wealth: { bg: '#3d2418', accent: '#ffc878' }, // 焦糖
+    gambling: { bg: '#3d2418', accent: '#a05828' }, // 黑巧克力
+    health: { bg: '#3d2418', accent: '#e89878' }, // 玫瑰摩卡
+    design: { bg: '#3d2418', accent: '#e8b070' }, // 榛果
+    time: { bg: '#3d2418', accent: '#fff0d8' }, // 卡布奇諾
+    education: { bg: '#3d2418', accent: '#a88060' }, // 核桃
+    cooking: { bg: '#3d2418', accent: '#c84830' }, // 磚紅
+    game: { bg: '#3d2418', accent: '#a0c878' }, // 開心果
   },
 };
 
@@ -181,22 +190,40 @@ const cat: Theme = {
   name: '喵喵（亮）',
   isDark: false,
   isPremium: true,
-  bg: '#fef7e0',
+  bg: '#fef5e0',
   cardBg: '#fff',
-  inputBg: '#fdebc0',
-  text: '#4a3520',
-  textMuted: '#a89070',
-  hint: '#c8b090',
-  divider: '#f4e8c8',
+  inputBg: '#fce8c0',
+  text: '#5a3018',
+  textMuted: '#b08868',
+  hint: '#d4b890',
+  divider: '#f8e4c0',
   brandColor: '#e8843a',
   radius: 26,
-  lcdFrame: '#f4c870',
-  lcdScreen: '#fff0c8',
-  lcdBorder: '#d4a040',
-  lcdText: '#4a3520',
+  lcdFrame: '#ffb868',
+  lcdScreen: '#fff5d8',
+  lcdBorder: '#d49040',
+  lcdText: '#5a3018',
   lcdLed: '#ff8a30',
+  mascotVariant: 'cat',
+  bgPattern: 'dots',
+  bgPatternColor: '#e8a868',
+  // 不同毛色的貓
+  categoryPalette: {
+    favorites: { bg: '#ffe0b8', accent: '#d46820' }, // 橘貓
+    life: { bg: '#f5e8d0', accent: '#8a5828' }, // 虎斑
+    science: { bg: '#fff0d8', accent: '#a87838' }, // 米克斯
+    wealth: { bg: '#fff8c8', accent: '#c89020' }, // 金吉拉
+    gambling: { bg: '#e8d8e0', accent: '#704850' }, // 玳瑁
+    health: { bg: '#ffd8d0', accent: '#c85040' }, // 三花
+    design: { bg: '#ffc8a0', accent: '#a04018' }, // 暹羅
+    time: { bg: '#d8d8d8', accent: '#404040' }, // 黑貓
+    education: { bg: '#fff0e8', accent: '#a87060' }, // 賓士
+    cooking: { bg: '#ffe8d0', accent: '#b85820' }, // 起司貓
+    game: { bg: '#f0f0f0', accent: '#606060' }, // 灰貓
+  },
 };
 
+const HAOOO_CAT: CategoryPalette = { bg: '#ffd0b8', accent: '#ff7020' };
 const haooo: Theme = {
   id: 'haooo',
   name: 'Haooo（暗）',
@@ -218,21 +245,21 @@ const haooo: Theme = {
   lcdLed: '#ff5a10',
   lcdBrandColor: '#1a0a02',
   font: {
-    display: 'VT323_400Regular',
+    display: 'PixelifySans_700Bold',
   },
-  // 跟糖果一樣的繽紛配色，但在暗底之上更鮮明
+  // 全部分類用同一個 peach + 橘色（design 那組）
   categoryPalette: {
-    favorites: { bg: '#ffd4e8', accent: '#ff3a80' },
-    life: { bg: '#c8e8ff', accent: '#2090ff' },
-    science: { bg: '#c8ffd8', accent: '#10b850' },
-    wealth: { bg: '#fff0a0', accent: '#e8a010' },
-    gambling: { bg: '#f0c4ff', accent: '#9030d8' },
-    health: { bg: '#ffc4d0', accent: '#ff4070' },
-    design: { bg: '#ffd0b8', accent: '#ff7020' },
-    time: { bg: '#d0d0ff', accent: '#5050e8' },
-    education: { bg: '#ffe4b0', accent: '#d88010' },
-    cooking: { bg: '#ffd0c0', accent: '#ff4020' },
-    game: { bg: '#c4ffc4', accent: '#30b020' },
+    favorites: HAOOO_CAT,
+    life: HAOOO_CAT,
+    science: HAOOO_CAT,
+    wealth: HAOOO_CAT,
+    gambling: HAOOO_CAT,
+    health: HAOOO_CAT,
+    design: HAOOO_CAT,
+    time: HAOOO_CAT,
+    education: HAOOO_CAT,
+    cooking: HAOOO_CAT,
+    game: HAOOO_CAT,
   },
 };
 
@@ -313,47 +340,50 @@ const tech: Theme = {
   },
 };
 
-const MODERN_BG = '#1a1a1a';
+const MODERN_BG = '#0d0a05';
 const MODERN_GOLD = '#d4af37';
-const modernCat: CategoryPalette = { bg: MODERN_BG, accent: MODERN_GOLD };
+const MODERN_GOLD_LIGHT = '#fde08a';
+const MODERN_GOLD_DEEP = '#8a6810';
 const modern: Theme = {
   id: 'modern',
   name: '現代感（暗）',
   isDark: true,
   isPremium: true,
-  bg: '#0a0a0a',
+  bg: '#000000',
   cardBg: MODERN_BG,
-  inputBg: '#262626',
+  inputBg: '#1a140a',
   text: '#f5e8b8',
   textMuted: '#a89878',
   hint: '#5a5040',
-  divider: '#262626',
-  brandColor: MODERN_GOLD,
+  divider: '#3a2c14',
+  brandColor: MODERN_GOLD_LIGHT,
   radius: 6,
-  lcdFrame: MODERN_BG,
-  lcdScreen: '#0a0a0a',
+  lcdFrame: '#0a0805',
+  lcdScreen: '#000000',
   lcdBorder: MODERN_GOLD,
-  lcdText: '#f5d878',
+  lcdText: MODERN_GOLD_LIGHT,
   lcdLed: '#ffd060',
+  lcdBrandColor: MODERN_GOLD_LIGHT,
   font: {
     display: 'Fraunces_700Bold',
   },
-  // 全部分類用相同的黑底金色：靠圖示和名稱辨識，不靠顏色
+  // 全部分類都是同款黑金，靠圖示金漸層發光辨識
   categoryPalette: {
-    favorites: modernCat,
-    life: modernCat,
-    science: modernCat,
-    wealth: modernCat,
-    gambling: modernCat,
-    health: modernCat,
-    design: modernCat,
-    time: modernCat,
-    education: modernCat,
-    cooking: modernCat,
-    game: modernCat,
+    favorites: { bg: MODERN_BG, accent: MODERN_GOLD },
+    life: { bg: MODERN_BG, accent: MODERN_GOLD },
+    science: { bg: MODERN_BG, accent: MODERN_GOLD },
+    wealth: { bg: MODERN_BG, accent: MODERN_GOLD },
+    gambling: { bg: MODERN_BG, accent: MODERN_GOLD },
+    health: { bg: MODERN_BG, accent: MODERN_GOLD },
+    design: { bg: MODERN_BG, accent: MODERN_GOLD },
+    time: { bg: MODERN_BG, accent: MODERN_GOLD },
+    education: { bg: MODERN_BG, accent: MODERN_GOLD },
+    cooking: { bg: MODERN_BG, accent: MODERN_GOLD },
+    game: { bg: MODERN_BG, accent: MODERN_GOLD },
   },
-  cardBorder: { color: MODERN_GOLD, width: 1 },
-  iconBoxBorder: { color: MODERN_GOLD, width: 1.5 },
+  cardBorder: { color: MODERN_GOLD, width: 1.5 },
+  iconBoxBorder: { color: MODERN_GOLD_LIGHT, width: 1 },
+  iconBoxGradient: [MODERN_GOLD_LIGHT, MODERN_GOLD, MODERN_GOLD_DEEP],
 };
 
 const THEMES_RECORD: Record<ThemeId, Theme> = {

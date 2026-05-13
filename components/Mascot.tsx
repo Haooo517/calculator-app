@@ -54,6 +54,8 @@ const WAVE_FRAMES = ['|', '/', '_', '/'];
 
 const MONO_FONT = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
+export type MascotVariant = 'default' | 'cat';
+
 type Props = {
   expression?: MascotExpression;
   size?: number;
@@ -62,6 +64,7 @@ type Props = {
   fontFamily?: string;
   bob?: boolean;
   autoBlink?: boolean;
+  variant?: MascotVariant;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -72,6 +75,7 @@ export function Mascot({
   fontFamily,
   bob = true,
   autoBlink = true,
+  variant = 'default',
   style,
 }: Props) {
   const [blinking, setBlinking] = useState(false);
@@ -173,7 +177,9 @@ export function Mascot({
       : face.eyes;
 
   const rh = expression === 'happy' ? WAVE_FRAMES[waveFrame] : face.rightHand;
-  const fullLine = `${face.leftHand}[ ${eyesStr} ]${rh}`;
+  const leftBracket = variant === 'cat' ? '(' : '[';
+  const rightBracket = variant === 'cat' ? ')' : ']';
+  const fullLine = `${face.leftHand}${leftBracket} ${eyesStr} ${rightBracket}${rh}`;
 
   const hatSize = size * 0.32;
   const faceSize = size * 0.42;

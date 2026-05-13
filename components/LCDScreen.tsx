@@ -233,7 +233,12 @@ export function LCDScreen() {
             },
           ]}
         >
-          <Mascot expression={expression} size={56} color={theme.lcdText} />
+          <Mascot
+            expression={expression}
+            size={56}
+            color={theme.lcdText}
+            variant={theme.mascotVariant}
+          />
         </Animated.View>
         <Text
           style={[styles.textBlock, { color: theme.lcdText }]}

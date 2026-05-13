@@ -1,6 +1,8 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { Stack, useRouter } from 'expo-router';
 import { CaretRight, GearSix } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackgroundPattern } from '../components/BackgroundPattern';
 import { CategoryIcon } from '../components/CategoryIcon';
 import { LCDScreen } from '../components/LCDScreen';
 import { Onboarding } from '../components/Onboarding';
@@ -15,10 +17,11 @@ export default function HomeScreen() {
   const go = (id: string) => router.push(`/category/${id}` as any);
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.bg }]}
-      contentContainerStyle={styles.content}
-    >
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
+      {theme.bgPattern && (
+        <BackgroundPattern type={theme.bgPattern} color={theme.bgPatternColor ?? theme.hint} />
+      )}
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
       <Stack.Screen options={{ headerShown: false }} />
       <Onboarding />
 
@@ -51,21 +54,39 @@ export default function HomeScreen() {
               onPress={() => go(cat.id)}
               activeOpacity={0.8}
             >
-              <View
-                style={[
-                  styles.iconBox,
-                  {
-                    backgroundColor: theme.iconBoxBorder ? 'transparent' : colors.bg,
-                    borderRadius: theme.radius * 0.85,
-                  },
-                  theme.iconBoxBorder && {
-                    borderWidth: theme.iconBoxBorder.width,
-                    borderColor: theme.iconBoxBorder.color,
-                  },
-                ]}
-              >
-                <CategoryIcon id={cat.id} size={28} color={colors.accent} weight="fill" />
-              </View>
+              {theme.iconBoxGradient ? (
+                <LinearGradient
+                  colors={theme.iconBoxGradient as [string, string, ...string[]]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={[
+                    styles.iconBox,
+                    { borderRadius: theme.radius * 0.85 },
+                    theme.iconBoxBorder && {
+                      borderWidth: theme.iconBoxBorder.width,
+                      borderColor: theme.iconBoxBorder.color,
+                    },
+                  ]}
+                >
+                  <CategoryIcon id={cat.id} size={28} color="#1a1410" weight="fill" />
+                </LinearGradient>
+              ) : (
+                <View
+                  style={[
+                    styles.iconBox,
+                    {
+                      backgroundColor: theme.iconBoxBorder ? 'transparent' : colors.bg,
+                      borderRadius: theme.radius * 0.85,
+                    },
+                    theme.iconBoxBorder && {
+                      borderWidth: theme.iconBoxBorder.width,
+                      borderColor: theme.iconBoxBorder.color,
+                    },
+                  ]}
+                >
+                  <CategoryIcon id={cat.id} size={28} color={colors.accent} weight="fill" />
+                </View>
+              )}
 
               <View style={styles.rowMid}>
                 <Text style={[styles.rowTitle, { color: theme.text }]}>{cat.title}</Text>
@@ -93,12 +114,16 @@ export default function HomeScreen() {
           );
         })}
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scroll: {
     flex: 1,
   },
   content: {

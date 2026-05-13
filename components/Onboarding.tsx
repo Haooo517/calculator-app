@@ -110,7 +110,7 @@ export function Onboarding() {
           <View style={styles.illustration}>
             {current.kind === 'intro' || current.kind === 'outro' ? (
               <View style={[styles.illustrationBg, { backgroundColor: theme.inputBg }]}>
-                <Mascot expression={current.expression} size={72} color={theme.text} />
+                <Mascot expression={current.expression} size={72} color={theme.text} variant={theme.mascotVariant} />
               </View>
             ) : current.kind === 'lcd' ? (
               <Animated.View style={{ transform: [{ scale: lcdZoom }] }}>
@@ -170,7 +170,7 @@ function LcdPreview() {
       <View
         style={[styles.lcdScreen, { backgroundColor: theme.lcdScreen, borderColor: theme.lcdBorder }]}
       >
-        <Mascot expression="default" size={48} color={theme.lcdText} />
+        <Mascot expression="default" size={48} color={theme.lcdText} variant={theme.mascotVariant} />
         <Text
           style={[
             styles.lcdText,
@@ -207,7 +207,7 @@ function TapDemo({ expression, onTap }: { expression: MascotExpression; onTap: (
     <View style={[styles.illustrationBg, { backgroundColor: theme.inputBg }]}>
       <Animated.View style={{ transform: [{ scale: pulse }] }}>
         <TouchableOpacity activeOpacity={0.7} onPress={onTap}>
-          <Mascot expression={expression} size={72} color={theme.text} />
+          <Mascot expression={expression} size={72} color={theme.text} variant={theme.mascotVariant} />
         </TouchableOpacity>
       </Animated.View>
       <View style={styles.tapHint}>
