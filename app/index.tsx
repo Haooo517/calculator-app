@@ -1,26 +1,42 @@
 import { Stack, useRouter } from 'expo-router';
-import { CaretRight } from 'phosphor-react-native';
+import { CaretRight, GearSix } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../components/CategoryIcon';
 import { LCDScreen } from '../components/LCDScreen';
 import { CATEGORIES } from '../data/categories';
 import { usePins } from '../lib/pins';
+import { useTheme } from '../lib/theme';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
   const { pins } = usePins();
   const go = (id: string) => router.push(`/category/${id}` as any);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.bg }]}
+      contentContainerStyle={styles.content}
+    >
       <Stack.Screen options={{ headerShown: false }} />
+
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={[styles.iconBtn, { backgroundColor: theme.cardBg }]}
+          onPress={() => router.push('/settings' as any)}
+          activeOpacity={0.7}
+        >
+          <GearSix size={20} color={theme.text} weight="fill" />
+        </TouchableOpacity>
+      </View>
+
       <LCDScreen />
 
       <View style={styles.list}>
         {CATEGORIES.map((cat) => (
           <TouchableOpacity
             key={cat.id}
-            style={styles.row}
+            style={[styles.row, { backgroundColor: theme.cardBg }]}
             onPress={() => go(cat.id)}
             activeOpacity={0.8}
           >
@@ -29,17 +45,17 @@ export default function HomeScreen() {
             </View>
 
             <View style={styles.rowMid}>
-              <Text style={styles.rowTitle}>{cat.title}</Text>
+              <Text style={[styles.rowTitle, { color: theme.text }]}>{cat.title}</Text>
               <View style={styles.rowMetaWrap}>
                 <Text style={[styles.rowMetaEn, { color: cat.accent }]}>{cat.nameEn}</Text>
                 <View style={[styles.dot, { backgroundColor: cat.accent }]} />
-                <Text style={styles.rowMetaCount}>
+                <Text style={[styles.rowMetaCount, { color: theme.textMuted }]}>
                   {cat.id === 'favorites' ? pins.size : cat.calculators.length} 個工具
                 </Text>
               </View>
             </View>
 
-            <CaretRight size={20} color="#a3897a" weight="bold" />
+            <CaretRight size={20} color={theme.hint} weight="bold" />
           </TouchableOpacity>
         ))}
       </View>
@@ -50,12 +66,28 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff8ed',
   },
   content: {
     padding: 20,
     paddingTop: 56,
     paddingBottom: 48,
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 10,
+  },
+  iconBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#a3897a',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   list: {
     gap: 12,
@@ -63,7 +95,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     borderRadius: 24,
     padding: 16,
     gap: 16,
@@ -86,7 +117,6 @@ const styles = StyleSheet.create({
   rowTitle: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 22,
-    color: '#2d2520',
     letterSpacing: -0.3,
     marginBottom: 3,
   },
@@ -109,6 +139,5 @@ const styles = StyleSheet.create({
   rowMetaCount: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 13,
-    color: '#8a7a6c',
   },
 });

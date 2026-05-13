@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '../lib/theme';
 import { Mascot, MascotExpression } from './Mascot';
 
 const TAP_EXPRESSIONS: MascotExpression[] = [
@@ -77,16 +78,17 @@ function useTypewriter() {
   return text;
 }
 
-function BlinkingCursor() {
+function BlinkingCursor({ color }: { color: string }) {
   const [visible, setVisible] = useState(true);
   useEffect(() => {
     const id = setInterval(() => setVisible((v) => !v), 500);
     return () => clearInterval(id);
   }, []);
-  return <Text style={[styles.cursor, { opacity: visible ? 1 : 0 }]}>▎</Text>;
+  return <Text style={[styles.cursor, { color, opacity: visible ? 1 : 0 }]}>▎</Text>;
 }
 
 export function LCDScreen() {
+  const { theme } = useTheme();
   const text = useTypewriter();
   const [expression, setExpression] = useState<MascotExpression>(getTimeExpression);
   const shakeAnim = useRef(new Animated.Value(0)).current;
@@ -140,22 +142,32 @@ export function LCDScreen() {
   };
 
   return (
-    <View style={styles.frame}>
-      <TouchableOpacity style={styles.screen} onPress={handleTap} activeOpacity={0.92}>
+    <View style={[styles.frame, { backgroundColor: theme.lcdFrame }]}>
+      <TouchableOpacity
+        style={[styles.screen, { backgroundColor: theme.lcdScreen, borderColor: theme.lcdBorder }]}
+        onPress={handleTap}
+        activeOpacity={0.92}
+      >
         <View style={styles.scanlines} pointerEvents="none" />
-        <Mascot expression={expression} size={56} style={styles.mascot} faceShake={shakeAnim} />
+        <Mascot
+          expression={expression}
+          size={56}
+          style={styles.mascot}
+          faceShake={shakeAnim}
+          color={theme.lcdText}
+        />
         <View style={styles.textRow}>
-          <Text style={styles.prompt}>{'>'}</Text>
-          <Text style={styles.text} numberOfLines={1}>{text}</Text>
-          <BlinkingCursor />
+          <Text style={[styles.prompt, { color: theme.lcdText }]}>{'>'}</Text>
+          <Text style={[styles.text, { color: theme.lcdText }]} numberOfLines={1}>{text}</Text>
+          <BlinkingCursor color={theme.lcdText} />
         </View>
       </TouchableOpacity>
       <View style={styles.brandRow}>
         <View style={styles.ledWrap}>
-          <View style={styles.led} />
-          <Text style={styles.brand}>ALLCULATOR</Text>
+          <View style={[styles.led, { backgroundColor: theme.lcdLed, shadowColor: theme.lcdLed }]} />
+          <Text style={[styles.brand, { color: theme.brandColor }]}>ALLCULATOR</Text>
         </View>
-        <Text style={styles.sparkle}>by haooo</Text>
+        <Text style={[styles.sparkle, { color: theme.brandColor }]}>by haooo</Text>
       </View>
     </View>
   );

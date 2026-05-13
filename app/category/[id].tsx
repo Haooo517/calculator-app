@@ -4,18 +4,20 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { CategoryIcon } from '../../components/CategoryIcon';
 import { Calculator, getCategoryById } from '../../data/categories';
 import { getPinnedCalculators, usePins } from '../../lib/pins';
+import { useTheme } from '../../lib/theme';
 
 export default function CategoryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { theme } = useTheme();
   const category = getCategoryById(id);
   const { pins, toggle, isPinned } = usePins();
 
   if (!category) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.bg }]}>
         <Stack.Screen options={{ title: '' }} />
-        <Text style={styles.notFound}>找不到這個分類</Text>
+        <Text style={[styles.notFound, { color: theme.text }]}>找不到這個分類</Text>
       </View>
     );
   }
@@ -26,7 +28,10 @@ export default function CategoryScreen() {
     : category.calculators;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.bg }]}
+      contentContainerStyle={styles.content}
+    >
       <Stack.Screen options={{ title: category.title }} />
 
       <View style={[styles.hero, { backgroundColor: category.bg }]}>
@@ -38,10 +43,10 @@ export default function CategoryScreen() {
       </View>
 
       {calculators.length === 0 ? (
-        <View style={styles.empty}>
-          <PushPin size={36} color="#c8b8a8" weight="duotone" />
-          <Text style={styles.emptyTitle}>還沒釘選任何工具</Text>
-          <Text style={styles.emptySub}>到其他分類點 📌 圖示就會出現在這裡</Text>
+        <View style={[styles.empty, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+          <PushPin size={36} color={theme.hint} weight="duotone" />
+          <Text style={[styles.emptyTitle, { color: theme.text }]}>還沒釘選任何工具</Text>
+          <Text style={[styles.emptySub, { color: theme.textMuted }]}>到其他分類點 📌 圖示就會出現在這裡</Text>
         </View>
       ) : (
         <View style={styles.list}>
@@ -50,14 +55,14 @@ export default function CategoryScreen() {
             return (
               <TouchableOpacity
                 key={calc.id}
-                style={[styles.row, calc.comingSoon && styles.rowDisabled]}
+                style={[styles.row, { backgroundColor: theme.cardBg }, calc.comingSoon && styles.rowDisabled]}
                 onPress={() => calc.route && router.push(calc.route as any)}
                 activeOpacity={calc.comingSoon ? 1 : 0.75}
               >
                 <View style={[styles.rowDot, { backgroundColor: category.bg }]} />
                 <View style={styles.rowText}>
-                  <Text style={styles.rowTitle}>{calc.title}</Text>
-                  <Text style={styles.rowSub}>{calc.subtitle}</Text>
+                  <Text style={[styles.rowTitle, { color: theme.text }]}>{calc.title}</Text>
+                  <Text style={[styles.rowSub, { color: theme.textMuted }]}>{calc.subtitle}</Text>
                 </View>
                 {!calc.comingSoon && (
                   <TouchableOpacity
@@ -67,13 +72,13 @@ export default function CategoryScreen() {
                   >
                     <PushPin
                       size={18}
-                      color={pinned ? category.accent : '#c8b8a8'}
+                      color={pinned ? category.accent : theme.hint}
                       weight={pinned ? 'fill' : 'regular'}
                     />
                   </TouchableOpacity>
                 )}
                 {calc.comingSoon ? (
-                  <Lock size={18} color="#a3897a" weight="duotone" />
+                  <Lock size={18} color={theme.hint} weight="duotone" />
                 ) : (
                   <CaretRight size={20} color={category.accent} weight="bold" />
                 )}
@@ -89,7 +94,6 @@ export default function CategoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff8ed',
   },
   content: {
     padding: 20,
@@ -135,7 +139,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     paddingVertical: 18,
     paddingHorizontal: 18,
     borderRadius: 20,
@@ -160,41 +163,34 @@ const styles = StyleSheet.create({
   rowTitle: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 17,
-    color: '#2d2520',
     marginBottom: 2,
   },
   rowSub: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 13,
-    color: '#8a7a6c',
   },
   pinBtn: {
     padding: 4,
   },
   empty: {
-    backgroundColor: '#fff',
     borderRadius: 24,
     padding: 36,
     alignItems: 'center',
     gap: 10,
     borderWidth: 2,
-    borderColor: '#f1e3d0',
     borderStyle: 'dashed',
   },
   emptyTitle: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 16,
-    color: '#2d2520',
     marginTop: 4,
   },
   emptySub: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 13,
-    color: '#8a7a6c',
     textAlign: 'center',
   },
   notFound: {
-    color: '#2d2520',
     textAlign: 'center',
     marginTop: 100,
     fontSize: 18,
