@@ -25,7 +25,7 @@ const STEPS: Step[] = [
   { text: '上面有 11 種類型分類，點進去就能用對應的計算機。', expression: 'default' },
   { text: '常用的工具可以「釘選」，會出現在最上面的釘選分類。', expression: 'wink' },
   { text: '想換主題或調整設定，點右上角齒輪。', expression: 'cool' },
-  { text: '無聊時可以戳我幾下喔～', expression: 'cute' },
+  { text: '無聊時可以戳我幾下喔～', expression: 'wink' },
 ];
 
 export function Onboarding() {

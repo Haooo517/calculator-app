@@ -8,7 +8,7 @@ export type ThemeId =
   | 'candy'
   | 'chocolate'
   | 'cat'
-  | 'developer'
+  | 'haooo'
   | 'scifi'
   | 'modern';
 
@@ -136,24 +136,24 @@ const cat: Theme = {
   lcdLed: '#ff8a30',
 };
 
-const developer: Theme = {
-  id: 'developer',
-  name: '開發者（暗）',
+const haooo: Theme = {
+  id: 'haooo',
+  name: 'Haooo（暗）',
   isDark: true,
   isPremium: true,
-  bg: '#1e1e1e',
-  cardBg: '#2d2d2d',
-  inputBg: '#3a3a3a',
-  text: '#d4d4d4',
-  textMuted: '#888888',
-  hint: '#666666',
-  divider: '#3a3a3a',
-  brandColor: '#4ec9b0',
-  lcdFrame: '#252525',
-  lcdScreen: '#1a1a1a',
-  lcdBorder: '#3a3a3a',
-  lcdText: '#4ec9b0',
-  lcdLed: '#4ec9b0',
+  bg: '#150b05',
+  cardBg: '#241408',
+  inputBg: '#33200e',
+  text: '#fff0d8',
+  textMuted: '#c89868',
+  hint: '#7a5840',
+  divider: '#3a2418',
+  brandColor: '#ff7a30',
+  lcdFrame: '#ff7a30',
+  lcdScreen: '#150b05',
+  lcdBorder: '#ff7a30',
+  lcdText: '#ffaa50',
+  lcdLed: '#ff5a10',
 };
 
 const scifi: Theme = {
@@ -202,7 +202,7 @@ const THEMES_RECORD: Record<ThemeId, Theme> = {
   candy,
   chocolate,
   cat,
-  developer,
+  haooo,
   scifi,
   modern,
 };

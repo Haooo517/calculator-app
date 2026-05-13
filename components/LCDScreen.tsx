@@ -4,7 +4,7 @@ import { useTheme } from '../lib/theme';
 import { Mascot, MascotExpression } from './Mascot';
 
 const TAP_EXPRESSIONS: MascotExpression[] = [
-  'happy', 'excited', 'thinking', 'wink', 'surprised', 'love', 'cool', 'cute',
+  'happy', 'excited', 'thinking', 'wink', 'surprised', 'love', 'cool',
 ];
 
 const getTimeExpression = (): MascotExpression => {
@@ -16,33 +16,21 @@ const getTimeExpression = (): MascotExpression => {
 };
 
 const MESSAGES = [
-  '嗨！我是歐古！',
-  '我的英文是 Allcu 喔！',
-  '今天想算什麼？',
-  '挑一個工具吧！',
-  '什麼都能算給你！',
-  '圈圈圓圓圈圈～',
-  '相關計算都需要我～',
-  '除了算命之外都會！',
-  '我是相信機率的。',
-  'allcu = all + calc',
-  '其實全名是 allculator',
-  '我的眼睛不是小數點！',
-  '不然就掉到地上了…',
-  '我的帽子是圓周率 π',
-  '但我才不是 π 郎！',
-  '冬天我躲在角落，',
-  '那裡剛好有 90 度。',
-  '世界上有 10 種人，',
-  '懂二進位的和不懂的。',
-  '一寺一壺酒，',
-  '二柳捂衫舞…',
+  '圈圈圓圓圈圈～相關計算都需要我～頭上的小帽帽～',
+  '我什麼都會算！除了算命以外…因為歐古是相信機率的！',
+  '冷知識：allculator 就是把 all 和 calculator 合起來喔！',
+  '冷知識：歐古的英文名是 allcu，也就是 allculator 的簡稱喔！',
+  '我的眼睛才不是小數點！不然他們就掉到地上了…',
+  '《山巔》：「一寺一壺酒，二柳捂衫舞，把酒棄舊衫，而山百世留」',
+  '冷知識：歐古戴的帽子是圓周率 π，但歐古不是個 π 郎喔！',
+  '我冬天的時候喜歡待在角落，因為那裡有 90 度。',
+  '世界上總共有 10 種人，一種懂 2 進位，另一種不懂。',
 ];
 
-const TYPE_MS = 100;
-const ERASE_MS = 45;
-const HOLD_MS = 1400;
-const PRE_NEXT_MS = 280;
+const TYPE_MS = 70;
+const ERASE_MS = 25;
+const HOLD_MS = 2000;
+const PRE_NEXT_MS = 320;
 
 function useTypewriter() {
   const [text, setText] = useState('');
@@ -78,18 +66,19 @@ function useTypewriter() {
   return text;
 }
 
-function BlinkingCursor({ color }: { color: string }) {
+function useBlinkingCursor() {
   const [visible, setVisible] = useState(true);
   useEffect(() => {
     const id = setInterval(() => setVisible((v) => !v), 500);
     return () => clearInterval(id);
   }, []);
-  return <Text style={[styles.cursor, { color, opacity: visible ? 1 : 0 }]}>▎</Text>;
+  return visible;
 }
 
 export function LCDScreen() {
   const { theme } = useTheme();
   const text = useTypewriter();
+  const cursorVisible = useBlinkingCursor();
   const [expression, setExpression] = useState<MascotExpression>(getTimeExpression);
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const timeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -156,11 +145,14 @@ export function LCDScreen() {
           faceShake={shakeAnim}
           color={theme.lcdText}
         />
-        <View style={styles.textRow}>
-          <Text style={[styles.prompt, { color: theme.lcdText }]}>{'>'}</Text>
-          <Text style={[styles.text, { color: theme.lcdText }]} numberOfLines={1}>{text}</Text>
-          <BlinkingCursor color={theme.lcdText} />
-        </View>
+        <Text
+          style={[styles.textBlock, { color: theme.lcdText }]}
+          numberOfLines={3}
+        >
+          <Text style={styles.prompt}>{'> '}</Text>
+          {text}
+          <Text style={[styles.cursor, { opacity: cursorVisible ? 1 : 0 }]}>▎</Text>
+        </Text>
       </TouchableOpacity>
       <View style={styles.brandRow}>
         <View style={styles.ledWrap}>
@@ -191,7 +183,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 18,
     paddingBottom: 16,
-    minHeight: 152,
+    minHeight: 200,
     borderWidth: 2,
     borderColor: '#aabd8a',
     overflow: 'hidden',
@@ -209,28 +201,20 @@ const styles = StyleSheet.create({
   mascot: {
     marginBottom: 10,
   },
-  textRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
+  textBlock: {
+    fontFamily: 'Fredoka_600SemiBold',
+    fontSize: 16,
+    letterSpacing: 0.3,
+    lineHeight: 22,
+    textAlign: 'center',
     alignSelf: 'stretch',
-    justifyContent: 'center',
   },
   prompt: {
     fontFamily: 'Fredoka_700Bold',
-    fontSize: 16,
-    color: '#3d4f25',
-  },
-  text: {
-    fontFamily: 'Fredoka_600SemiBold',
-    fontSize: 17,
-    color: '#2d3d20',
-    letterSpacing: 0.5,
   },
   cursor: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 18,
-    color: '#2d3d20',
   },
   brandRow: {
     flexDirection: 'row',

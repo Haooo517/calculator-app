@@ -24,7 +24,7 @@ export default function ThemesScreen() {
             key={t.id}
             target={t}
             active={t.id === themeId}
-            locked={t.isPremium}
+            locked={t.isPremium && !__DEV__}
             onSelect={() => setThemeId(t.id)}
           />
         ))}

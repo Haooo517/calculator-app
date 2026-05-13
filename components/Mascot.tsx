@@ -27,7 +27,6 @@ export type MascotExpression =
   | 'surprised'
   | 'love'
   | 'cool'
-  | 'cute'
   | 'sad';
 
 type Face = { hat: string; eyes: string };
@@ -44,7 +43,6 @@ const FACES: Record<MascotExpression | 'blink', Face> = {
   surprised: { hat: '!', eyes: 'O o O' },
   love: { hat: 'π', eyes: '♥︎ u ♥︎' },
   cool: { hat: 'π', eyes: '▬ u ▬' },
-  cute: { hat: 'π', eyes: '★︎ v ★︎' },
   sad: { hat: 'π', eyes: '· ∩ ·' },
 };
 
