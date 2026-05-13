@@ -40,11 +40,30 @@ export default function HomeScreen() {
           return (
             <TouchableOpacity
               key={cat.id}
-              style={[styles.row, { backgroundColor: theme.cardBg, borderRadius: theme.radius }]}
+              style={[
+                styles.row,
+                { backgroundColor: theme.cardBg, borderRadius: theme.radius },
+                theme.cardBorder && {
+                  borderWidth: theme.cardBorder.width,
+                  borderColor: theme.cardBorder.color,
+                },
+              ]}
               onPress={() => go(cat.id)}
               activeOpacity={0.8}
             >
-              <View style={[styles.iconBox, { backgroundColor: colors.bg, borderRadius: theme.radius * 0.85 }]}>
+              <View
+                style={[
+                  styles.iconBox,
+                  {
+                    backgroundColor: theme.iconBoxBorder ? 'transparent' : colors.bg,
+                    borderRadius: theme.radius * 0.85,
+                  },
+                  theme.iconBoxBorder && {
+                    borderWidth: theme.iconBoxBorder.width,
+                    borderColor: theme.iconBoxBorder.color,
+                  },
+                ]}
+              >
                 <CategoryIcon id={cat.id} size={28} color={colors.accent} weight="fill" />
               </View>
 

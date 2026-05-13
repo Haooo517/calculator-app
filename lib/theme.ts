@@ -46,6 +46,9 @@ export type Theme = {
     display?: string; // big headlines / brand
     mono?: string;    // monospace used by mascot
   };
+  // optional decorative borders for card surfaces
+  cardBorder?: { color: string; width: number };
+  iconBoxBorder?: { color: string; width: number };
 };
 
 export function categoryColors(
@@ -199,37 +202,37 @@ const haooo: Theme = {
   name: 'Haooo（暗）',
   isDark: true,
   isPremium: true,
-  bg: '#150b05',
-  cardBg: '#241408',
-  inputBg: '#33200e',
+  bg: '#050505',
+  cardBg: '#151012',
+  inputBg: '#28201a',
   text: '#fff0d8',
   textMuted: '#c89868',
   hint: '#7a5840',
-  divider: '#3a2418',
+  divider: '#2a1f18',
   brandColor: '#ff7a30',
   radius: 14,
   lcdFrame: '#ff7a30',
-  lcdScreen: '#150b05',
+  lcdScreen: '#080604',
   lcdBorder: '#ff7a30',
   lcdText: '#ffaa50',
   lcdLed: '#ff5a10',
   lcdBrandColor: '#1a0a02',
   font: {
-    display: 'PressStart2P_400Regular',
-    mono: 'PressStart2P_400Regular',
+    display: 'VT323_400Regular',
   },
+  // 跟糖果一樣的繽紛配色，但在暗底之上更鮮明
   categoryPalette: {
-    favorites: { bg: '#3d1f0a', accent: '#ff7a30' },
-    life: { bg: '#2a1810', accent: '#ff9050' },
-    science: { bg: '#332010', accent: '#ffaa30' },
-    wealth: { bg: '#3a2810', accent: '#ffc060' },
-    gambling: { bg: '#3a1a12', accent: '#ff5a3a' },
-    health: { bg: '#3a1c14', accent: '#ff7050' },
-    design: { bg: '#3a2418', accent: '#ff8a4a' },
-    time: { bg: '#2a1d12', accent: '#ffa060' },
-    education: { bg: '#3a281a', accent: '#ffb050' },
-    cooking: { bg: '#3a1d10', accent: '#ff6030' },
-    game: { bg: '#332810', accent: '#ffaa50' },
+    favorites: { bg: '#ffd4e8', accent: '#ff3a80' },
+    life: { bg: '#c8e8ff', accent: '#2090ff' },
+    science: { bg: '#c8ffd8', accent: '#10b850' },
+    wealth: { bg: '#fff0a0', accent: '#e8a010' },
+    gambling: { bg: '#f0c4ff', accent: '#9030d8' },
+    health: { bg: '#ffc4d0', accent: '#ff4070' },
+    design: { bg: '#ffd0b8', accent: '#ff7020' },
+    time: { bg: '#d0d0ff', accent: '#5050e8' },
+    education: { bg: '#ffe4b0', accent: '#d88010' },
+    cooking: { bg: '#ffd0c0', accent: '#ff4020' },
+    game: { bg: '#c4ffc4', accent: '#30b020' },
   },
 };
 
@@ -310,41 +313,47 @@ const tech: Theme = {
   },
 };
 
+const MODERN_BG = '#1a1a1a';
+const MODERN_GOLD = '#d4af37';
+const modernCat: CategoryPalette = { bg: MODERN_BG, accent: MODERN_GOLD };
 const modern: Theme = {
   id: 'modern',
   name: '現代感（暗）',
   isDark: true,
   isPremium: true,
   bg: '#0a0a0a',
-  cardBg: '#1a1a1a',
+  cardBg: MODERN_BG,
   inputBg: '#262626',
   text: '#f5e8b8',
   textMuted: '#a89878',
   hint: '#5a5040',
   divider: '#262626',
-  brandColor: '#d4af37',
+  brandColor: MODERN_GOLD,
   radius: 6,
-  lcdFrame: '#1a1a1a',
+  lcdFrame: MODERN_BG,
   lcdScreen: '#0a0a0a',
-  lcdBorder: '#d4af37',
+  lcdBorder: MODERN_GOLD,
   lcdText: '#f5d878',
   lcdLed: '#ffd060',
   font: {
     display: 'Fraunces_700Bold',
   },
+  // 全部分類用相同的黑底金色：靠圖示和名稱辨識，不靠顏色
   categoryPalette: {
-    favorites: { bg: '#1f1a0e', accent: '#ffd060' },
-    life: { bg: '#1a1612', accent: '#e8c878' },
-    science: { bg: '#1c1815', accent: '#d4a040' },
-    wealth: { bg: '#221c0e', accent: '#ffd870' },
-    gambling: { bg: '#1a1410', accent: '#b88c30' },
-    health: { bg: '#1c1612', accent: '#dab050' },
-    design: { bg: '#1f1a10', accent: '#e8c870' },
-    time: { bg: '#1a1612', accent: '#c0a060' },
-    education: { bg: '#221c10', accent: '#dcb850' },
-    cooking: { bg: '#1c1810', accent: '#cc9030' },
-    game: { bg: '#1c1810', accent: '#e0a830' },
+    favorites: modernCat,
+    life: modernCat,
+    science: modernCat,
+    wealth: modernCat,
+    gambling: modernCat,
+    health: modernCat,
+    design: modernCat,
+    time: modernCat,
+    education: modernCat,
+    cooking: modernCat,
+    game: modernCat,
   },
+  cardBorder: { color: MODERN_GOLD, width: 1 },
+  iconBoxBorder: { color: MODERN_GOLD, width: 1.5 },
 };
 
 const THEMES_RECORD: Record<ThemeId, Theme> = {

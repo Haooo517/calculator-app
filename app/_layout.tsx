@@ -9,6 +9,7 @@ import { PixelifySans_700Bold } from '@expo-google-fonts/pixelify-sans';
 import { PressStart2P_400Regular } from '@expo-google-fonts/press-start-2p';
 import { ShareTechMono_400Regular } from '@expo-google-fonts/share-tech-mono';
 import { SpaceMono_700Bold } from '@expo-google-fonts/space-mono';
+import { VT323_400Regular } from '@expo-google-fonts/vt323';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -48,6 +49,7 @@ export default function RootLayout() {
     ShareTechMono_400Regular,
     SpaceMono_700Bold,
     Fraunces_700Bold,
+    VT323_400Regular,
   });
 
   if (!loaded) return <View style={{ flex: 1, backgroundColor: '#fff8ed' }} />;

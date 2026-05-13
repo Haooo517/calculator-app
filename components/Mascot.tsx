@@ -37,20 +37,20 @@ const FACES: Record<MascotExpression, Face> = {
   love: { hat: '♡', leftHand: '~', rightHand: '~', eyes: '♡ u ♡' },
   cool: { hat: 'π', leftHand: '<', rightHand: '>', eyes: '▬ u ▬' },
   sad: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· ∩ ·' },
-  cry: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: 'T n T' },
+  cry: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: 'T ∩ T' },
 };
 
 const CRY_FRAMES = [
   '· U ·',
   '· - ·',
-  ', n ·',
-  '; n ·',
-  '· n ;',
-  '; n ;',
-  'T n T',
+  '· ∩ ·',
+  '; ∩ ·',
+  '· ∩ ;',
+  '; ∩ ;',
+  'T ∩ T',
 ];
 
-const WAVE_FRAMES = ['|', '/', '_', '/', '|'];
+const WAVE_FRAMES = ['|', '/', '_', '/'];
 
 const MONO_FONT = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
