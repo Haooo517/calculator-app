@@ -6,7 +6,7 @@ import { LCDScreen } from '../components/LCDScreen';
 import { Onboarding } from '../components/Onboarding';
 import { CATEGORIES } from '../data/categories';
 import { usePins } from '../lib/pins';
-import { useTheme } from '../lib/theme';
+import { categoryColors, useTheme } from '../lib/theme';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -35,31 +35,34 @@ export default function HomeScreen() {
       <LCDScreen />
 
       <View style={styles.list}>
-        {CATEGORIES.map((cat) => (
-          <TouchableOpacity
-            key={cat.id}
-            style={[styles.row, { backgroundColor: theme.cardBg }]}
-            onPress={() => go(cat.id)}
-            activeOpacity={0.8}
-          >
-            <View style={[styles.iconBox, { backgroundColor: cat.bg }]}>
-              <CategoryIcon id={cat.id} size={28} color={cat.accent} weight="fill" />
-            </View>
-
-            <View style={styles.rowMid}>
-              <Text style={[styles.rowTitle, { color: theme.text }]}>{cat.title}</Text>
-              <View style={styles.rowMetaWrap}>
-                <Text style={[styles.rowMetaEn, { color: cat.accent }]}>{cat.nameEn}</Text>
-                <View style={[styles.dot, { backgroundColor: cat.accent }]} />
-                <Text style={[styles.rowMetaCount, { color: theme.textMuted }]}>
-                  {cat.id === 'favorites' ? pins.size : cat.calculators.length} 個工具
-                </Text>
+        {CATEGORIES.map((cat) => {
+          const colors = categoryColors(theme, cat.id, { bg: cat.bg, accent: cat.accent });
+          return (
+            <TouchableOpacity
+              key={cat.id}
+              style={[styles.row, { backgroundColor: theme.cardBg, borderRadius: theme.radius }]}
+              onPress={() => go(cat.id)}
+              activeOpacity={0.8}
+            >
+              <View style={[styles.iconBox, { backgroundColor: colors.bg, borderRadius: theme.radius * 0.85 }]}>
+                <CategoryIcon id={cat.id} size={28} color={colors.accent} weight="fill" />
               </View>
-            </View>
 
-            <CaretRight size={20} color={theme.hint} weight="bold" />
-          </TouchableOpacity>
-        ))}
+              <View style={styles.rowMid}>
+                <Text style={[styles.rowTitle, { color: theme.text }]}>{cat.title}</Text>
+                <View style={styles.rowMetaWrap}>
+                  <Text style={[styles.rowMetaEn, { color: colors.accent }]}>{cat.nameEn}</Text>
+                  <View style={[styles.dot, { backgroundColor: colors.accent }]} />
+                  <Text style={[styles.rowMetaCount, { color: theme.textMuted }]}>
+                    {cat.id === 'favorites' ? pins.size : cat.calculators.length} 個工具
+                  </Text>
+                </View>
+              </View>
+
+              <CaretRight size={20} color={theme.hint} weight="bold" />
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </ScrollView>
   );

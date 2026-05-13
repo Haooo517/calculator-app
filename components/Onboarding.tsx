@@ -28,10 +28,10 @@ const STEPS: StepType[] = [
   { kind: 'intro', text: '哈囉！歡迎使用 Allculator！', expression: 'excited' },
   { kind: 'intro', text: '我是你的計算小助理，歐古！', expression: 'happy' },
   { kind: 'lcd', text: '我會住在首頁上面這個小螢幕，跟你聊天～' },
-  { kind: 'tap', text: '戳戳螢幕，我會擺各種表情給你看！' },
+  { kind: 'tap', text: '戳戳我，我會擺各種表情給你看！' },
   { kind: 'category', text: '下面是 11 種分類，點進去就有對應的計算機。' },
-  { kind: 'pin', text: '常用的工具點 📌 釘選起來，會出現在最上面的「釘選」分類。' },
-  { kind: 'outro', text: '右上角的齒輪可以換主題、調設定。那就開始用吧！', expression: 'wink' },
+  { kind: 'pin', text: '常用的工具點右邊的釘子，會出現在最上面的「釘選」分類。' },
+  { kind: 'outro', text: '右上角的齒輪可以換主題、調設定。那就開始用吧！', expression: 'happy' },
 ];
 
 const SAMPLE_CATEGORIES = [
@@ -81,7 +81,7 @@ export function Onboarding() {
   };
 
   const onTapDemo = () => {
-    const opts: MascotExpression[] = ['happy', 'excited', 'wink', 'surprised', 'love', 'cool'];
+    const opts: MascotExpression[] = ['happy', 'excited', 'surprised', 'love', 'cool'];
     const pick = opts[Math.floor(Math.random() * opts.length)];
     setTapDemoExpression(pick);
   };

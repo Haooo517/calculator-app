@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { CategoryIcon } from '../../components/CategoryIcon';
 import { Calculator, getCategoryById } from '../../data/categories';
 import { getPinnedCalculators, usePins } from '../../lib/pins';
-import { useTheme } from '../../lib/theme';
+import { categoryColors, useTheme } from '../../lib/theme';
 
 export default function CategoryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -27,6 +27,8 @@ export default function CategoryScreen() {
     ? getPinnedCalculators(pins)
     : category.calculators;
 
+  const colors = categoryColors(theme, category.id, { bg: category.bg, accent: category.accent });
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: theme.bg }]}
@@ -34,19 +36,19 @@ export default function CategoryScreen() {
     >
       <Stack.Screen options={{ title: category.title }} />
 
-      <View style={[styles.hero, { backgroundColor: category.bg }]}>
+      <View style={[styles.hero, { backgroundColor: colors.bg }]}>
         <View style={styles.heroIconWrap}>
-          <CategoryIcon id={category.id} size={48} color={category.accent} weight="fill" />
+          <CategoryIcon id={category.id} size={48} color={colors.accent} weight="fill" />
         </View>
-        <Text style={[styles.heroTitle, { color: category.accent }]}>{category.title}</Text>
-        <Text style={[styles.heroSubtitle, { color: category.accent }]}>{category.subtitle}</Text>
+        <Text style={[styles.heroTitle, { color: colors.accent }]}>{category.title}</Text>
+        <Text style={[styles.heroSubtitle, { color: colors.accent }]}>{category.subtitle}</Text>
       </View>
 
       {calculators.length === 0 ? (
         <View style={[styles.empty, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
           <PushPin size={36} color={theme.hint} weight="duotone" />
           <Text style={[styles.emptyTitle, { color: theme.text }]}>還沒釘選任何工具</Text>
-          <Text style={[styles.emptySub, { color: theme.textMuted }]}>到其他分類點 📌 圖示就會出現在這裡</Text>
+          <Text style={[styles.emptySub, { color: theme.textMuted }]}>到其他分類點右邊的釘子就會出現在這裡</Text>
         </View>
       ) : (
         <View style={styles.list}>
@@ -59,7 +61,7 @@ export default function CategoryScreen() {
                 onPress={() => calc.route && router.push(calc.route as any)}
                 activeOpacity={calc.comingSoon ? 1 : 0.75}
               >
-                <View style={[styles.rowDot, { backgroundColor: category.bg }]} />
+                <View style={[styles.rowDot, { backgroundColor: colors.bg }]} />
                 <View style={styles.rowText}>
                   <Text style={[styles.rowTitle, { color: theme.text }]}>{calc.title}</Text>
                   <Text style={[styles.rowSub, { color: theme.textMuted }]}>{calc.subtitle}</Text>
@@ -72,7 +74,7 @@ export default function CategoryScreen() {
                   >
                     <PushPin
                       size={18}
-                      color={pinned ? category.accent : theme.hint}
+                      color={pinned ? colors.accent : theme.hint}
                       weight={pinned ? 'fill' : 'regular'}
                     />
                   </TouchableOpacity>
@@ -80,7 +82,7 @@ export default function CategoryScreen() {
                 {calc.comingSoon ? (
                   <Lock size={18} color={theme.hint} weight="duotone" />
                 ) : (
-                  <CaretRight size={20} color={category.accent} weight="bold" />
+                  <CaretRight size={20} color={colors.accent} weight="bold" />
                 )}
               </TouchableOpacity>
             );

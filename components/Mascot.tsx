@@ -23,27 +23,25 @@ export type MascotExpression =
   | 'thinking'
   | 'sleepy'
   | 'drowsy'
-  | 'wink'
   | 'surprised'
   | 'love'
   | 'cool'
   | 'sad';
 
-type Face = { hat: string; eyes: string };
+type Face = { hat: string; leftHand: string; rightHand: string; eyes: string };
 
 const FACES: Record<MascotExpression | 'blink', Face> = {
-  default: { hat: 'π', eyes: '· U ·' },
-  blink: { hat: 'π', eyes: '− U −' },
-  happy: { hat: 'π', eyes: '^ U ^' },
-  excited: { hat: 'π', eyes: '* o *' },
-  thinking: { hat: '?', eyes: '· ~ o' },
-  sleepy: { hat: 'Z', eyes: '— ~ —' },
-  drowsy: { hat: 'z', eyes: '— U —' },
-  wink: { hat: 'π', eyes: '· U ;' },
-  surprised: { hat: '!', eyes: 'O o O' },
-  love: { hat: 'π', eyes: '♥︎ u ♥︎' },
-  cool: { hat: 'π', eyes: '▬ u ▬' },
-  sad: { hat: 'π', eyes: '· ∩ ·' },
+  default: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· U ·' },
+  blink: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '− U −' },
+  happy: { hat: 'π', leftHand: '~', rightHand: '~', eyes: '^ U ^' },
+  excited: { hat: 'π', leftHand: '/', rightHand: '\\', eyes: '* o *' },
+  thinking: { hat: '?', leftHand: '\\', rightHand: '/', eyes: '· ~ o' },
+  sleepy: { hat: 'Z', leftHand: '_', rightHand: '_', eyes: '— ~ —' },
+  drowsy: { hat: 'z', leftHand: '_', rightHand: '_', eyes: '— U —' },
+  surprised: { hat: '!', leftHand: '/', rightHand: '\\', eyes: 'O o O' },
+  love: { hat: '♥︎', leftHand: '~', rightHand: '~', eyes: '♥︎ u ♥︎' },
+  cool: { hat: 'π', leftHand: '<', rightHand: '>', eyes: '▬ u ▬' },
+  sad: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· ∩ ·' },
 };
 
 type Props = {
@@ -141,11 +139,11 @@ export function Mascot({
         {face.hat}
       </Text>
       <View style={styles.faceRow}>
-        <Text style={[styles.mono, monoStyle]}>{'\\[ '}</Text>
+        <Text style={[styles.mono, monoStyle]}>{`${face.leftHand}[ `}</Text>
         <Animated.Text style={[styles.mono, monoStyle, faceTransform && { transform: faceTransform }]}>
           {face.eyes}
         </Animated.Text>
-        <Text style={[styles.mono, monoStyle]}>{' ]/'}</Text>
+        <Text style={[styles.mono, monoStyle]}>{` ]${face.rightHand}`}</Text>
       </View>
     </Animated.View>
   );

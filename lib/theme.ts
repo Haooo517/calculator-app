@@ -12,6 +12,8 @@ export type ThemeId =
   | 'scifi'
   | 'modern';
 
+export type CategoryPalette = { bg: string; accent: string };
+
 export type Theme = {
   id: ThemeId;
   name: string;
@@ -28,13 +30,24 @@ export type Theme = {
   // misc
   divider: string;
   brandColor: string;
+  radius: number;
   // LCD specific
   lcdFrame: string;
   lcdScreen: string;
   lcdBorder: string;
   lcdText: string;
   lcdLed: string;
+  // optional category color overrides (keyed by category id)
+  categoryPalette?: Record<string, CategoryPalette>;
 };
+
+export function categoryColors(
+  theme: Theme,
+  id: string,
+  fallback: CategoryPalette
+): CategoryPalette {
+  return theme.categoryPalette?.[id] ?? fallback;
+}
 
 const classicLight: Theme = {
   id: 'classic-light',
@@ -49,6 +62,7 @@ const classicLight: Theme = {
   hint: '#a3897a',
   divider: '#f1e3d0',
   brandColor: '#c4623a',
+  radius: 22,
   lcdFrame: '#ffd4ba',
   lcdScreen: '#d8e0b8',
   lcdBorder: '#aabd8a',
@@ -69,6 +83,7 @@ const classicDark: Theme = {
   hint: '#7a6c5a',
   divider: '#3a3128',
   brandColor: '#ff8a5c',
+  radius: 22,
   lcdFrame: '#c4623a',
   lcdScreen: '#5a7038',
   lcdBorder: '#7a8a48',
@@ -89,6 +104,7 @@ const candy: Theme = {
   hint: '#d4a8c2',
   divider: '#fce4ee',
   brandColor: '#e91e63',
+  radius: 28,
   lcdFrame: '#f8b4d0',
   lcdScreen: '#e8d4f0',
   lcdBorder: '#c8a4d8',
@@ -109,6 +125,7 @@ const chocolate: Theme = {
   hint: '#8a6450',
   divider: '#4a2e1e',
   brandColor: '#d4a878',
+  radius: 20,
   lcdFrame: '#5a3a24',
   lcdScreen: '#3d2418',
   lcdBorder: '#7a4a30',
@@ -129,6 +146,7 @@ const cat: Theme = {
   hint: '#c8b090',
   divider: '#f4e8c8',
   brandColor: '#e8843a',
+  radius: 26,
   lcdFrame: '#f4c870',
   lcdScreen: '#fff0c8',
   lcdBorder: '#d4a040',
@@ -149,11 +167,25 @@ const haooo: Theme = {
   hint: '#7a5840',
   divider: '#3a2418',
   brandColor: '#ff7a30',
+  radius: 14,
   lcdFrame: '#ff7a30',
   lcdScreen: '#150b05',
   lcdBorder: '#ff7a30',
   lcdText: '#ffaa50',
   lcdLed: '#ff5a10',
+  categoryPalette: {
+    favorites: { bg: '#3d1f0a', accent: '#ff7a30' },
+    life: { bg: '#2a1810', accent: '#ff9050' },
+    science: { bg: '#332010', accent: '#ffaa30' },
+    wealth: { bg: '#3a2810', accent: '#ffc060' },
+    gambling: { bg: '#3a1a12', accent: '#ff5a3a' },
+    health: { bg: '#3a1c14', accent: '#ff7050' },
+    design: { bg: '#3a2418', accent: '#ff8a4a' },
+    time: { bg: '#2a1d12', accent: '#ffa060' },
+    education: { bg: '#3a281a', accent: '#ffb050' },
+    cooking: { bg: '#3a1d10', accent: '#ff6030' },
+    game: { bg: '#332810', accent: '#ffaa50' },
+  },
 };
 
 const scifi: Theme = {
@@ -169,6 +201,7 @@ const scifi: Theme = {
   hint: '#3a6585',
   divider: '#1a3a5a',
   brandColor: '#00d4ff',
+  radius: 8,
   lcdFrame: '#1a3a5a',
   lcdScreen: '#001a2a',
   lcdBorder: '#00a8d8',
@@ -189,6 +222,7 @@ const modern: Theme = {
   hint: '#737373',
   divider: '#262626',
   brandColor: '#fafafa',
+  radius: 6,
   lcdFrame: '#262626',
   lcdScreen: '#0a0a0a',
   lcdBorder: '#404040',

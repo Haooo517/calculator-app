@@ -4,7 +4,7 @@ import { useTheme } from '../lib/theme';
 import { Mascot, MascotExpression } from './Mascot';
 
 const TAP_EXPRESSIONS: MascotExpression[] = [
-  'happy', 'excited', 'thinking', 'wink', 'surprised', 'love', 'cool',
+  'happy', 'excited', 'thinking', 'surprised', 'love', 'cool',
 ];
 
 const getTimeExpression = (): MascotExpression => {
@@ -130,14 +130,6 @@ export function LCDScreen() {
           Animated.timing(tapRot, { toValue: 0.35, duration: 320, ...opts }),
           Animated.delay(900),
           Animated.timing(tapRot, { toValue: 0, duration: 300, ...opts }),
-        ]).start();
-        break;
-      case 'wink':
-        // 眨眼小點頭
-        Animated.sequence([
-          Animated.timing(tapY, { toValue: -5, duration: 150, ...opts }),
-          Animated.timing(tapY, { toValue: 2, duration: 130, ...opts }),
-          Animated.timing(tapY, { toValue: 0, duration: 130, ...opts }),
         ]).start();
         break;
       case 'thinking':
@@ -276,7 +268,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 18,
     paddingBottom: 16,
-    minHeight: 200,
+    minHeight: 160,
     borderWidth: 2,
     borderColor: '#aabd8a',
     overflow: 'hidden',
