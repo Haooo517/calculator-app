@@ -56,6 +56,11 @@ export type Theme = {
   // page background overlay pattern
   bgPattern?: 'dots' | 'stripes';
   bgPatternColor?: string;
+  // overlay pattern inside the LCD frame
+  lcdFramePattern?: 'dots' | 'stripes';
+  lcdFramePatternColor?: string;
+  // optional outer border around LCD frame
+  lcdFrameBorder?: { color: string; width: number };
 };
 
 export function categoryColors(
@@ -135,6 +140,8 @@ const candy: Theme = {
   },
   bgPattern: 'dots',
   bgPatternColor: '#ff80a8',
+  lcdFramePattern: 'stripes',
+  lcdFramePatternColor: '#fff5fa',
   categoryPalette: {
     favorites: { bg: '#ffd4e8', accent: '#ff3a80' },
     life: { bg: '#c8e8ff', accent: '#2090ff' },
@@ -171,11 +178,11 @@ const chocolate: Theme = {
   lcdLed: '#ffb050',
   // 全部統一深咖啡底色，靠 icon 色（不同烘焙度 / 堅果風味）區分
   categoryPalette: {
-    favorites: { bg: '#3d2418', accent: '#3d2418' }, // 濃縮咖啡
+    favorites: { bg: '#3d2418', accent: '#fde8ce' }, // 奶霜釘
     life: { bg: '#3d2418', accent: '#f4e0c8' }, // 拿鐵奶白
     science: { bg: '#3d2418', accent: '#d4b86a' }, // 抹茶摩卡
     wealth: { bg: '#3d2418', accent: '#ffc878' }, // 焦糖
-    gambling: { bg: '#3d2418', accent: '#a05828' }, // 黑巧克力
+    gambling: { bg: '#3d2418', accent: '#c87838' }, // 黑巧克力
     health: { bg: '#3d2418', accent: '#e89878' }, // 玫瑰摩卡
     design: { bg: '#3d2418', accent: '#e8b070' }, // 榛果
     time: { bg: '#3d2418', accent: '#fff0d8' }, // 卡布奇諾
@@ -223,7 +230,7 @@ const cat: Theme = {
   },
 };
 
-const HAOOO_CAT: CategoryPalette = { bg: '#ffd0b8', accent: '#ff7020' };
+const HAOOO_BG = '#ffd0b8';
 const haooo: Theme = {
   id: 'haooo',
   name: 'Haooo（暗）',
@@ -245,21 +252,21 @@ const haooo: Theme = {
   lcdLed: '#ff5a10',
   lcdBrandColor: '#1a0a02',
   font: {
-    display: 'PixelifySans_700Bold',
+    display: 'Caveat_700Bold',
   },
-  // 全部分類用同一個 peach + 橘色（design 那組）
+  // 同樣的杏桃底，但每個分類有 candy 的繽紛 icon 色
   categoryPalette: {
-    favorites: HAOOO_CAT,
-    life: HAOOO_CAT,
-    science: HAOOO_CAT,
-    wealth: HAOOO_CAT,
-    gambling: HAOOO_CAT,
-    health: HAOOO_CAT,
-    design: HAOOO_CAT,
-    time: HAOOO_CAT,
-    education: HAOOO_CAT,
-    cooking: HAOOO_CAT,
-    game: HAOOO_CAT,
+    favorites: { bg: HAOOO_BG, accent: '#ff3a80' }, // 粉
+    life: { bg: HAOOO_BG, accent: '#2090ff' }, // 藍
+    science: { bg: HAOOO_BG, accent: '#10b850' }, // 綠
+    wealth: { bg: HAOOO_BG, accent: '#c88810' }, // 黃金
+    gambling: { bg: HAOOO_BG, accent: '#9030d8' }, // 紫
+    health: { bg: HAOOO_BG, accent: '#ff4070' }, // 桃紅
+    design: { bg: HAOOO_BG, accent: '#ff7020' }, // 橘
+    time: { bg: HAOOO_BG, accent: '#5050e8' }, // 靛
+    education: { bg: HAOOO_BG, accent: '#a86018' }, // 棕
+    cooking: { bg: HAOOO_BG, accent: '#ff4020' }, // 紅
+    game: { bg: HAOOO_BG, accent: '#30b020' }, // 萊姆
   },
 };
 
@@ -341,19 +348,18 @@ const tech: Theme = {
 };
 
 const MODERN_BG = '#0d0a05';
-const MODERN_GOLD = '#d4af37';
+const MODERN_GOLD = '#e8c060';
 const MODERN_GOLD_LIGHT = '#fde08a';
-const MODERN_GOLD_DEEP = '#8a6810';
 const modern: Theme = {
   id: 'modern',
-  name: '現代感（暗）',
+  name: '黑金（暗）',
   isDark: true,
   isPremium: true,
   bg: '#000000',
   cardBg: MODERN_BG,
   inputBg: '#1a140a',
-  text: '#f5e8b8',
-  textMuted: '#a89878',
+  text: '#fde08a',
+  textMuted: '#a89060',
   hint: '#5a5040',
   divider: '#3a2c14',
   brandColor: MODERN_GOLD_LIGHT,
@@ -367,7 +373,7 @@ const modern: Theme = {
   font: {
     display: 'Fraunces_700Bold',
   },
-  // 全部分類都是同款黑金，靠圖示金漸層發光辨識
+  // 全部分類同款黑金 — icon 用金色，底維持黑
   categoryPalette: {
     favorites: { bg: MODERN_BG, accent: MODERN_GOLD },
     life: { bg: MODERN_BG, accent: MODERN_GOLD },
@@ -382,8 +388,8 @@ const modern: Theme = {
     game: { bg: MODERN_BG, accent: MODERN_GOLD },
   },
   cardBorder: { color: MODERN_GOLD, width: 1.5 },
-  iconBoxBorder: { color: MODERN_GOLD_LIGHT, width: 1 },
-  iconBoxGradient: [MODERN_GOLD_LIGHT, MODERN_GOLD, MODERN_GOLD_DEEP],
+  iconBoxBorder: { color: MODERN_GOLD, width: 1.5 },
+  lcdFrameBorder: { color: MODERN_GOLD, width: 2 },
 };
 
 const THEMES_RECORD: Record<ThemeId, Theme> = {

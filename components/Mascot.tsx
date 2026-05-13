@@ -41,14 +41,20 @@ const FACES: Record<MascotExpression, Face> = {
 };
 
 const CRY_FRAMES = [
-  '· U ·',
-  '· - ·',
-  '· ∩ ·',
-  '; ∩ ·',
+  '· U ·', // 開心
+  '· - ·', // 嘴變平
+  '· ∩ ·', // 嘴下垂
+  '; ∩ ·', // 左眼一滴
+  '· ∩ ;', // 右眼一滴
+  '; ∩ ·', // 左眼再一滴
+  '· ∩ ;', // 右眼再一滴
+  '; ∩ ·', // 多滴
   '· ∩ ;',
-  '; ∩ ;',
-  'T ∩ T',
+  '; ∩ ;', // 兩眼同時流
+  '; ∩ ;', // 撐一下
+  'T ∩ T', // 嚎啕大哭
 ];
+const CRY_FRAME_MS = 320;
 
 const WAVE_FRAMES = ['|', '/', '_', '/'];
 
@@ -124,7 +130,7 @@ export function Mascot({
       timeouts.push(
         setTimeout(() => {
           if (alive) setCryFrame(i);
-        }, i * 250)
+        }, i * CRY_FRAME_MS)
       );
     }
     return () => {

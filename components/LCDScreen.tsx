@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../lib/theme';
+import { BackgroundPattern } from './BackgroundPattern';
 import { Mascot, MascotExpression } from './Mascot';
 
 const TAP_EXPRESSIONS: MascotExpression[] = [
@@ -141,11 +142,11 @@ export function LCDScreen() {
         ]).start();
         break;
       case 'cry':
-        // 哭哭 — 整個身體微微下沉並保持
+        // 哭哭 — 整個身體微微下沉並保持更久
         Animated.sequence([
-          Animated.timing(tapY, { toValue: 4, duration: 400, ...opts }),
-          Animated.delay(1500),
-          Animated.timing(tapY, { toValue: 0, duration: 400, ...opts }),
+          Animated.timing(tapY, { toValue: 4, duration: 500, ...opts }),
+          Animated.delay(3200),
+          Animated.timing(tapY, { toValue: 0, duration: 500, ...opts }),
         ]).start();
         break;
     }
@@ -196,19 +197,37 @@ export function LCDScreen() {
       return;
     }
 
-    // 其他時候：換隨機表情 + 對應的特殊動畫，3 秒後回到時段表情
+    // 其他時候：換隨機表情 + 對應的特殊動畫
     const others = TAP_EXPRESSIONS.filter((e) => e !== expression);
     const pick = others[Math.floor(Math.random() * others.length)];
     resetTapAnim();
     setExpression(pick);
     playTapAnim(pick);
+    // 哭哭動畫比較長，多給一點時間
+    const revertDelay = pick === 'cry' ? 4800 : 2800;
     timeouts.current.push(
-      setTimeout(() => setExpression(getTimeExpression()), 2800)
+      setTimeout(() => setExpression(getTimeExpression()), revertDelay)
     );
   };
 
   return (
-    <View style={[styles.frame, { backgroundColor: theme.lcdFrame }]}>
+    <View
+      style={[
+        styles.frame,
+        { backgroundColor: theme.lcdFrame },
+        theme.lcdFrameBorder && {
+          borderWidth: theme.lcdFrameBorder.width,
+          borderColor: theme.lcdFrameBorder.color,
+        },
+      ]}
+    >
+      {theme.lcdFramePattern && (
+        <BackgroundPattern
+          type={theme.lcdFramePattern}
+          color={theme.lcdFramePatternColor ?? '#fff'}
+          opacity={0.45}
+        />
+      )}
       <TouchableOpacity
         style={[styles.screen, { backgroundColor: theme.lcdScreen, borderColor: theme.lcdBorder }]}
         onPress={handleTap}

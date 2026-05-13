@@ -10,6 +10,7 @@ import {
   Translate,
 } from 'phosphor-react-native';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackgroundPattern } from '../components/BackgroundPattern';
 import { resetOnboarding } from '../components/Onboarding';
 import { usePins } from '../lib/pins';
 import { useTheme } from '../lib/theme';
@@ -101,16 +102,45 @@ export default function SettingsScreen() {
   ];
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.bg }]}
-      contentContainerStyle={styles.content}
-    >
-      <Stack.Screen options={{ title: '設定' }} />
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
+      {theme.bgPattern && (
+        <BackgroundPattern type={theme.bgPattern} color={theme.bgPatternColor ?? theme.hint} />
+      )}
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+      <Stack.Screen
+        options={{
+          title: '設定',
+          headerTitleStyle: {
+            fontFamily: theme.font?.display ?? 'Fredoka_700Bold',
+            fontSize: 20,
+            color: theme.text,
+          },
+        }}
+      />
 
       {sections.map((sec) => (
         <View key={sec.title} style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{sec.title}</Text>
-          <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                color: theme.textMuted,
+                fontFamily: theme.font?.display ?? 'Fredoka_600SemiBold',
+              },
+            ]}
+          >
+            {sec.title}
+          </Text>
+          <View
+            style={[
+              styles.card,
+              { backgroundColor: theme.cardBg, borderRadius: theme.radius },
+              theme.cardBorder && {
+                borderWidth: theme.cardBorder.width,
+                borderColor: theme.cardBorder.color,
+              },
+            ]}
+          >
             {sec.items.map((item, i) => (
               <View key={item.label}>
                 <TouchableOpacity
@@ -119,7 +149,19 @@ export default function SettingsScreen() {
                   activeOpacity={item.onPress ? 0.6 : 1}
                   disabled={!item.onPress}
                 >
-                  <View style={[styles.iconBox, { backgroundColor: theme.inputBg }]}>
+                  <View
+                    style={[
+                      styles.iconBox,
+                      {
+                        backgroundColor: theme.iconBoxBorder ? 'transparent' : theme.inputBg,
+                        borderRadius: theme.radius * 0.6,
+                      },
+                      theme.iconBoxBorder && {
+                        borderWidth: theme.iconBoxBorder.width,
+                        borderColor: theme.iconBoxBorder.color,
+                      },
+                    ]}
+                  >
                     <item.Icon size={18} color={theme.text} weight="fill" />
                   </View>
                   <View style={styles.rowText}>
@@ -142,12 +184,14 @@ export default function SettingsScreen() {
           </View>
         </View>
       ))}
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  scroll: { flex: 1 },
   content: { padding: 20, paddingBottom: 60 },
   section: { marginBottom: 24 },
   sectionTitle: {
