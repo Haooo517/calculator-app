@@ -242,9 +242,21 @@ export function LCDScreen() {
       <View style={styles.brandRow}>
         <View style={styles.ledWrap}>
           <View style={[styles.led, { backgroundColor: theme.lcdLed, shadowColor: theme.lcdLed }]} />
-          <Text style={[styles.brand, { color: theme.brandColor }]}>ALLCULATOR</Text>
+          <Text
+            style={[
+              styles.brand,
+              {
+                color: theme.lcdBrandColor ?? theme.brandColor,
+                fontFamily: theme.font?.display ?? 'Fredoka_700Bold',
+              },
+            ]}
+          >
+            ALLCULATOR
+          </Text>
         </View>
-        <Text style={[styles.sparkle, { color: theme.brandColor }]}>by haooo</Text>
+        <Text style={[styles.sparkle, { color: theme.lcdBrandColor ?? theme.brandColor }]}>
+          by haooo
+        </Text>
       </View>
     </View>
   );

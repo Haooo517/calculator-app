@@ -37,8 +37,13 @@ export type Theme = {
   lcdBorder: string;
   lcdText: string;
   lcdLed: string;
+  lcdBrandColor?: string;
   // optional category color overrides (keyed by category id)
   categoryPalette?: Record<string, CategoryPalette>;
+  // optional font overrides (display = headlines / brand)
+  font?: {
+    display?: string;
+  };
 };
 
 export function categoryColors(
@@ -89,6 +94,7 @@ const classicDark: Theme = {
   lcdBorder: '#7a8a48',
   lcdText: '#e8f0c8',
   lcdLed: '#7df0a0',
+  lcdBrandColor: '#fff0e0',
 };
 
 const candy: Theme = {
@@ -110,6 +116,7 @@ const candy: Theme = {
   lcdBorder: '#c8a4d8',
   lcdText: '#5a2d4d',
   lcdLed: '#ff6b9a',
+  lcdBrandColor: '#7a1339',
 };
 
 const chocolate: Theme = {
@@ -173,6 +180,10 @@ const haooo: Theme = {
   lcdBorder: '#ff7a30',
   lcdText: '#ffaa50',
   lcdLed: '#ff5a10',
+  lcdBrandColor: '#1a0a02',
+  font: {
+    display: 'PressStart2P_400Regular',
+  },
   categoryPalette: {
     favorites: { bg: '#3d1f0a', accent: '#ff7a30' },
     life: { bg: '#2a1810', accent: '#ff9050' },

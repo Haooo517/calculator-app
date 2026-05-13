@@ -39,7 +39,7 @@ const FACES: Record<MascotExpression | 'blink', Face> = {
   sleepy: { hat: 'Z', leftHand: '_', rightHand: '_', eyes: '— ~ —' },
   drowsy: { hat: 'z', leftHand: '_', rightHand: '_', eyes: '— U —' },
   surprised: { hat: '!', leftHand: '/', rightHand: '\\', eyes: 'O o O' },
-  love: { hat: '♥︎', leftHand: '~', rightHand: '~', eyes: '♥︎ u ♥︎' },
+  love: { hat: '♡', leftHand: '~', rightHand: '~', eyes: '♡ u ♡' },
   cool: { hat: 'π', leftHand: '<', rightHand: '>', eyes: '▬ u ▬' },
   sad: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· ∩ ·' },
 };

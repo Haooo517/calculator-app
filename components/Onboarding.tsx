@@ -92,6 +92,10 @@ export function Onboarding() {
 
   const scaleIn = stepAnim.interpolate({ inputRange: [0, 1], outputRange: [0.92, 1] });
   const opacityIn = stepAnim;
+  const lcdZoom = stepAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: current.kind === 'lcd' ? [0.35, 1] : [1, 1],
+  });
 
   return (
     <Modal transparent animationType="none" visible={visible} statusBarTranslucent>
@@ -109,7 +113,9 @@ export function Onboarding() {
                 <Mascot expression={current.expression} size={72} color={theme.text} />
               </View>
             ) : current.kind === 'lcd' ? (
-              <LcdPreview />
+              <Animated.View style={{ transform: [{ scale: lcdZoom }] }}>
+                <LcdPreview />
+              </Animated.View>
             ) : current.kind === 'tap' ? (
               <TapDemo expression={tapDemoExpression} onTap={onTapDemo} />
             ) : current.kind === 'category' ? (
