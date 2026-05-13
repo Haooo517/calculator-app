@@ -51,7 +51,17 @@ export default function HomeScreen() {
               <View style={styles.rowMid}>
                 <Text style={[styles.rowTitle, { color: theme.text }]}>{cat.title}</Text>
                 <View style={styles.rowMetaWrap}>
-                  <Text style={[styles.rowMetaEn, { color: colors.accent }]}>{cat.nameEn}</Text>
+                  <Text
+                    style={[
+                      styles.rowMetaEn,
+                      {
+                        color: colors.accent,
+                        fontFamily: theme.font?.display ?? 'Fredoka_600SemiBold',
+                      },
+                    ]}
+                  >
+                    {cat.nameEn}
+                  </Text>
                   <View style={[styles.dot, { backgroundColor: colors.accent }]} />
                   <Text style={[styles.rowMetaCount, { color: theme.textMuted }]}>
                     {cat.id === 'favorites' ? pins.size : cat.calculators.length} 個工具

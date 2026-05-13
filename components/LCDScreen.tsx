@@ -4,7 +4,7 @@ import { useTheme } from '../lib/theme';
 import { Mascot, MascotExpression } from './Mascot';
 
 const TAP_EXPRESSIONS: MascotExpression[] = [
-  'happy', 'excited', 'thinking', 'surprised', 'love', 'cool',
+  'happy', 'excited', 'thinking', 'surprised', 'love', 'cool', 'cry',
 ];
 
 const getTimeExpression = (): MascotExpression => {
@@ -140,6 +140,14 @@ export function LCDScreen() {
           Animated.timing(tapRot, { toValue: 0, duration: 350, ...opts }),
         ]).start();
         break;
+      case 'cry':
+        // 哭哭 — 整個身體微微下沉並保持
+        Animated.sequence([
+          Animated.timing(tapY, { toValue: 4, duration: 400, ...opts }),
+          Animated.delay(1500),
+          Animated.timing(tapY, { toValue: 0, duration: 400, ...opts }),
+        ]).start();
+        break;
     }
   };
 
@@ -225,12 +233,7 @@ export function LCDScreen() {
             },
           ]}
         >
-          <Mascot
-            expression={expression}
-            size={56}
-            color={theme.lcdText}
-            fontFamily={theme.font?.mono}
-          />
+          <Mascot expression={expression} size={56} color={theme.lcdText} />
         </Animated.View>
         <Text
           style={[styles.textBlock, { color: theme.lcdText }]}

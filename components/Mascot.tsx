@@ -19,31 +19,46 @@ export type MascotExpression =
   | 'surprised'
   | 'love'
   | 'cool'
-  | 'sad';
+  | 'sad'
+  | 'cry';
 
 type Face = { hat: string; leftHand: string; rightHand: string; eyes: string };
 
-// All eyes are exactly 5 monospace cells: eye + space + mouth + space + eye.
-// Mouth char lives at index 2 so blink can preserve it.
+// All eyes are 5 monospace cells: eye + space + mouth + space + eye.
+// Index 2 is the mouth so blink can preserve it.
 const FACES: Record<MascotExpression, Face> = {
-  default: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '. U .' },
-  happy: { hat: 'π', leftHand: '~', rightHand: '~', eyes: '^ U ^' },
+  default: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· U ·' },
+  happy: { hat: 'π', leftHand: '\\', rightHand: '|', eyes: '^ U ^' }, // rightHand cycles via wave anim
   excited: { hat: 'π', leftHand: '/', rightHand: '\\', eyes: '* o *' },
-  thinking: { hat: '?', leftHand: '\\', rightHand: '/', eyes: '. ~ o' },
-  sleepy: { hat: 'Z', leftHand: '_', rightHand: '_', eyes: '- ~ -' },
-  drowsy: { hat: 'z', leftHand: '_', rightHand: '_', eyes: '- U -' },
+  thinking: { hat: '?', leftHand: '\\', rightHand: '/', eyes: '· ~ o' },
+  sleepy: { hat: 'Z', leftHand: '_', rightHand: '_', eyes: '— ~ —' },
+  drowsy: { hat: 'z', leftHand: '_', rightHand: '_', eyes: '— U —' },
   surprised: { hat: '!', leftHand: '/', rightHand: '\\', eyes: 'O o O' },
-  love: { hat: '*', leftHand: '~', rightHand: '~', eyes: 'o u o' },
-  cool: { hat: 'π', leftHand: '<', rightHand: '>', eyes: '= u =' },
-  sad: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '. _ .' },
+  love: { hat: '♡', leftHand: '~', rightHand: '~', eyes: '♡ u ♡' },
+  cool: { hat: 'π', leftHand: '<', rightHand: '>', eyes: '▬ u ▬' },
+  sad: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· ∩ ·' },
+  cry: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: 'T n T' },
 };
 
-const DEFAULT_MONO_FONT = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+const CRY_FRAMES = [
+  '· U ·',
+  '· - ·',
+  ', n ·',
+  '; n ·',
+  '· n ;',
+  '; n ;',
+  'T n T',
+];
+
+const WAVE_FRAMES = ['|', '/', '_', '/', '|'];
+
+const MONO_FONT = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
 type Props = {
   expression?: MascotExpression;
   size?: number;
   color?: string;
+  /** Optional override for the monospace font. Defaults to Menlo / monospace. */
   fontFamily?: string;
   bob?: boolean;
   autoBlink?: boolean;
@@ -60,12 +75,14 @@ export function Mascot({
   style,
 }: Props) {
   const [blinking, setBlinking] = useState(false);
+  const [cryFrame, setCryFrame] = useState(-1);
+  const [waveFrame, setWaveFrame] = useState(0);
   const bobAnim = useRef(new Animated.Value(0)).current;
 
-  // auto blink — only when eyes are open (not sleepy/drowsy)
+  // auto blink (skip when eyes already closed or crying — handled separately)
   useEffect(() => {
     if (!autoBlink) return;
-    if (expression === 'sleepy' || expression === 'drowsy') return;
+    if (expression === 'sleepy' || expression === 'drowsy' || expression === 'cry') return;
 
     let timer: ReturnType<typeof setTimeout>;
     let alive = true;
@@ -89,6 +106,38 @@ export function Mascot({
       clearTimeout(timer);
     };
   }, [expression, autoBlink]);
+
+  // cry sequence (7 frames, ~250ms each, ends at full cry)
+  useEffect(() => {
+    if (expression !== 'cry') {
+      setCryFrame(-1);
+      return;
+    }
+    setCryFrame(0);
+    let alive = true;
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+    for (let i = 1; i < CRY_FRAMES.length; i++) {
+      timeouts.push(
+        setTimeout(() => {
+          if (alive) setCryFrame(i);
+        }, i * 250)
+      );
+    }
+    return () => {
+      alive = false;
+      timeouts.forEach(clearTimeout);
+    };
+  }, [expression]);
+
+  // wave loop for happy
+  useEffect(() => {
+    if (expression !== 'happy') return;
+    setWaveFrame(0);
+    const id = setInterval(() => {
+      setWaveFrame((f) => (f + 1) % WAVE_FRAMES.length);
+    }, 220);
+    return () => clearInterval(id);
+  }, [expression]);
 
   // breathing bob
   useEffect(() => {
@@ -116,22 +165,23 @@ export function Mascot({
   const translateY = bobAnim.interpolate({ inputRange: [0, 1], outputRange: [0, -3] });
   const face = FACES[expression];
 
-  // When blinking: replace the two eye positions with '-' but keep the mouth (index 2).
-  const eyesStr = blinking ? `- ${face.eyes[2]} -` : face.eyes;
-  const fullLine = `${face.leftHand}[ ${eyesStr} ]${face.rightHand}`;
+  const eyesStr =
+    expression === 'cry' && cryFrame >= 0
+      ? CRY_FRAMES[cryFrame]
+      : blinking
+      ? `- ${face.eyes[2]} -`
+      : face.eyes;
+
+  const rh = expression === 'happy' ? WAVE_FRAMES[waveFrame] : face.rightHand;
+  const fullLine = `${face.leftHand}[ ${eyesStr} ]${rh}`;
 
   const hatSize = size * 0.32;
   const faceSize = size * 0.42;
-  const monoFamily = fontFamily ?? DEFAULT_MONO_FONT;
+  const monoFamily = fontFamily ?? MONO_FONT;
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY }] }, style]}>
-      <Text
-        style={[
-          styles.line,
-          { fontSize: hatSize, color, lineHeight: hatSize * 1.05 },
-        ]}
-      >
+      <Text style={[styles.line, { fontSize: hatSize, color, lineHeight: hatSize * 1.05 }]}>
         {face.hat}
       </Text>
       <Text

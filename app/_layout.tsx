@@ -4,6 +4,7 @@ import {
   Fredoka_600SemiBold,
   Fredoka_700Bold,
 } from '@expo-google-fonts/fredoka';
+import { Fraunces_700Bold } from '@expo-google-fonts/fraunces';
 import { PixelifySans_700Bold } from '@expo-google-fonts/pixelify-sans';
 import { PressStart2P_400Regular } from '@expo-google-fonts/press-start-2p';
 import { ShareTechMono_400Regular } from '@expo-google-fonts/share-tech-mono';
@@ -46,6 +47,7 @@ export default function RootLayout() {
     PixelifySans_700Bold,
     ShareTechMono_400Regular,
     SpaceMono_700Bold,
+    Fraunces_700Bold,
   });
 
   if (!loaded) return <View style={{ flex: 1, backgroundColor: '#fff8ed' }} />;

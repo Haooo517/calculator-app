@@ -9,7 +9,8 @@ export type ThemeId =
   | 'chocolate'
   | 'cat'
   | 'haooo'
-  | 'scifi'
+  | 'cyberpunk'
+  | 'tech'
   | 'modern';
 
 export type CategoryPalette = { bg: string; accent: string };
@@ -156,18 +157,19 @@ const chocolate: Theme = {
   lcdBorder: '#7a4a30',
   lcdText: '#f4d8a8',
   lcdLed: '#ffb050',
+  // 11 distinct coffee / chocolate / nut tones
   categoryPalette: {
-    favorites: { bg: '#4a2e1e', accent: '#e8b880' },
-    life: { bg: '#4d3020', accent: '#d4a878' },
-    science: { bg: '#4a3520', accent: '#c0a070' },
-    wealth: { bg: '#503820', accent: '#e8c080' },
-    gambling: { bg: '#3a2018', accent: '#b08060' },
-    health: { bg: '#4a2820', accent: '#d09878' },
-    design: { bg: '#4d3220', accent: '#dcb088' },
-    time: { bg: '#3d2818', accent: '#a89070' },
-    education: { bg: '#503820', accent: '#e0b888' },
-    cooking: { bg: '#4a2418', accent: '#c89070' },
-    game: { bg: '#403020', accent: '#c0a888' },
+    favorites: { bg: '#1a0f08', accent: '#3d2418' }, // espresso
+    life: { bg: '#6b4423', accent: '#f4e0c8' }, // latte
+    science: { bg: '#4a3a18', accent: '#d4b86a' }, // matcha mocha
+    wealth: { bg: '#7a4a18', accent: '#ffc878' }, // caramel
+    gambling: { bg: '#1a0e04', accent: '#a05828' }, // dark chocolate
+    health: { bg: '#5a2418', accent: '#e89878' }, // rose mocha
+    design: { bg: '#6a3a1a', accent: '#e8b070' }, // hazelnut
+    time: { bg: '#a07a4a', accent: '#fff0d8' }, // cappuccino
+    education: { bg: '#3a2010', accent: '#a88060' }, // walnut
+    cooking: { bg: '#5a2010', accent: '#c84830' }, // brick red
+    game: { bg: '#3a3020', accent: '#a0c878' }, // pistachio
   },
 };
 
@@ -231,9 +233,9 @@ const haooo: Theme = {
   },
 };
 
-const scifi: Theme = {
-  id: 'scifi',
-  name: '科幻（暗）',
+const cyberpunk: Theme = {
+  id: 'cyberpunk',
+  name: '賽博龐克（暗）',
   isDark: true,
   isPremium: true,
   bg: '#0a1929',
@@ -269,6 +271,45 @@ const scifi: Theme = {
   },
 };
 
+const tech: Theme = {
+  id: 'tech',
+  name: '科技感（亮）',
+  isDark: false,
+  isPremium: true,
+  bg: '#f5f7fa',
+  cardBg: '#ffffff',
+  inputBg: '#eef2f6',
+  text: '#0a1929',
+  textMuted: '#5a7090',
+  hint: '#a0b0c0',
+  divider: '#dde4ec',
+  brandColor: '#0070f3',
+  radius: 14,
+  lcdFrame: '#ffffff',
+  lcdScreen: '#eef5fb',
+  lcdBorder: '#cce0f0',
+  lcdText: '#0070f3',
+  lcdLed: '#00d4ff',
+  lcdBrandColor: '#0a1929',
+  font: {
+    display: 'ShareTechMono_400Regular',
+  },
+  // pure white + bright blue Apple-style
+  categoryPalette: {
+    favorites: { bg: '#e8f4ff', accent: '#0070f3' },
+    life: { bg: '#dceeff', accent: '#0090f5' },
+    science: { bg: '#d8f0ff', accent: '#00a0e0' },
+    wealth: { bg: '#e0f0ff', accent: '#3080ff' },
+    gambling: { bg: '#ddebfc', accent: '#5070d0' },
+    health: { bg: '#e8f4ff', accent: '#0090d0' },
+    design: { bg: '#e0eeff', accent: '#4070ff' },
+    time: { bg: '#dceeff', accent: '#3070e0' },
+    education: { bg: '#e4f0ff', accent: '#1070d8' },
+    cooking: { bg: '#e8f4ff', accent: '#0080c8' },
+    game: { bg: '#dcefff', accent: '#00a0ff' },
+  },
+};
+
 const modern: Theme = {
   id: 'modern',
   name: '現代感（暗）',
@@ -289,8 +330,7 @@ const modern: Theme = {
   lcdText: '#f5d878',
   lcdLed: '#ffd060',
   font: {
-    display: 'SpaceMono_700Bold',
-    mono: 'SpaceMono_700Bold',
+    display: 'Fraunces_700Bold',
   },
   categoryPalette: {
     favorites: { bg: '#1f1a0e', accent: '#ffd060' },
@@ -314,7 +354,8 @@ const THEMES_RECORD: Record<ThemeId, Theme> = {
   chocolate,
   cat,
   haooo,
-  scifi,
+  cyberpunk,
+  tech,
   modern,
 };
 
