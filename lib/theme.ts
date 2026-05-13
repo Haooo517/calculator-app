@@ -57,10 +57,13 @@ export type Theme = {
   bgPattern?: 'dots' | 'stripes';
   bgPatternColor?: string;
   // overlay pattern inside the LCD frame
-  lcdFramePattern?: 'dots' | 'stripes';
+  lcdFramePattern?: 'dots' | 'stripes' | 'candy';
   lcdFramePatternColor?: string;
+  lcdFramePatternColor2?: string;
   // optional outer border around LCD frame
   lcdFrameBorder?: { color: string; width: number };
+  // optional override for the category-page hero background (when category bg is too bright)
+  heroBg?: string;
 };
 
 export function categoryColors(
@@ -140,8 +143,9 @@ const candy: Theme = {
   },
   bgPattern: 'dots',
   bgPatternColor: '#ff80a8',
-  lcdFramePattern: 'stripes',
-  lcdFramePatternColor: '#fff5fa',
+  lcdFramePattern: 'candy',
+  lcdFramePatternColor: '#ff3060', // 紅色拐杖糖條紋
+  lcdFramePatternColor2: '#ffffff', // 白色間隔
   categoryPalette: {
     favorites: { bg: '#ffd4e8', accent: '#ff3a80' },
     life: { bg: '#c8e8ff', accent: '#2090ff' },
@@ -176,19 +180,19 @@ const chocolate: Theme = {
   lcdBorder: '#7a4a30',
   lcdText: '#f4d8a8',
   lcdLed: '#ffb050',
-  // 全部統一深咖啡底色，靠 icon 色（不同烘焙度 / 堅果風味）區分
+  // iconBox 用比 card 更深一階的咖啡色，提高對比；icon 用不同烘焙度區分
   categoryPalette: {
-    favorites: { bg: '#3d2418', accent: '#fde8ce' }, // 奶霜釘
-    life: { bg: '#3d2418', accent: '#f4e0c8' }, // 拿鐵奶白
-    science: { bg: '#3d2418', accent: '#d4b86a' }, // 抹茶摩卡
-    wealth: { bg: '#3d2418', accent: '#ffc878' }, // 焦糖
-    gambling: { bg: '#3d2418', accent: '#c87838' }, // 黑巧克力
-    health: { bg: '#3d2418', accent: '#e89878' }, // 玫瑰摩卡
-    design: { bg: '#3d2418', accent: '#e8b070' }, // 榛果
-    time: { bg: '#3d2418', accent: '#fff0d8' }, // 卡布奇諾
-    education: { bg: '#3d2418', accent: '#a88060' }, // 核桃
-    cooking: { bg: '#3d2418', accent: '#c84830' }, // 磚紅
-    game: { bg: '#3d2418', accent: '#a0c878' }, // 開心果
+    favorites: { bg: '#1f1208', accent: '#fde8ce' }, // 奶霜
+    life: { bg: '#1f1208', accent: '#f4e0c8' }, // 拿鐵奶白
+    science: { bg: '#1f1208', accent: '#d4b86a' }, // 抹茶摩卡
+    wealth: { bg: '#1f1208', accent: '#ffc878' }, // 焦糖
+    gambling: { bg: '#1f1208', accent: '#c87838' }, // 黑巧克力
+    health: { bg: '#1f1208', accent: '#e89878' }, // 玫瑰摩卡
+    design: { bg: '#1f1208', accent: '#e8b070' }, // 榛果
+    time: { bg: '#1f1208', accent: '#fff0d8' }, // 卡布奇諾
+    education: { bg: '#1f1208', accent: '#a88060' }, // 核桃
+    cooking: { bg: '#1f1208', accent: '#c84830' }, // 磚紅
+    game: { bg: '#1f1208', accent: '#a0c878' }, // 開心果
   },
 };
 
@@ -254,18 +258,19 @@ const haooo: Theme = {
   font: {
     display: 'Caveat_700Bold',
   },
+  heroBg: '#1a1208',
   // 同樣的杏桃底，但每個分類有 candy 的繽紛 icon 色
   categoryPalette: {
-    favorites: { bg: HAOOO_BG, accent: '#ff3a80' }, // 粉
+    favorites: { bg: HAOOO_BG, accent: '#dc143c' }, // 深紅
     life: { bg: HAOOO_BG, accent: '#2090ff' }, // 藍
     science: { bg: HAOOO_BG, accent: '#10b850' }, // 綠
     wealth: { bg: HAOOO_BG, accent: '#c88810' }, // 黃金
     gambling: { bg: HAOOO_BG, accent: '#9030d8' }, // 紫
-    health: { bg: HAOOO_BG, accent: '#ff4070' }, // 桃紅
+    health: { bg: HAOOO_BG, accent: '#ff70b0' }, // 粉
     design: { bg: HAOOO_BG, accent: '#ff7020' }, // 橘
     time: { bg: HAOOO_BG, accent: '#5050e8' }, // 靛
     education: { bg: HAOOO_BG, accent: '#a86018' }, // 棕
-    cooking: { bg: HAOOO_BG, accent: '#ff4020' }, // 紅
+    cooking: { bg: HAOOO_BG, accent: '#ff4020' }, // 橘紅
     game: { bg: HAOOO_BG, accent: '#30b020' }, // 萊姆
   },
 };

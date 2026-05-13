@@ -225,7 +225,8 @@ export function LCDScreen() {
         <BackgroundPattern
           type={theme.lcdFramePattern}
           color={theme.lcdFramePatternColor ?? '#fff'}
-          opacity={0.45}
+          color2={theme.lcdFramePatternColor2}
+          opacity={0.4}
         />
       )}
       <TouchableOpacity

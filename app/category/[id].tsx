@@ -36,7 +36,7 @@ export default function CategoryScreen() {
     >
       <Stack.Screen options={{ title: category.title }} />
 
-      <View style={[styles.hero, { backgroundColor: colors.bg }]}>
+      <View style={[styles.hero, { backgroundColor: theme.heroBg ?? colors.bg }]}>
         <View style={styles.heroIconWrap}>
           <CategoryIcon id={category.id} size={48} color={colors.accent} weight="fill" />
         </View>
