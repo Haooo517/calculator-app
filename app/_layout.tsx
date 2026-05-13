@@ -6,6 +6,8 @@ import {
 } from '@expo-google-fonts/fredoka';
 import { PixelifySans_700Bold } from '@expo-google-fonts/pixelify-sans';
 import { PressStart2P_400Regular } from '@expo-google-fonts/press-start-2p';
+import { ShareTechMono_400Regular } from '@expo-google-fonts/share-tech-mono';
+import { SpaceMono_700Bold } from '@expo-google-fonts/space-mono';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -42,6 +44,8 @@ export default function RootLayout() {
     Fredoka_700Bold,
     PressStart2P_400Regular,
     PixelifySans_700Bold,
+    ShareTechMono_400Regular,
+    SpaceMono_700Bold,
   });
 
   if (!loaded) return <View style={{ flex: 1, backgroundColor: '#fff8ed' }} />;

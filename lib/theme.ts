@@ -40,9 +40,10 @@ export type Theme = {
   lcdBrandColor?: string;
   // optional category color overrides (keyed by category id)
   categoryPalette?: Record<string, CategoryPalette>;
-  // optional font overrides (display = headlines / brand)
+  // optional font overrides
   font?: {
-    display?: string;
+    display?: string; // big headlines / brand
+    mono?: string;    // monospace used by mascot
   };
 };
 
@@ -117,6 +118,23 @@ const candy: Theme = {
   lcdText: '#5a2d4d',
   lcdLed: '#ff6b9a',
   lcdBrandColor: '#7a1339',
+  font: {
+    display: 'PixelifySans_700Bold',
+    mono: 'PixelifySans_700Bold',
+  },
+  categoryPalette: {
+    favorites: { bg: '#ffd4e8', accent: '#ff3a80' },
+    life: { bg: '#c8e8ff', accent: '#2090ff' },
+    science: { bg: '#c8ffd8', accent: '#10b850' },
+    wealth: { bg: '#fff0a0', accent: '#e8a010' },
+    gambling: { bg: '#f0c4ff', accent: '#9030d8' },
+    health: { bg: '#ffc4d0', accent: '#ff4070' },
+    design: { bg: '#ffd0b8', accent: '#ff7020' },
+    time: { bg: '#d0d0ff', accent: '#5050e8' },
+    education: { bg: '#ffe4b0', accent: '#d88010' },
+    cooking: { bg: '#ffd0c0', accent: '#ff4020' },
+    game: { bg: '#c4ffc4', accent: '#30b020' },
+  },
 };
 
 const chocolate: Theme = {
@@ -138,6 +156,19 @@ const chocolate: Theme = {
   lcdBorder: '#7a4a30',
   lcdText: '#f4d8a8',
   lcdLed: '#ffb050',
+  categoryPalette: {
+    favorites: { bg: '#4a2e1e', accent: '#e8b880' },
+    life: { bg: '#4d3020', accent: '#d4a878' },
+    science: { bg: '#4a3520', accent: '#c0a070' },
+    wealth: { bg: '#503820', accent: '#e8c080' },
+    gambling: { bg: '#3a2018', accent: '#b08060' },
+    health: { bg: '#4a2820', accent: '#d09878' },
+    design: { bg: '#4d3220', accent: '#dcb088' },
+    time: { bg: '#3d2818', accent: '#a89070' },
+    education: { bg: '#503820', accent: '#e0b888' },
+    cooking: { bg: '#4a2418', accent: '#c89070' },
+    game: { bg: '#403020', accent: '#c0a888' },
+  },
 };
 
 const cat: Theme = {
@@ -183,6 +214,7 @@ const haooo: Theme = {
   lcdBrandColor: '#1a0a02',
   font: {
     display: 'PressStart2P_400Regular',
+    mono: 'PressStart2P_400Regular',
   },
   categoryPalette: {
     favorites: { bg: '#3d1f0a', accent: '#ff7a30' },
@@ -218,6 +250,23 @@ const scifi: Theme = {
   lcdBorder: '#00a8d8',
   lcdText: '#00ffd4',
   lcdLed: '#00d4ff',
+  font: {
+    display: 'ShareTechMono_400Regular',
+    mono: 'ShareTechMono_400Regular',
+  },
+  categoryPalette: {
+    favorites: { bg: '#0f2a50', accent: '#00d4ff' },
+    life: { bg: '#1a3560', accent: '#5ad4ff' },
+    science: { bg: '#0a2a50', accent: '#00b8e8' },
+    wealth: { bg: '#1a3055', accent: '#80e0ff' },
+    gambling: { bg: '#1a2545', accent: '#a0c8ff' },
+    health: { bg: '#1a4060', accent: '#5ae0e0' },
+    design: { bg: '#0a3060', accent: '#00c8d8' },
+    time: { bg: '#0f2a55', accent: '#a0e8ff' },
+    education: { bg: '#1a3555', accent: '#5acce0' },
+    cooking: { bg: '#1a3a5a', accent: '#00e0c8' },
+    game: { bg: '#0f3055', accent: '#00d8e0' },
+  },
 };
 
 const modern: Theme = {
@@ -225,20 +274,37 @@ const modern: Theme = {
   name: '現代感（暗）',
   isDark: true,
   isPremium: true,
-  bg: '#0f0f0f',
-  cardBg: '#1c1c1c',
+  bg: '#0a0a0a',
+  cardBg: '#1a1a1a',
   inputBg: '#262626',
-  text: '#fafafa',
-  textMuted: '#a3a3a3',
-  hint: '#737373',
+  text: '#f5e8b8',
+  textMuted: '#a89878',
+  hint: '#5a5040',
   divider: '#262626',
-  brandColor: '#fafafa',
+  brandColor: '#d4af37',
   radius: 6,
-  lcdFrame: '#262626',
+  lcdFrame: '#1a1a1a',
   lcdScreen: '#0a0a0a',
-  lcdBorder: '#404040',
-  lcdText: '#fafafa',
-  lcdLed: '#fafafa',
+  lcdBorder: '#d4af37',
+  lcdText: '#f5d878',
+  lcdLed: '#ffd060',
+  font: {
+    display: 'SpaceMono_700Bold',
+    mono: 'SpaceMono_700Bold',
+  },
+  categoryPalette: {
+    favorites: { bg: '#1f1a0e', accent: '#ffd060' },
+    life: { bg: '#1a1612', accent: '#e8c878' },
+    science: { bg: '#1c1815', accent: '#d4a040' },
+    wealth: { bg: '#221c0e', accent: '#ffd870' },
+    gambling: { bg: '#1a1410', accent: '#b88c30' },
+    health: { bg: '#1c1612', accent: '#dab050' },
+    design: { bg: '#1f1a10', accent: '#e8c870' },
+    time: { bg: '#1a1612', accent: '#c0a060' },
+    education: { bg: '#221c10', accent: '#dcb850' },
+    cooking: { bg: '#1c1810', accent: '#cc9030' },
+    game: { bg: '#1c1810', accent: '#e0a830' },
+  },
 };
 
 const THEMES_RECORD: Record<ThemeId, Theme> = {

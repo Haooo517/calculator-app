@@ -6,15 +6,8 @@ import {
   StyleProp,
   StyleSheet,
   Text,
-  View,
   ViewStyle,
 } from 'react-native';
-
-const MONO_FONT = Platform.select({
-  ios: 'Menlo',
-  android: 'monospace',
-  default: 'monospace',
-});
 
 export type MascotExpression =
   | 'default'
@@ -30,51 +23,49 @@ export type MascotExpression =
 
 type Face = { hat: string; leftHand: string; rightHand: string; eyes: string };
 
-const FACES: Record<MascotExpression | 'blink', Face> = {
-  default: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· U ·' },
-  blink: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '− U −' },
+// All eyes are exactly 5 monospace cells: eye + space + mouth + space + eye.
+// Mouth char lives at index 2 so blink can preserve it.
+const FACES: Record<MascotExpression, Face> = {
+  default: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '. U .' },
   happy: { hat: 'π', leftHand: '~', rightHand: '~', eyes: '^ U ^' },
   excited: { hat: 'π', leftHand: '/', rightHand: '\\', eyes: '* o *' },
-  thinking: { hat: '?', leftHand: '\\', rightHand: '/', eyes: '· ~ o' },
-  sleepy: { hat: 'Z', leftHand: '_', rightHand: '_', eyes: '— ~ —' },
-  drowsy: { hat: 'z', leftHand: '_', rightHand: '_', eyes: '— U —' },
+  thinking: { hat: '?', leftHand: '\\', rightHand: '/', eyes: '. ~ o' },
+  sleepy: { hat: 'Z', leftHand: '_', rightHand: '_', eyes: '- ~ -' },
+  drowsy: { hat: 'z', leftHand: '_', rightHand: '_', eyes: '- U -' },
   surprised: { hat: '!', leftHand: '/', rightHand: '\\', eyes: 'O o O' },
-  love: { hat: '♡', leftHand: '~', rightHand: '~', eyes: '♡ u ♡' },
-  cool: { hat: 'π', leftHand: '<', rightHand: '>', eyes: '▬ u ▬' },
-  sad: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· ∩ ·' },
+  love: { hat: '*', leftHand: '~', rightHand: '~', eyes: 'o u o' },
+  cool: { hat: 'π', leftHand: '<', rightHand: '>', eyes: '= u =' },
+  sad: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '. _ .' },
 };
+
+const DEFAULT_MONO_FONT = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
 type Props = {
   expression?: MascotExpression;
   size?: number;
   color?: string;
+  fontFamily?: string;
   bob?: boolean;
   autoBlink?: boolean;
   style?: StyleProp<ViewStyle>;
-  faceShake?: Animated.Value;
 };
 
 export function Mascot({
   expression = 'default',
   size = 56,
   color = '#2d3d20',
+  fontFamily,
   bob = true,
   autoBlink = true,
   style,
-  faceShake,
 }: Props) {
-  const [current, setCurrent] = useState<MascotExpression | 'blink'>(expression);
+  const [blinking, setBlinking] = useState(false);
   const bobAnim = useRef(new Animated.Value(0)).current;
 
-  // sync current state when expression prop changes
-  useEffect(() => {
-    setCurrent(expression);
-  }, [expression]);
-
-  // auto blink loop
+  // auto blink — only when eyes are open (not sleepy/drowsy)
   useEffect(() => {
     if (!autoBlink) return;
-    if (expression === 'sleepy') return;
+    if (expression === 'sleepy' || expression === 'drowsy') return;
 
     let timer: ReturnType<typeof setTimeout>;
     let alive = true;
@@ -83,10 +74,10 @@ export function Mascot({
       const wait = 2400 + Math.random() * 2600;
       timer = setTimeout(() => {
         if (!alive) return;
-        setCurrent('blink');
+        setBlinking(true);
         timer = setTimeout(() => {
           if (!alive) return;
-          setCurrent(expression);
+          setBlinking(false);
           schedule();
         }, 130);
       }, wait);
@@ -99,7 +90,7 @@ export function Mascot({
     };
   }, [expression, autoBlink]);
 
-  // bob animation
+  // breathing bob
   useEffect(() => {
     if (!bob) return;
     const loop = Animated.loop(
@@ -123,28 +114,39 @@ export function Mascot({
   }, [bob, bobAnim]);
 
   const translateY = bobAnim.interpolate({ inputRange: [0, 1], outputRange: [0, -3] });
-  const face = FACES[current];
+  const face = FACES[expression];
+
+  // When blinking: replace the two eye positions with '-' but keep the mouth (index 2).
+  const eyesStr = blinking ? `- ${face.eyes[2]} -` : face.eyes;
+  const fullLine = `${face.leftHand}[ ${eyesStr} ]${face.rightHand}`;
 
   const hatSize = size * 0.32;
   const faceSize = size * 0.42;
-
-  const monoStyle = { fontSize: faceSize, color, lineHeight: faceSize * 1.15 };
-  const faceTransform = faceShake ? [{ translateX: faceShake }] : undefined;
+  const monoFamily = fontFamily ?? DEFAULT_MONO_FONT;
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY }] }, style]}>
       <Text
-        style={[styles.line, { fontSize: hatSize, color, lineHeight: hatSize * 1.05 }]}
+        style={[
+          styles.line,
+          { fontSize: hatSize, color, lineHeight: hatSize * 1.05 },
+        ]}
       >
         {face.hat}
       </Text>
-      <View style={styles.faceRow}>
-        <Text style={[styles.mono, monoStyle]}>{`${face.leftHand}[ `}</Text>
-        <Animated.Text style={[styles.mono, monoStyle, faceTransform && { transform: faceTransform }]}>
-          {face.eyes}
-        </Animated.Text>
-        <Text style={[styles.mono, monoStyle]}>{` ]${face.rightHand}`}</Text>
-      </View>
+      <Text
+        style={[
+          styles.mono,
+          {
+            fontFamily: monoFamily,
+            fontSize: faceSize,
+            color,
+            lineHeight: faceSize * 1.15,
+          },
+        ]}
+      >
+        {fullLine}
+      </Text>
     </Animated.View>
   );
 }
@@ -158,14 +160,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   mono: {
-    fontFamily: MONO_FONT,
     fontWeight: '700',
     textAlign: 'center',
     letterSpacing: 0,
-  },
-  faceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
   },
 });

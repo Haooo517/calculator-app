@@ -80,7 +80,7 @@ export function LCDScreen() {
   const text = useTypewriter();
   const cursorVisible = useBlinkingCursor();
   const [expression, setExpression] = useState<MascotExpression>(getTimeExpression);
-  const shakeAnim = useRef(new Animated.Value(0)).current;
+  const tapX = useRef(new Animated.Value(0)).current;
   const tapY = useRef(new Animated.Value(0)).current;
   const tapRot = useRef(new Animated.Value(0)).current;
   const tapScale = useRef(new Animated.Value(1)).current;
@@ -144,6 +144,7 @@ export function LCDScreen() {
   };
 
   const resetTapAnim = () => {
+    tapX.setValue(0);
     tapY.setValue(0);
     tapRot.setValue(0);
     tapScale.setValue(1);
@@ -173,11 +174,11 @@ export function LCDScreen() {
         setTimeout(() => {
           setExpression('default');
           Animated.sequence([
-            Animated.timing(shakeAnim, { toValue: -5, duration: 220, useNativeDriver: true }),
-            Animated.timing(shakeAnim, { toValue: 5, duration: 280, useNativeDriver: true }),
-            Animated.timing(shakeAnim, { toValue: -4, duration: 260, useNativeDriver: true }),
-            Animated.timing(shakeAnim, { toValue: 3, duration: 240, useNativeDriver: true }),
-            Animated.timing(shakeAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
+            Animated.timing(tapX, { toValue: -6, duration: 220, useNativeDriver: true }),
+            Animated.timing(tapX, { toValue: 6, duration: 280, useNativeDriver: true }),
+            Animated.timing(tapX, { toValue: -5, duration: 260, useNativeDriver: true }),
+            Animated.timing(tapX, { toValue: 3, duration: 240, useNativeDriver: true }),
+            Animated.timing(tapX, { toValue: 0, duration: 200, useNativeDriver: true }),
           ]).start();
         }, 900)
       );
@@ -211,6 +212,7 @@ export function LCDScreen() {
             styles.mascotWrap,
             {
               transform: [
+                { translateX: tapX },
                 { translateY: tapY },
                 {
                   rotate: tapRot.interpolate({
@@ -226,8 +228,8 @@ export function LCDScreen() {
           <Mascot
             expression={expression}
             size={56}
-            faceShake={shakeAnim}
             color={theme.lcdText}
+            fontFamily={theme.font?.mono}
           />
         </Animated.View>
         <Text
