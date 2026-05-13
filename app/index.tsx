@@ -3,6 +3,7 @@ import { CaretRight, GearSix } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../components/CategoryIcon';
 import { LCDScreen } from '../components/LCDScreen';
+import { Onboarding } from '../components/Onboarding';
 import { CATEGORIES } from '../data/categories';
 import { usePins } from '../lib/pins';
 import { useTheme } from '../lib/theme';
@@ -19,6 +20,7 @@ export default function HomeScreen() {
       contentContainerStyle={styles.content}
     >
       <Stack.Screen options={{ headerShown: false }} />
+      <Onboarding />
 
       <View style={styles.topBar}>
         <TouchableOpacity

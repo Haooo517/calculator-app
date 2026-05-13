@@ -2,6 +2,7 @@ import Constants from 'expo-constants';
 import { Stack, useRouter } from 'expo-router';
 import {
   CaretRight,
+  HandWaving,
   Info,
   Palette,
   PushPinSlash,
@@ -9,6 +10,7 @@ import {
   Translate,
 } from 'phosphor-react-native';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { resetOnboarding } from '../components/Onboarding';
 import { usePins } from '../lib/pins';
 import { useTheme } from '../lib/theme';
 
@@ -72,6 +74,16 @@ export default function SettingsScreen() {
           sub: `目前釘了 ${pins.size} 個工具`,
           Icon: PushPinSlash,
           onPress: handleResetPins,
+        },
+        {
+          label: '重看新手引導',
+          sub: '再見一次歐古的介紹',
+          Icon: HandWaving,
+          onPress: () => {
+            resetOnboarding().then(() => {
+              Alert.alert('已重設', '回到首頁就會看到引導。');
+            });
+          },
         },
       ],
     },
