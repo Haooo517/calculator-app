@@ -81,7 +81,81 @@ export function LCDScreen() {
   const cursorVisible = useBlinkingCursor();
   const [expression, setExpression] = useState<MascotExpression>(getTimeExpression);
   const shakeAnim = useRef(new Animated.Value(0)).current;
+  const tapY = useRef(new Animated.Value(0)).current;
+  const tapRot = useRef(new Animated.Value(0)).current;
+  const tapScale = useRef(new Animated.Value(1)).current;
   const timeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const playTapAnim = (pick: MascotExpression) => {
+    const opts = { useNativeDriver: true };
+    switch (pick) {
+      case 'happy':
+        // 開心歪頭擺擺
+        Animated.sequence([
+          Animated.timing(tapRot, { toValue: 0.5, duration: 220, ...opts }),
+          Animated.timing(tapRot, { toValue: -0.5, duration: 280, ...opts }),
+          Animated.timing(tapRot, { toValue: 0.3, duration: 240, ...opts }),
+          Animated.timing(tapRot, { toValue: 0, duration: 220, ...opts }),
+        ]).start();
+        break;
+      case 'excited':
+        // 興奮跳兩下
+        Animated.sequence([
+          Animated.timing(tapY, { toValue: -14, duration: 180, ...opts }),
+          Animated.spring(tapY, { toValue: 0, friction: 4, ...opts }),
+          Animated.timing(tapY, { toValue: -10, duration: 160, ...opts }),
+          Animated.spring(tapY, { toValue: 0, friction: 4, ...opts }),
+        ]).start();
+        break;
+      case 'surprised':
+        // 嚇到縮一下再回來
+        Animated.sequence([
+          Animated.timing(tapScale, { toValue: 1.2, duration: 120, ...opts }),
+          Animated.timing(tapScale, { toValue: 0.95, duration: 100, ...opts }),
+          Animated.spring(tapScale, { toValue: 1, friction: 5, ...opts }),
+        ]).start();
+        break;
+      case 'love':
+        // 愛心怦怦跳
+        Animated.sequence([
+          Animated.timing(tapScale, { toValue: 1.15, duration: 200, ...opts }),
+          Animated.timing(tapScale, { toValue: 1, duration: 220, ...opts }),
+          Animated.timing(tapScale, { toValue: 1.1, duration: 180, ...opts }),
+          Animated.timing(tapScale, { toValue: 1, duration: 200, ...opts }),
+        ]).start();
+        break;
+      case 'cool':
+        // 酷酷靠在側邊
+        Animated.sequence([
+          Animated.timing(tapRot, { toValue: 0.35, duration: 320, ...opts }),
+          Animated.delay(900),
+          Animated.timing(tapRot, { toValue: 0, duration: 300, ...opts }),
+        ]).start();
+        break;
+      case 'wink':
+        // 眨眼小點頭
+        Animated.sequence([
+          Animated.timing(tapY, { toValue: -5, duration: 150, ...opts }),
+          Animated.timing(tapY, { toValue: 2, duration: 130, ...opts }),
+          Animated.timing(tapY, { toValue: 0, duration: 130, ...opts }),
+        ]).start();
+        break;
+      case 'thinking':
+        // 沉思 — 往左歪然後停住
+        Animated.sequence([
+          Animated.timing(tapRot, { toValue: -0.4, duration: 350, ...opts }),
+          Animated.delay(1200),
+          Animated.timing(tapRot, { toValue: 0, duration: 350, ...opts }),
+        ]).start();
+        break;
+    }
+  };
+
+  const resetTapAnim = () => {
+    tapY.setValue(0);
+    tapRot.setValue(0);
+    tapScale.setValue(1);
+  };
 
   const clearPendingTimeouts = () => {
     timeouts.current.forEach(clearTimeout);
@@ -121,10 +195,12 @@ export function LCDScreen() {
       return;
     }
 
-    // 其他時候：換隨機表情，3 秒後回到時段表情
+    // 其他時候：換隨機表情 + 對應的特殊動畫，3 秒後回到時段表情
     const others = TAP_EXPRESSIONS.filter((e) => e !== expression);
     const pick = others[Math.floor(Math.random() * others.length)];
+    resetTapAnim();
     setExpression(pick);
+    playTapAnim(pick);
     timeouts.current.push(
       setTimeout(() => setExpression(getTimeExpression()), 2800)
     );
@@ -138,13 +214,30 @@ export function LCDScreen() {
         activeOpacity={0.92}
       >
         <View style={styles.scanlines} pointerEvents="none" />
-        <Mascot
-          expression={expression}
-          size={56}
-          style={styles.mascot}
-          faceShake={shakeAnim}
-          color={theme.lcdText}
-        />
+        <Animated.View
+          style={[
+            styles.mascotWrap,
+            {
+              transform: [
+                { translateY: tapY },
+                {
+                  rotate: tapRot.interpolate({
+                    inputRange: [-1, 1],
+                    outputRange: ['-15deg', '15deg'],
+                  }),
+                },
+                { scale: tapScale },
+              ],
+            },
+          ]}
+        >
+          <Mascot
+            expression={expression}
+            size={56}
+            faceShake={shakeAnim}
+            color={theme.lcdText}
+          />
+        </Animated.View>
         <Text
           style={[styles.textBlock, { color: theme.lcdText }]}
           numberOfLines={3}
@@ -199,6 +292,9 @@ const styles = StyleSheet.create({
     opacity: 0.04,
   },
   mascot: {
+    marginBottom: 10,
+  },
+  mascotWrap: {
     marginBottom: 10,
   },
   textBlock: {
