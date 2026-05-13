@@ -16,10 +16,26 @@ const getTimeExpression = (): MascotExpression => {
 
 const MESSAGES = [
   '嗨！我是歐古！',
-  '我的英文名字是 Allcu 喔！',
+  '我的英文是 Allcu 喔！',
   '今天想算什麼？',
   '挑一個工具吧！',
   '什麼都能算給你！',
+  '圈圈圓圓圈圈～',
+  '相關計算都需要我～',
+  '除了算命之外都會！',
+  '我是相信機率的。',
+  'allcu = all + calc',
+  '其實全名是 allculator',
+  '我的眼睛不是小數點！',
+  '不然就掉到地上了…',
+  '我的帽子是圓周率 π',
+  '但我才不是 π 郎！',
+  '冬天我躲在角落，',
+  '那裡剛好有 90 度。',
+  '世界上有 10 種人，',
+  '懂二進位的和不懂的。',
+  '一寺一壺酒，',
+  '二柳捂衫舞…',
 ];
 
 const TYPE_MS = 100;
@@ -139,7 +155,7 @@ export function LCDScreen() {
           <View style={styles.led} />
           <Text style={styles.brand}>ALLCULATOR</Text>
         </View>
-        <Text style={styles.sparkle}>✦ V1</Text>
+        <Text style={styles.sparkle}>by haooo</Text>
       </View>
     </View>
   );
