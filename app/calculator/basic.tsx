@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { Backspace } from 'phosphor-react-native';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { haptics } from '../../lib/haptics';
 
 const BACK = 'BACK';
 
@@ -92,14 +93,35 @@ export default function BasicCalculator() {
   };
 
   const handlePress = (btn: string) => {
-    if (btn >= '0' && btn <= '9') return handleNumber(btn);
-    if (btn === '.') return handleDecimal();
-    if (OPERATORS.includes(btn)) return handleOperator(btn as Operator);
-    if (btn === '=') return handleEquals();
-    if (btn === 'C') return handleClear();
-    if (btn === '±') return handleSign();
-    if (btn === '%') return handlePercent();
-    if (btn === BACK) return handleBackspace();
+    if (btn >= '0' && btn <= '9') {
+      haptics.light();
+      return handleNumber(btn);
+    }
+    if (btn === '.') {
+      haptics.light();
+      return handleDecimal();
+    }
+    if (OPERATORS.includes(btn)) {
+      haptics.medium();
+      return handleOperator(btn as Operator);
+    }
+    if (btn === '=') {
+      haptics.success();
+      return handleEquals();
+    }
+    if (btn === 'C') {
+      haptics.warning();
+      return handleClear();
+    }
+    if (btn === '±' || btn === '%') {
+      haptics.soft();
+      if (btn === '±') return handleSign();
+      return handlePercent();
+    }
+    if (btn === BACK) {
+      haptics.soft();
+      return handleBackspace();
+    }
   };
 
   const isOperatorActive = (btn: string) =>

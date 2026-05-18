@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { haptics } from '../lib/haptics';
 import { useTheme } from '../lib/theme';
 import { BackgroundPattern } from './BackgroundPattern';
 import { Mascot, MascotExpression } from './Mascot';
@@ -177,6 +178,7 @@ export function LCDScreen() {
 
     // 睡著時被點：驚醒 → 搖臉環顧 → 慢慢閉眼睡回去
     if (expression === 'sleepy') {
+      haptics.heavy(); // 把歐古嚇醒 = 重觸感
       setExpression('surprised');
 
       timeouts.current.push(
@@ -200,6 +202,10 @@ export function LCDScreen() {
     // 其他時候：換隨機表情 + 對應的特殊動畫
     const others = TAP_EXPRESSIONS.filter((e) => e !== expression);
     const pick = others[Math.floor(Math.random() * others.length)];
+    // 哭哭給比較重的回饋，其他輕觸
+    if (pick === 'cry') haptics.medium();
+    else if (pick === 'surprised') haptics.rigid();
+    else haptics.soft();
     resetTapAnim();
     setExpression(pick);
     playTapAnim(pick);

@@ -3,6 +3,7 @@ import { CaretRight, Lock, PushPin } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CategoryIcon } from '../../components/CategoryIcon';
 import { Calculator, getCategoryById } from '../../data/categories';
+import { haptics } from '../../lib/haptics';
 import { getPinnedCalculators, usePins } from '../../lib/pins';
 import { categoryColors, useTheme } from '../../lib/theme';
 
@@ -58,7 +59,11 @@ export default function CategoryScreen() {
               <TouchableOpacity
                 key={calc.id}
                 style={[styles.row, { backgroundColor: theme.cardBg }, calc.comingSoon && styles.rowDisabled]}
-                onPress={() => calc.route && router.push(calc.route as any)}
+                onPress={() => {
+                  if (!calc.route) return;
+                  haptics.soft();
+                  router.push(calc.route as any);
+                }}
                 activeOpacity={calc.comingSoon ? 1 : 0.75}
               >
                 <View style={[styles.rowDot, { backgroundColor: colors.bg }]} />
@@ -68,7 +73,10 @@ export default function CategoryScreen() {
                 </View>
                 {!calc.comingSoon && (
                   <TouchableOpacity
-                    onPress={() => toggle(calc.id)}
+                    onPress={() => {
+                      haptics.light();
+                      toggle(calc.id);
+                    }}
                     style={styles.pinBtn}
                     hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                   >
