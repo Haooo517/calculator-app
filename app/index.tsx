@@ -7,6 +7,7 @@ import { CategoryIcon } from '../components/CategoryIcon';
 import { LCDScreen } from '../components/LCDScreen';
 import { Onboarding } from '../components/Onboarding';
 import { CATEGORIES } from '../data/categories';
+import { haptics } from '../lib/haptics';
 import { usePins } from '../lib/pins';
 import { categoryColors, useTheme } from '../lib/theme';
 
@@ -14,7 +15,10 @@ export default function HomeScreen() {
   const router = useRouter();
   const { theme } = useTheme();
   const { pins } = usePins();
-  const go = (id: string) => router.push(`/category/${id}` as any);
+  const go = (id: string) => {
+    haptics.soft();
+    router.push(`/category/${id}` as any);
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.bg }]}>
@@ -28,7 +32,10 @@ export default function HomeScreen() {
       <View style={styles.topBar}>
         <TouchableOpacity
           style={[styles.iconBtn, { backgroundColor: theme.cardBg }]}
-          onPress={() => router.push('/settings' as any)}
+          onPress={() => {
+            haptics.light();
+            router.push('/settings' as any);
+          }}
           activeOpacity={0.7}
         >
           <GearSix size={20} color={theme.text} weight="fill" />

@@ -8,10 +8,12 @@ import {
   PushPinSlash,
   SpeakerHigh,
   Translate,
+  Vibrate,
 } from 'phosphor-react-native';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { BackgroundPattern } from '../components/BackgroundPattern';
 import { resetOnboarding } from '../components/Onboarding';
+import { haptics, useHapticsToggle } from '../lib/haptics';
 import { usePins } from '../lib/pins';
 import { useTheme } from '../lib/theme';
 
@@ -19,6 +21,8 @@ export default function SettingsScreen() {
   const router = useRouter();
   const { theme } = useTheme();
   const { pins } = usePins();
+  const { enabled: hapticsOn, setEnabled: setHapticsOn, supported: hapticsSupported } =
+    useHapticsToggle();
   const version = Constants.expoConfig?.version ?? '1.0.0';
 
   const handleResetPins = () => {
@@ -44,6 +48,7 @@ export default function SettingsScreen() {
       Icon: any;
       onPress?: () => void;
       right?: string;
+      toggle?: { value: boolean; onChange: (v: boolean) => void };
     }[];
   }[] = [
     {
@@ -53,13 +58,24 @@ export default function SettingsScreen() {
           label: '主題',
           sub: '挑你喜歡的配色',
           Icon: Palette,
-          onPress: () => router.push('/themes' as any),
+          onPress: () => {
+            haptics.light();
+            router.push('/themes' as any);
+          },
         },
       ],
     },
     {
       title: '一般',
       items: [
+        {
+          label: '觸感回饋',
+          sub: hapticsSupported ? '按鍵時的小小振動' : '這台裝置不支援',
+          Icon: Vibrate,
+          toggle: hapticsSupported
+            ? { value: hapticsOn, onChange: setHapticsOn }
+            : undefined,
+        },
         {
           label: '音效',
           sub: '即將推出',
@@ -74,13 +90,17 @@ export default function SettingsScreen() {
           label: '重設釘選',
           sub: `目前釘了 ${pins.size} 個工具`,
           Icon: PushPinSlash,
-          onPress: handleResetPins,
+          onPress: () => {
+            haptics.warning();
+            handleResetPins();
+          },
         },
         {
           label: '重看新手引導',
           sub: '再見一次歐古的介紹',
           Icon: HandWaving,
           onPress: () => {
+            haptics.light();
             resetOnboarding().then(() => {
               Alert.alert('已重設', '回到首頁就會看到引導。');
             });
@@ -147,7 +167,7 @@ export default function SettingsScreen() {
                   style={styles.row}
                   onPress={item.onPress}
                   activeOpacity={item.onPress ? 0.6 : 1}
-                  disabled={!item.onPress}
+                  disabled={!item.onPress && !item.toggle}
                 >
                   <View
                     style={[
@@ -170,7 +190,14 @@ export default function SettingsScreen() {
                       <Text style={[styles.rowSub, { color: theme.textMuted }]}>{item.sub}</Text>
                     )}
                   </View>
-                  {item.right ? (
+                  {item.toggle ? (
+                    <Switch
+                      value={item.toggle.value}
+                      onValueChange={item.toggle.onChange}
+                      trackColor={{ false: theme.divider, true: theme.brandColor }}
+                      thumbColor="#fff"
+                    />
+                  ) : item.right ? (
                     <Text style={[styles.rowRight, { color: theme.textMuted }]}>{item.right}</Text>
                   ) : item.onPress ? (
                     <CaretRight size={16} color={theme.hint} weight="bold" />
