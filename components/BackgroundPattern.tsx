@@ -30,18 +30,19 @@ export function BackgroundPattern({ type, color, color2, opacity = 0.18 }: Props
             <Rect width={6} height={18} fill={color} opacity={opacity} />
           </Pattern>
         ) : (
-          // candy cane: 兩色交錯斜紋
+          // candy cane: 白底 + 細紅斜線（仿照拐杖糖包裝紙）
+          // 白底固定不透明蓋滿，紅線細而疏 ≈ 1:5
           <Pattern
             id="bg-candy"
             x={0}
             y={0}
-            width={16}
-            height={16}
+            width={18}
+            height={18}
             patternUnits="userSpaceOnUse"
-            patternTransform="rotate(35)"
+            patternTransform="rotate(45)"
           >
-            <Rect width={16} height={16} fill={color2 ?? '#ffffff'} opacity={opacity * 2.5} />
-            <Rect x={0} y={0} width={8} height={16} fill={color} opacity={opacity * 3.5} />
+            <Rect width={18} height={18} fill={color2 ?? '#ffffff'} />
+            <Rect x={0} y={0} width={3} height={18} fill={color} opacity={opacity} />
           </Pattern>
         )}
       </Defs>

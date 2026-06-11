@@ -6,11 +6,14 @@ import {
 } from '@expo-google-fonts/fredoka';
 import { Caveat_700Bold } from '@expo-google-fonts/caveat';
 import { Fraunces_700Bold } from '@expo-google-fonts/fraunces';
+import { MaShanZheng_400Regular } from '@expo-google-fonts/ma-shan-zheng';
+import { NotoSansTC_500Medium, NotoSansTC_700Bold } from '@expo-google-fonts/noto-sans-tc';
 import { PixelifySans_700Bold } from '@expo-google-fonts/pixelify-sans';
 import { PressStart2P_400Regular } from '@expo-google-fonts/press-start-2p';
 import { ShareTechMono_400Regular } from '@expo-google-fonts/share-tech-mono';
 import { SpaceMono_700Bold } from '@expo-google-fonts/space-mono';
 import { VT323_400Regular } from '@expo-google-fonts/vt323';
+import { ZCOOLKuaiLe_400Regular } from '@expo-google-fonts/zcool-kuaile';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -30,7 +33,7 @@ function StackWithTheme() {
           headerTitleStyle: { fontFamily: 'Fredoka_700Bold', fontSize: 20, color: theme.text },
           headerTitleAlign: 'center',
           headerShadowVisible: false,
-          headerBackButtonDisplayMode: 'minimal',
+          headerBackVisible: false, // 關掉 iOS 預設的玻璃圓框
           headerLeft: ({ canGoBack }) => (canGoBack ? <BackButton /> : null),
           contentStyle: { backgroundColor: theme.bg },
         }}
@@ -52,6 +55,10 @@ export default function RootLayout() {
     Fraunces_700Bold,
     VT323_400Regular,
     Caveat_700Bold,
+    ZCOOLKuaiLe_400Regular,
+    MaShanZheng_400Regular,
+    NotoSansTC_500Medium,
+    NotoSansTC_700Bold,
   });
 
   if (!loaded) return <View style={{ flex: 1, backgroundColor: '#fff8ed' }} />;

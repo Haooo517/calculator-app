@@ -96,7 +96,17 @@ export default function HomeScreen() {
               )}
 
               <View style={styles.rowMid}>
-                <Text style={[styles.rowTitle, { color: theme.text }]}>{cat.title}</Text>
+                <Text
+                  style={[
+                    styles.rowTitle,
+                    {
+                      color: theme.text,
+                      fontFamily: theme.font?.displayCn ?? 'Fredoka_700Bold',
+                    },
+                  ]}
+                >
+                  {cat.title}
+                </Text>
                 <View style={styles.rowMetaWrap}>
                   <Text
                     style={[

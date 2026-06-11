@@ -1,6 +1,7 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { CaretRight, Lock, PushPin } from 'phosphor-react-native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackgroundPattern } from '../../components/BackgroundPattern';
 import { CategoryIcon } from '../../components/CategoryIcon';
 import { Calculator, getCategoryById } from '../../data/categories';
 import { haptics } from '../../lib/haptics';
@@ -31,17 +32,46 @@ export default function CategoryScreen() {
   const colors = categoryColors(theme, category.id, { bg: category.bg, accent: category.accent });
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.bg }]}
-      contentContainerStyle={styles.content}
-    >
-      <Stack.Screen options={{ title: category.title }} />
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
+      {theme.bgPattern && (
+        <BackgroundPattern type={theme.bgPattern} color={theme.bgPatternColor ?? theme.hint} />
+      )}
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+      <Stack.Screen
+        options={{
+          title: category.title,
+          headerTitleStyle: {
+            fontFamily: theme.font?.display ?? 'Fredoka_700Bold',
+            fontSize: 18,
+            color: theme.text,
+          },
+        }}
+      />
 
-      <View style={[styles.hero, { backgroundColor: theme.heroBg ?? colors.bg }]}>
+      <View
+        style={[
+          styles.hero,
+          { backgroundColor: theme.heroBg ?? colors.bg },
+          theme.cardBorder && {
+            borderWidth: theme.cardBorder.width,
+            borderColor: theme.cardBorder.color,
+          },
+        ]}
+      >
         <View style={styles.heroIconWrap}>
           <CategoryIcon id={category.id} size={48} color={colors.accent} weight="fill" />
         </View>
-        <Text style={[styles.heroTitle, { color: colors.accent }]}>{category.title}</Text>
+        <Text
+          style={[
+            styles.heroTitle,
+            {
+              color: colors.accent,
+              fontFamily: theme.font?.displayCn ?? 'Fredoka_700Bold',
+            },
+          ]}
+        >
+          {category.title}
+        </Text>
         <Text style={[styles.heroSubtitle, { color: colors.accent }]}>{category.subtitle}</Text>
       </View>
 
@@ -58,7 +88,15 @@ export default function CategoryScreen() {
             return (
               <TouchableOpacity
                 key={calc.id}
-                style={[styles.row, { backgroundColor: theme.cardBg }, calc.comingSoon && styles.rowDisabled]}
+                style={[
+                  styles.row,
+                  { backgroundColor: theme.cardBg },
+                  theme.cardBorder && {
+                    borderWidth: theme.cardBorder.width,
+                    borderColor: theme.cardBorder.color,
+                  },
+                  calc.comingSoon && styles.rowDisabled,
+                ]}
                 onPress={() => {
                   if (!calc.route) return;
                   haptics.soft();
@@ -97,12 +135,16 @@ export default function CategoryScreen() {
           })}
         </View>
       )}
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scroll: {
     flex: 1,
   },
   content: {
