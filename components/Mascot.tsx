@@ -20,7 +20,9 @@ export type MascotExpression =
   | 'love'
   | 'cool'
   | 'sad'
-  | 'cry';
+  | 'cry'
+  | 'dizzy'
+  | 'shake'; // 一次性動畫：頭不動，臉左右晃（喚醒）
 
 type Face = { hat: string; leftHand: string; rightHand: string; eyes: string };
 
@@ -38,6 +40,8 @@ const FACES: Record<MascotExpression, Face> = {
   cool: { hat: 'π', leftHand: '<', rightHand: '>', eyes: '▬ u ▬' },
   sad: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· ∩ ·' },
   cry: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: 'T ∩ T' },
+  dizzy: { hat: '@', leftHand: '~', rightHand: '~', eyes: '@ ~ @' },
+  shake: { hat: 'π', leftHand: '\\', rightHand: '/', eyes: '· U ·' }, // 動畫結束時的休息臉
 };
 
 const CRY_FRAMES = [
@@ -57,6 +61,47 @@ const CRY_FRAMES = [
 const CRY_FRAME_MS = 320;
 
 const WAVE_FRAMES = ['|', '/', '_', '/'];
+
+// 頭不動 (brackets 固定)，臉在裡面左右晃 — 用於睡覺被叫醒
+// 5 個字一格，shift face content left/right within fixed 5-cell field
+const SHAKE_FRAMES = [
+  'O o O', // 驚醒中心
+  ' Oo O', // 整張臉往右擠一格
+  '  OoO',
+  ' OoO ',
+  'OoO  ',
+  ' OoO ',
+  '  OoO',
+  ' Oo O',
+  'O o O', // 回正
+];
+const SHAKE_FRAME_MS = 90;
+
+// 360° 轉頭：臉在 brackets 裡轉一圈，最後停在暈眩臉
+// 把臉內容當作往左推然後從右邊推回來，模擬旋轉
+const SPIN_FRAMES = [
+  '> o <', // 正面
+  ' o < ',
+  'o <  ',
+  ' <   ',
+  '     ', // 後腦勺
+  '    >',
+  '   > ',
+  '  > o',
+  ' > o ',
+  '> o <', // 一圈
+  ' o < ',
+  'o <  ',
+  ' <   ',
+  '     ',
+  '    >',
+  '   > ',
+  '  > o',
+  ' > o ',
+  '> o <',
+  '@ ~ @', // 暈眩停下
+];
+const SPIN_FRAME_MS = 95;
 
 const MONO_FONT = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
@@ -86,13 +131,22 @@ export function Mascot({
 }: Props) {
   const [blinking, setBlinking] = useState(false);
   const [cryFrame, setCryFrame] = useState(-1);
+  const [shakeFrame, setShakeFrame] = useState(-1);
+  const [spinFrame, setSpinFrame] = useState(-1);
   const [waveFrame, setWaveFrame] = useState(0);
   const bobAnim = useRef(new Animated.Value(0)).current;
 
   // auto blink (skip when eyes already closed or crying — handled separately)
   useEffect(() => {
     if (!autoBlink) return;
-    if (expression === 'sleepy' || expression === 'drowsy' || expression === 'cry') return;
+    if (
+      expression === 'sleepy' ||
+      expression === 'drowsy' ||
+      expression === 'cry' ||
+      expression === 'shake' ||
+      expression === 'dizzy'
+    )
+      return;
 
     let timer: ReturnType<typeof setTimeout>;
     let alive = true;
@@ -139,6 +193,50 @@ export function Mascot({
     };
   }, [expression]);
 
+  // 喚醒搖頭：頭不動，臉在 brackets 裡左右晃
+  useEffect(() => {
+    if (expression !== 'shake') {
+      setShakeFrame(-1);
+      return;
+    }
+    setShakeFrame(0);
+    let alive = true;
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+    for (let i = 1; i < SHAKE_FRAMES.length; i++) {
+      timeouts.push(
+        setTimeout(() => {
+          if (alive) setShakeFrame(i);
+        }, i * SHAKE_FRAME_MS)
+      );
+    }
+    return () => {
+      alive = false;
+      timeouts.forEach(clearTimeout);
+    };
+  }, [expression]);
+
+  // 360° 轉頭：頭不動，臉在 brackets 裡轉一圈，最後停在暈眩臉
+  useEffect(() => {
+    if (expression !== 'dizzy') {
+      setSpinFrame(-1);
+      return;
+    }
+    setSpinFrame(0);
+    let alive = true;
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+    for (let i = 1; i < SPIN_FRAMES.length; i++) {
+      timeouts.push(
+        setTimeout(() => {
+          if (alive) setSpinFrame(i);
+        }, i * SPIN_FRAME_MS)
+      );
+    }
+    return () => {
+      alive = false;
+      timeouts.forEach(clearTimeout);
+    };
+  }, [expression]);
+
   // wave loop for happy
   useEffect(() => {
     if (expression !== 'happy') return;
@@ -175,17 +273,41 @@ export function Mascot({
   const translateY = bobAnim.interpolate({ inputRange: [0, 1], outputRange: [0, -3] });
   const face = FACES[expression];
 
-  const eyesStr =
-    expression === 'cry' && cryFrame >= 0
-      ? CRY_FRAMES[cryFrame]
-      : blinking
-      ? `- ${face.eyes[2]} -`
-      : face.eyes;
+  let eyesStr: string;
+  if (expression === 'cry' && cryFrame >= 0) {
+    eyesStr = CRY_FRAMES[cryFrame];
+  } else if (expression === 'shake' && shakeFrame >= 0) {
+    eyesStr = SHAKE_FRAMES[shakeFrame];
+  } else if (expression === 'dizzy' && spinFrame >= 0) {
+    eyesStr = SPIN_FRAMES[spinFrame];
+  } else if (blinking) {
+    eyesStr = `- ${face.eyes[2]} -`;
+  } else {
+    eyesStr = face.eyes;
+  }
+
+  // cat 變體：嘴巴 U/u → w（保留 ∩/~ 等其他嘴型）
+  if (variant === 'cat') {
+    const m = eyesStr[2];
+    if (m === 'U' || m === 'u') {
+      eyesStr = `${eyesStr.slice(0, 2)}w${eyesStr.slice(3)}`;
+    }
+  }
 
   const rh = expression === 'happy' ? WAVE_FRAMES[waveFrame] : face.rightHand;
   const leftBracket = variant === 'cat' ? '(' : '[';
   const rightBracket = variant === 'cat' ? ')' : ']';
   const fullLine = `${face.leftHand}${leftBracket} ${eyesStr} ${rightBracket}${rh}`;
+
+  // cat 變體：用貓耳取代帽子（除了哭/睡/想等情境性帽子）
+  const displayHat =
+    variant === 'cat' &&
+    expression !== 'sleepy' &&
+    expression !== 'drowsy' &&
+    expression !== 'thinking' &&
+    expression !== 'surprised'
+      ? '^ ^'
+      : face.hat;
 
   const hatSize = size * 0.32;
   const faceSize = size * 0.42;
@@ -194,7 +316,7 @@ export function Mascot({
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY }] }, style]}>
       <Text style={[styles.line, { fontSize: hatSize, color, lineHeight: hatSize * 1.05 }]}>
-        {face.hat}
+        {displayHat}
       </Text>
       <Text
         style={[

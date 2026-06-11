@@ -6,7 +6,7 @@ import { BackgroundPattern } from './BackgroundPattern';
 import { Mascot, MascotExpression } from './Mascot';
 
 const TAP_EXPRESSIONS: MascotExpression[] = [
-  'happy', 'excited', 'thinking', 'surprised', 'love', 'cool', 'cry',
+  'happy', 'excited', 'thinking', 'surprised', 'love', 'cool', 'cry', 'dizzy',
 ];
 
 const getTimeExpression = (): MascotExpression => {
@@ -150,6 +150,7 @@ export function LCDScreen() {
           Animated.timing(tapY, { toValue: 0, duration: 500, ...opts }),
         ]).start();
         break;
+      // dizzy 沒有 body transform — 臉的旋轉由 Mascot 內部 SPIN_FRAMES 處理
     }
   };
 
@@ -176,26 +177,16 @@ export function LCDScreen() {
   const handleTap = () => {
     clearPendingTimeouts();
 
-    // 睡著時被點：驚醒 → 搖臉環顧 → 慢慢閉眼睡回去
+    // 睡著時被點：驚醒 → 搖頭環顧（頭不動，臉左右晃）→ 慢慢閉眼睡回去
     if (expression === 'sleepy') {
       haptics.heavy(); // 把歐古嚇醒 = 重觸感
       setExpression('surprised');
-
-      timeouts.current.push(
-        setTimeout(() => {
-          setExpression('default');
-          Animated.sequence([
-            Animated.timing(tapX, { toValue: -6, duration: 220, useNativeDriver: true }),
-            Animated.timing(tapX, { toValue: 6, duration: 280, useNativeDriver: true }),
-            Animated.timing(tapX, { toValue: -5, duration: 260, useNativeDriver: true }),
-            Animated.timing(tapX, { toValue: 3, duration: 240, useNativeDriver: true }),
-            Animated.timing(tapX, { toValue: 0, duration: 200, useNativeDriver: true }),
-          ]).start();
-        }, 900)
-      );
-
-      timeouts.current.push(setTimeout(() => setExpression('drowsy'), 3200));
-      timeouts.current.push(setTimeout(() => setExpression('sleepy'), 4200));
+      // 0.9s 後切換到 shake — Mascot 內部會跑 SHAKE_FRAMES（約 0.8s）
+      timeouts.current.push(setTimeout(() => setExpression('shake'), 900));
+      // shake 動畫結束（約 9*90 = 810ms）後讓臉回到 default
+      timeouts.current.push(setTimeout(() => setExpression('default'), 1750));
+      timeouts.current.push(setTimeout(() => setExpression('drowsy'), 3400));
+      timeouts.current.push(setTimeout(() => setExpression('sleepy'), 4400));
       return;
     }
 
@@ -209,8 +200,8 @@ export function LCDScreen() {
     resetTapAnim();
     setExpression(pick);
     playTapAnim(pick);
-    // 哭哭動畫比較長，多給一點時間
-    const revertDelay = pick === 'cry' ? 4800 : 2800;
+    // 哭哭/暈頭動畫比較長，多給一點時間
+    const revertDelay = pick === 'cry' ? 4800 : pick === 'dizzy' ? 3200 : 2800;
     timeouts.current.push(
       setTimeout(() => setExpression(getTimeExpression()), revertDelay)
     );
@@ -232,7 +223,7 @@ export function LCDScreen() {
           type={theme.lcdFramePattern}
           color={theme.lcdFramePatternColor ?? '#fff'}
           color2={theme.lcdFramePatternColor2}
-          opacity={0.4}
+          opacity={theme.lcdFramePattern === 'candy' ? 1 : 0.65}
         />
       )}
       <TouchableOpacity
