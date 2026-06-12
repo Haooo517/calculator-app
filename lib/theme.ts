@@ -143,7 +143,7 @@ const candy: Theme = {
   cardBg: '#fff',
   inputBg: '#fde4ef',
   text: '#5a2d4d',
-  textMuted: '#b58aa3',
+  textMuted: '#9a6f88',
   hint: '#d4a8c2',
   divider: '#fce4ee',
   brandColor: '#e91e63',
@@ -166,13 +166,13 @@ const candy: Theme = {
   categoryPalette: {
     favorites: { bg: '#ffd4e8', accent: '#ff3a80' },
     life: { bg: '#c8e8ff', accent: '#2090ff' },
-    science: { bg: '#c8ffd8', accent: '#10b850' },
-    wealth: { bg: '#fff0a0', accent: '#e8a010' },
+    science: { bg: '#c8ffd8', accent: '#0c9842' },
+    wealth: { bg: '#fff0a0', accent: '#c88408' },
     gambling: { bg: '#f0c4ff', accent: '#9030d8' },
-    health: { bg: '#ffc4d0', accent: '#ff4070' },
-    design: { bg: '#ffd0b8', accent: '#ff7020' },
+    health: { bg: '#ffc4d0', accent: '#e83060' },
+    design: { bg: '#ffd0b8', accent: '#e85c10' },
     time: { bg: '#d0d0ff', accent: '#5050e8' },
-    education: { bg: '#ffe4b0', accent: '#d88010' },
+    education: { bg: '#ffe4b0', accent: '#c0700a' },
     cooking: { bg: '#ffd0c0', accent: '#ff4020' },
     game: { bg: '#c4ffc4', accent: '#30b020' },
   },
@@ -224,7 +224,7 @@ const cat: Theme = {
   cardBg: '#fff',
   inputBg: '#fce8c0',
   text: '#5a3018',
-  textMuted: '#b08868',
+  textMuted: '#9a7252',
   hint: '#d4b890',
   divider: '#f8e4c0',
   brandColor: '#e8843a',
@@ -234,6 +234,7 @@ const cat: Theme = {
   lcdBorder: '#d49040',
   lcdText: '#5a3018',
   lcdLed: '#ff8a30',
+  lcdBrandColor: '#7a3a10', // 深棕，在 #ffb868 框上才看得到
   mascotVariant: 'cat',
   bgPattern: 'dots',
   bgPatternColor: '#e8a868',
@@ -297,10 +298,10 @@ const haooo: Theme = {
     favorites: { bg: HAOOO_BG, accent: '#e02040' }, // 深紅
     life: { bg: HAOOO_BG, accent: '#3098ff' }, // 藍（少量對比）
     science: { bg: HAOOO_BG, accent: '#30a040' }, // 綠
-    wealth: { bg: HAOOO_BG, accent: '#d89010' }, // 金黃
+    wealth: { bg: HAOOO_BG, accent: '#b87808' }, // 金黃（加深保對比）
     gambling: { bg: HAOOO_BG, accent: '#9040d0' }, // 紫
-    health: { bg: HAOOO_BG, accent: '#ff70a8' }, // 粉
-    design: { bg: HAOOO_BG, accent: '#ff8030' }, // 橘
+    health: { bg: HAOOO_BG, accent: '#e85090' }, // 粉（加深保對比）
+    design: { bg: HAOOO_BG, accent: '#e06010' }, // 橘（加深保對比）
     time: { bg: HAOOO_BG, accent: '#5060d8' }, // 靛
     education: { bg: HAOOO_BG, accent: '#a86018' }, // 棕
     cooking: { bg: HAOOO_BG, accent: '#ff4020' }, // 橘紅
@@ -393,7 +394,7 @@ const tech: Theme = {
     time: { bg: '#dceeff', accent: '#3070e0' },
     education: { bg: '#e4f0ff', accent: '#1070d8' },
     cooking: { bg: '#e8f4ff', accent: '#0080c8' },
-    game: { bg: '#dcefff', accent: '#00a0ff' },
+    game: { bg: '#dcefff', accent: '#0088e0' },
   },
 };
 
@@ -464,7 +465,7 @@ const pixelArcade: Theme = {
   lcdBorder: '#0a4020',
   lcdText: '#0a4020',
   lcdLed: '#ff3050',
-  lcdBrandColor: '#0a4020',
+  lcdBrandColor: '#ffd000', // 街機黃，在 #3a2068 紫框上才看得到
   font: { display: 'PressStart2P_400Regular', mono: 'PressStart2P_400Regular' },
   cardBorder: { color: '#ffd000', width: 2 },
   // 街機霓虹色：每格不同霓虹按鈕
@@ -623,6 +624,7 @@ const doggy: Theme = {
   lcdBorder: '#a87038',
   lcdText: '#4a2818',
   lcdLed: '#ff9038',
+  lcdBrandColor: '#4a2818', // 深棕，在 #d4a468 框上才看得到
   bgPattern: 'dots',
   bgPatternColor: '#d4a468',
   // 各種狗狗的毛色
@@ -630,7 +632,7 @@ const doggy: Theme = {
     favorites: { bg: '#fad0a0', accent: '#c87030' }, // 黃金獵犬
     life:      { bg: '#f0e0c8', accent: '#8a6038' }, // 柴犬
     science:   { bg: '#fff0d0', accent: '#a87030' }, // 米克斯
-    wealth:    { bg: '#fae8a8', accent: '#c89020' }, // 黃金
+    wealth:    { bg: '#fae8a8', accent: '#a87810' }, // 黃金（加深保對比）
     gambling:  { bg: '#e0d8d0', accent: '#605040' }, // 灰
     health:    { bg: '#fad8c8', accent: '#c85838' }, // 柯基
     design:    { bg: '#fac8a0', accent: '#a83820' }, // 紅貴賓
@@ -716,13 +718,14 @@ const zoo: Theme = {
   lcdBorder: '#5a3a18',
   lcdText: '#2a2010',
   lcdLed: '#e85020',
+  lcdBrandColor: '#fff5d8', // 米白，在 #a87838 棕框上才看得到
   font: { display: 'Fraunces_700Bold' },
   // 動物毛色：獅子金、老虎橘、企鵝黑、熊棕…
   categoryPalette: {
-    favorites: { bg: '#fae0a0', accent: '#d49020' }, // 獅子
+    favorites: { bg: '#fae0a0', accent: '#b07410' }, // 獅子（加深保對比）
     life:      { bg: '#f0e0c0', accent: '#8a6028' }, // 大象
     science:   { bg: '#fae8c8', accent: '#8a7038' }, // 長頸鹿
-    wealth:    { bg: '#fae8a0', accent: '#c89020' }, // 黃金
+    wealth:    { bg: '#fae8a0', accent: '#a87810' }, // 黃金（加深保對比）
     gambling:  { bg: '#e8d8c0', accent: '#605040' }, // 灰狼
     health:    { bg: '#fad8c0', accent: '#c85020' }, // 紅毛猩猩
     design:    { bg: '#fac890', accent: '#a83818' }, // 老虎
@@ -822,7 +825,7 @@ const flower: Theme = {
     favorites: { bg: '#fad8e4', accent: '#e84080' }, // 玫瑰
     life:      { bg: '#e0f0d8', accent: '#5aa040' }, // 葉子
     science:   { bg: '#e8e0f0', accent: '#8050b0' }, // 薰衣草
-    wealth:    { bg: '#fff0c8', accent: '#d8a020' }, // 向日葵
+    wealth:    { bg: '#fff0c8', accent: '#b8860b' }, // 向日葵（加深保對比）
     gambling:  { bg: '#f0d8f0', accent: '#a050a0' }, // 紫羅蘭
     health:    { bg: '#fae0d8', accent: '#e85838' }, // 鬱金香
     design:    { bg: '#fae8d0', accent: '#d47830' }, // 萬壽菊
