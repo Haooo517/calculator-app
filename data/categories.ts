@@ -108,10 +108,10 @@ export const CATEGORIES: Category[] = [
     bg: '#f0c4e8',
     accent: '#8a3a8d',
     calculators: [
-      { id: 'color', title: '色彩換算', subtitle: 'RGB / HEX / HSL', comingSoon: true },
-      { id: 'aspect-ratio', title: '寬高比', subtitle: '16:9、4:3', comingSoon: true },
-      { id: 'golden-ratio', title: '黃金比例', subtitle: '1:1.618', comingSoon: true },
-      { id: 'font-size', title: '字級換算', subtitle: 'px / rem / pt', comingSoon: true },
+      { id: 'color', title: '色彩換算', subtitle: 'RGB / HEX / HSL', route: '/calculator/color' },
+      { id: 'aspect-ratio', title: '寬高比', subtitle: '16:9、4:3', route: '/calculator/aspect-ratio' },
+      { id: 'golden-ratio', title: '黃金比例', subtitle: '1:1.618', route: '/calculator/golden-ratio' },
+      { id: 'font-size', title: '字級換算', subtitle: 'px / rem / pt', route: '/calculator/font-size' },
     ],
   },
   {
@@ -150,9 +150,9 @@ export const CATEGORIES: Category[] = [
     bg: '#f5b8a8',
     accent: '#a8443a',
     calculators: [
-      { id: 'recipe-scale', title: '食譜倍率', subtitle: '人數換算', comingSoon: true },
-      { id: 'oven-temp', title: '烤箱溫度', subtitle: '°C / °F / Gas Mark', comingSoon: true },
-      { id: 'ingredient-sub', title: '食材替換', subtitle: '替代比例', comingSoon: true },
+      { id: 'recipe-scale', title: '食譜倍率', subtitle: '人數換算', route: '/calculator/recipe-scale' },
+      { id: 'oven-temp', title: '烤箱溫度', subtitle: '°C / °F / Gas Mark', route: '/calculator/oven-temp' },
+      { id: 'ingredient-sub', title: '食材替換', subtitle: '替代比例', route: '/calculator/ingredient-sub' },
     ],
   },
   {
