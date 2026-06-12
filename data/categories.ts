@@ -122,10 +122,10 @@ export const CATEGORIES: Category[] = [
     bg: '#d4d8e0',
     accent: '#4a5868',
     calculators: [
-      { id: 'countdown', title: '倒數計時', subtitle: '設定提醒', comingSoon: true },
-      { id: 'pomodoro', title: '番茄鐘', subtitle: '專注計時', comingSoon: true },
-      { id: 'work-hours', title: '工時計算', subtitle: '時數加總', comingSoon: true },
-      { id: 'seniority', title: '年資計算', subtitle: '到職至今', comingSoon: true },
+      { id: 'countdown', title: '倒數計時', subtitle: '專注倒數', route: '/calculator/countdown' },
+      { id: 'pomodoro', title: '番茄鐘', subtitle: '專注計時', route: '/calculator/pomodoro' },
+      { id: 'work-hours', title: '工時計算', subtitle: '時數加總', route: '/calculator/work-hours' },
+      { id: 'seniority', title: '年資計算', subtitle: '到職至今、特休', route: '/calculator/seniority' },
     ],
   },
   {
