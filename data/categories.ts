@@ -96,8 +96,8 @@ export const CATEGORIES: Category[] = [
       { id: 'bmi', title: 'BMI 計算', subtitle: '身體質量指數', route: '/calculator/bmi' },
       { id: 'calorie', title: '熱量計算', subtitle: '每日所需熱量', route: '/calculator/calorie' },
       { id: 'pregnancy', title: '預產期', subtitle: '懷孕週數', route: '/calculator/pregnancy' },
-      { id: 'heart-rate', title: '心率區間', subtitle: '運動心率', comingSoon: true },
-      { id: 'water', title: '水分攝取', subtitle: '每日建議量', comingSoon: true },
+      { id: 'heart-rate', title: '心率區間', subtitle: '運動心率', route: '/calculator/heart-rate' },
+      { id: 'water', title: '水分攝取', subtitle: '每日建議量', route: '/calculator/water' },
     ],
   },
   {
@@ -136,10 +136,10 @@ export const CATEGORIES: Category[] = [
     bg: '#e0c890',
     accent: '#786020',
     calculators: [
-      { id: 'gpa', title: 'GPA 計算', subtitle: '學期平均', comingSoon: true },
-      { id: 'weighted-avg', title: '加權平均', subtitle: '考試成績', comingSoon: true },
-      { id: 'word-count', title: '字數統計', subtitle: '文章字數', comingSoon: true },
-      { id: 'student-loan', title: '學貸試算', subtitle: '每月償還', comingSoon: true },
+      { id: 'gpa', title: 'GPA 計算', subtitle: '學期平均', route: '/calculator/gpa' },
+      { id: 'weighted-avg', title: '加權平均', subtitle: '考試成績', route: '/calculator/weighted-avg' },
+      { id: 'word-count', title: '字數統計', subtitle: '文章字數', route: '/calculator/word-count' },
+      { id: 'student-loan', title: '學貸試算', subtitle: '每月償還', route: '/calculator/student-loan' },
     ],
   },
   {
