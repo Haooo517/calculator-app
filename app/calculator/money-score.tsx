@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { Coins, TrendDown, TrendUp, Wallet } from 'phosphor-react-native';
 import { ComponentType, useMemo, useState } from 'react';
 import { Mascot, MascotExpression } from '../../components/Mascot';
+import { useTheme } from '../../lib/theme';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -40,6 +41,7 @@ type BreakItem = {
 };
 
 export default function MoneyScoreCalculator() {
+  const { theme } = useTheme();
   const [income, setIncome] = useState('');
   const [expense, setExpense] = useState('');
   const [savings, setSavings] = useState('');
@@ -108,13 +110,13 @@ export default function MoneyScoreCalculator() {
   }, [income, expense, savings, debt, monthlySave]);
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff8ed' }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Stack.Screen options={{ title: '金錢評分' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>理財健康分數</Text>
-        <Text style={styles.subtitle}>填入 5 項數字，看你的金錢健康度</Text>
+        <Text style={[styles.title, { color: theme.text }]}>理財健康分數</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>填入 5 項數字，看你的金錢健康度</Text>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
           {[
             { label: '月收入', value: income, onChange: setIncome, ph: '50000' },
             { label: '月支出', value: expense, onChange: setExpense, ph: '30000' },
@@ -124,21 +126,21 @@ export default function MoneyScoreCalculator() {
           ].map((f, i, arr) => (
             <View key={f.label}>
               <View style={styles.inputRow}>
-                <Text style={styles.label}>{f.label}</Text>
+                <Text style={[styles.label, { color: theme.text }]}>{f.label}</Text>
                 <View style={styles.inputWrap}>
-                  <Text style={styles.prefix}>$</Text>
+                  <Text style={[styles.prefix, { color: theme.hint }]}>$</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: theme.text }]}
                     value={f.value}
                     onChangeText={f.onChange}
                     placeholder={f.ph}
-                    placeholderTextColor="#c8b8a8"
+                    placeholderTextColor={theme.hint}
                     keyboardType="decimal-pad"
                     maxLength={10}
                   />
                 </View>
               </View>
-              {i < arr.length - 1 && <View style={styles.divider} />}
+              {i < arr.length - 1 && <View style={[styles.divider, { backgroundColor: theme.divider }]} />}
             </View>
           ))}
         </View>
@@ -156,31 +158,31 @@ export default function MoneyScoreCalculator() {
               <Text style={[styles.tierTip, { color: result.tier.fg }]}>{result.tier.tip}</Text>
             </View>
 
-            <Text style={styles.sectionLabel}>分數明細</Text>
+            <Text style={[styles.sectionLabel, { color: theme.textMuted }]}>分數明細</Text>
             <View style={styles.breakList}>
               {result.breakdown.map((b) => (
-                <View key={b.label} style={styles.breakRow}>
+                <View key={b.label} style={[styles.breakRow, { backgroundColor: theme.cardBg }]}>
                   <View style={styles.breakHead}>
                     <View style={styles.breakIconWrap}>
                       <b.Icon size={18} color="#8d6e00" weight="fill" />
                     </View>
-                    <Text style={styles.breakLabel}>{b.label}</Text>
+                    <Text style={[styles.breakLabel, { color: theme.text }]}>{b.label}</Text>
                     <Text style={styles.breakScore}>
                       {b.earned} / {b.max}
                     </Text>
                   </View>
-                  <View style={styles.bar}>
+                  <View style={[styles.bar, { backgroundColor: theme.divider }]}>
                     <View style={[styles.barFill, { width: `${(b.earned / b.max) * 100}%` }]} />
                   </View>
-                  <Text style={styles.breakDetail}>{b.detail}</Text>
+                  <Text style={[styles.breakDetail, { color: theme.textMuted }]}>{b.detail}</Text>
                 </View>
               ))}
             </View>
           </>
         ) : (
-          <View style={styles.placeholderCard}>
-            <Mascot expression="sleepy" color="#a3897a" size={48} />
-            <Text style={[styles.placeholderText, { marginTop: 4 }]}>填好 5 項數字就會出現分數</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Mascot expression="sleepy" color={theme.hint} size={48} />
+            <Text style={[styles.placeholderText, { color: theme.hint, marginTop: 4 }]}>填好 5 項數字就會出現分數</Text>
           </View>
         )}
       </ScrollView>
@@ -189,24 +191,24 @@ export default function MoneyScoreCalculator() {
 }
 
 const C = {
-  card: '#fff', text: '#2d2520', muted: '#8a7a6c', hint: '#a3897a', divider: '#f1e3d0',
+  hint: '#a3897a',
   accentBg: '#ffe082', accent: '#8d6e00',
 };
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
-  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, color: C.text, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
-  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, color: C.muted, marginBottom: 22, textAlign: 'center' },
+  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
+  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, marginBottom: 22, textAlign: 'center' },
   card: {
-    backgroundColor: C.card, borderRadius: 24, padding: 6, marginBottom: 16,
+    borderRadius: 24, padding: 6, marginBottom: 16,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
   },
   inputRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 12 },
-  label: { fontFamily: 'Fredoka_600SemiBold', fontSize: 15, color: C.text, width: 80 },
+  label: { fontFamily: 'Fredoka_600SemiBold', fontSize: 15, width: 80 },
   inputWrap: { flex: 1, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'flex-end', gap: 4 },
-  prefix: { fontFamily: 'Fredoka_500Medium', fontSize: 16, color: C.hint },
-  input: { fontFamily: 'Fredoka_700Bold', fontSize: 22, color: C.text, textAlign: 'right', minWidth: 80, padding: 0 },
-  divider: { height: 1, backgroundColor: C.divider, marginHorizontal: 18 },
+  prefix: { fontFamily: 'Fredoka_500Medium', fontSize: 16 },
+  input: { fontFamily: 'Fredoka_700Bold', fontSize: 22, textAlign: 'right', minWidth: 80, padding: 0 },
+  divider: { height: 1, marginHorizontal: 18 },
   mainCard: {
     borderRadius: 28, padding: 28, alignItems: 'center', marginBottom: 18,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
@@ -217,22 +219,22 @@ const styles = StyleSheet.create({
   mainUnit: { fontSize: 24 },
   tierBadge: { fontFamily: 'Fredoka_700Bold', fontSize: 22, marginTop: 4 },
   tierTip: { fontFamily: 'Fredoka_400Regular', fontSize: 13, opacity: 0.85, marginTop: 6, textAlign: 'center' },
-  sectionLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, color: C.muted, marginLeft: 8, marginBottom: 10, letterSpacing: 0.5 },
+  sectionLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, marginLeft: 8, marginBottom: 10, letterSpacing: 0.5 },
   breakList: { gap: 10 },
   breakRow: {
-    backgroundColor: C.card, borderRadius: 18, padding: 14,
+    borderRadius: 18, padding: 14,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2,
   },
   breakHead: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 8 },
   breakIconWrap: { width: 30, height: 30, borderRadius: 10, backgroundColor: C.accentBg, alignItems: 'center', justifyContent: 'center' },
-  breakLabel: { flex: 1, fontFamily: 'Fredoka_600SemiBold', fontSize: 14, color: C.text },
+  breakLabel: { flex: 1, fontFamily: 'Fredoka_600SemiBold', fontSize: 14 },
   breakScore: { fontFamily: 'Fredoka_700Bold', fontSize: 14, color: C.accent },
-  bar: { height: 6, backgroundColor: '#f1e3d0', borderRadius: 3, overflow: 'hidden', marginBottom: 6 },
+  bar: { height: 6, borderRadius: 3, overflow: 'hidden', marginBottom: 6 },
   barFill: { height: '100%', backgroundColor: C.accent, borderRadius: 3 },
-  breakDetail: { fontFamily: 'Fredoka_400Regular', fontSize: 12, color: C.muted, marginLeft: 40 },
+  breakDetail: { fontFamily: 'Fredoka_400Regular', fontSize: 12, marginLeft: 40 },
   placeholderCard: {
-    backgroundColor: C.card, borderRadius: 28, padding: 36, alignItems: 'center', gap: 10,
-    borderWidth: 2, borderColor: C.divider, borderStyle: 'dashed',
+    borderRadius: 28, padding: 36, alignItems: 'center', gap: 10,
+    borderWidth: 2, borderStyle: 'dashed',
   },
-  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.hint },
+  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
 });

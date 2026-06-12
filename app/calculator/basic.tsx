@@ -3,6 +3,7 @@ import { Backspace } from 'phosphor-react-native';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { haptics } from '../../lib/haptics';
+import { useTheme } from '../../lib/theme';
 
 const BACK = 'BACK';
 
@@ -19,6 +20,7 @@ const OPERATORS = ['÷', '×', '−', '+'];
 type Operator = '÷' | '×' | '−' | '+' | null;
 
 export default function BasicCalculator() {
+  const { theme } = useTheme();
   const [display, setDisplay] = useState('0');
   const [prevValue, setPrevValue] = useState<number | null>(null);
   const [operator, setOperator] = useState<Operator>(null);
@@ -131,8 +133,8 @@ export default function BasicCalculator() {
     if (btn === '=') return [styles.btn, styles.btnEquals];
     if (OPERATORS.includes(btn))
       return [styles.btn, styles.btnOperator, isOperatorActive(btn) && styles.btnOperatorActive];
-    if (['C', '±', '%', BACK].includes(btn)) return [styles.btn, styles.btnFunction];
-    return [styles.btn, styles.btnNumber];
+    if (['C', '±', '%', BACK].includes(btn)) return [styles.btn, { backgroundColor: theme.inputBg }];
+    return [styles.btn, { backgroundColor: theme.cardBg }];
   };
 
   const getTextStyle = (btn: string) => {
@@ -140,22 +142,22 @@ export default function BasicCalculator() {
     if (OPERATORS.includes(btn))
       return [styles.btnText, styles.btnTextOperator, isOperatorActive(btn) && styles.btnTextOperatorActive];
     if (['C', '±', '%'].includes(btn)) return [styles.btnText, styles.btnTextFunction];
-    return [styles.btnText, styles.btnTextNumber];
+    return [styles.btnText, { color: theme.text }];
   };
 
   const fontSize = display.length > 9 ? 44 : display.length > 6 ? 60 : 76;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
       <Stack.Screen options={{ title: '基本計算機' }} />
 
       <View style={styles.displayArea}>
         {operator && prevValue !== null && (
-          <Text style={styles.expression}>
+          <Text style={[styles.expression, { color: theme.hint }]}>
             {prevValue} {operator}
           </Text>
         )}
-        <Text style={[styles.display, { fontSize }]} numberOfLines={1} adjustsFontSizeToFit>
+        <Text style={[styles.display, { fontSize, color: theme.text }]} numberOfLines={1} adjustsFontSizeToFit>
           {display}
         </Text>
       </View>
@@ -187,7 +189,6 @@ export default function BasicCalculator() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff8ed',
   },
   displayArea: {
     flex: 1,
@@ -199,12 +200,10 @@ const styles = StyleSheet.create({
   expression: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 22,
-    color: '#a3897a',
     marginBottom: 4,
   },
   display: {
     fontFamily: 'Fredoka_700Bold',
-    color: '#2d2520',
     letterSpacing: -2,
   },
   buttons: {
@@ -228,9 +227,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
-  btnNumber: {
-    backgroundColor: '#fff',
-  },
   btnOperator: {
     backgroundColor: '#ffd4ba',
   },
@@ -240,15 +236,9 @@ const styles = StyleSheet.create({
   btnEquals: {
     backgroundColor: '#c4623a',
   },
-  btnFunction: {
-    backgroundColor: '#f1e3d0',
-  },
   btnText: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 28,
-  },
-  btnTextNumber: {
-    color: '#2d2520',
   },
   btnTextOperator: {
     color: '#c4623a',

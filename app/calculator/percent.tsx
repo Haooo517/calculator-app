@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { Percent } from 'phosphor-react-native';
 import { Mascot } from '../../components/Mascot';
+import { useTheme } from '../../lib/theme';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -27,6 +28,7 @@ const format = (n: number, digits = 2) => {
 };
 
 export default function PercentCalculator() {
+  const { theme } = useTheme();
   const [mode, setMode] = useState<Mode>('value');
   const [pct, setPct] = useState('');
   const [num, setNum] = useState('');
@@ -74,49 +76,49 @@ export default function PercentCalculator() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: '#fff8ed' }}
+      style={{ flex: 1, backgroundColor: theme.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Stack.Screen options={{ title: '百分比計算' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>百分比計算</Text>
-        <Text style={styles.subtitle}>{MODES.find((m) => m.id === mode)?.hint}</Text>
+        <Text style={[styles.title, { color: theme.text }]}>百分比計算</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>{MODES.find((m) => m.id === mode)?.hint}</Text>
 
-        <View style={styles.modes}>
+        <View style={[styles.modes, { backgroundColor: theme.inputBg }]}>
           {MODES.map((m) => {
             const active = mode === m.id;
             return (
               <TouchableOpacity
                 key={m.id}
-                style={[styles.modeBtn, active && styles.modeBtnActive]}
+                style={[styles.modeBtn, active && styles.modeBtnActive, active && { backgroundColor: theme.cardBg }]}
                 onPress={() => switchMode(m.id)}
                 activeOpacity={0.75}
               >
-                <Text style={[styles.modeText, active && styles.modeTextActive]}>{m.label}</Text>
+                <Text style={[styles.modeText, { color: theme.textMuted }, active && styles.modeTextActive]}>{m.label}</Text>
               </TouchableOpacity>
             );
           })}
         </View>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
           {fields.map((f, i) => (
             <View key={f.label}>
               <View style={styles.inputRow}>
-                <Text style={styles.label}>{f.label}</Text>
+                <Text style={[styles.label, { color: theme.text }]}>{f.label}</Text>
                 <View style={styles.inputWrap}>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: theme.text }]}
                     value={f.value}
                     onChangeText={f.onChange}
                     placeholder={f.placeholder}
-                    placeholderTextColor="#c8b8a8"
+                    placeholderTextColor={theme.hint}
                     keyboardType="decimal-pad"
                     maxLength={10}
                   />
-                  {f.suffix && <Text style={styles.suffix}>{f.suffix}</Text>}
+                  {f.suffix && <Text style={[styles.suffix, { color: theme.hint }]}>{f.suffix}</Text>}
                 </View>
               </View>
-              {i < fields.length - 1 && <View style={styles.divider} />}
+              {i < fields.length - 1 && <View style={[styles.divider, { backgroundColor: theme.divider }]} />}
             </View>
           ))}
         </View>
@@ -144,9 +146,9 @@ export default function PercentCalculator() {
             </View>
           )
         ) : (
-          <View style={styles.placeholderCard}>
-            <Mascot expression="sleepy" color="#a3897a" size={48} />
-            <Text style={[styles.placeholderText, { marginTop: 4 }]}>輸入數字就會出現結果</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Mascot expression="sleepy" color={theme.hint} size={48} />
+            <Text style={[styles.placeholderText, { marginTop: 4, color: theme.hint }]}>輸入數字就會出現結果</Text>
           </View>
         )}
       </ScrollView>
@@ -155,12 +157,6 @@ export default function PercentCalculator() {
 }
 
 const C = {
-  bg: '#fff8ed',
-  card: '#fff',
-  text: '#2d2520',
-  muted: '#8a7a6c',
-  hint: '#a3897a',
-  divider: '#f1e3d0',
   accentBg: '#ffd4ba',
   accent: '#c4623a',
 };
@@ -170,7 +166,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 32,
-    color: C.text,
     letterSpacing: -0.5,
     marginBottom: 6,
     textAlign: 'center',
@@ -178,13 +173,11 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
-    color: C.muted,
     marginBottom: 22,
     textAlign: 'center',
   },
   modes: {
     flexDirection: 'row',
-    backgroundColor: '#f1e3d0',
     borderRadius: 16,
     padding: 4,
     gap: 4,
@@ -197,8 +190,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modeBtnActive: {
-    backgroundColor: '#fff',
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
@@ -207,17 +199,15 @@ const styles = StyleSheet.create({
   modeText: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 13,
-    color: C.muted,
   },
   modeTextActive: {
     color: C.accent,
   },
   card: {
-    backgroundColor: C.card,
     borderRadius: 24,
     padding: 6,
     marginBottom: 18,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -232,7 +222,6 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 17,
-    color: C.text,
     width: 96,
   },
   inputWrap: {
@@ -245,7 +234,6 @@ const styles = StyleSheet.create({
   input: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 28,
-    color: C.text,
     textAlign: 'right',
     minWidth: 60,
     padding: 0,
@@ -253,11 +241,9 @@ const styles = StyleSheet.create({
   suffix: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 16,
-    color: C.hint,
   },
   divider: {
     height: 1,
-    backgroundColor: C.divider,
     marginHorizontal: 18,
   },
   resultCard: {
@@ -265,7 +251,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     padding: 28,
     alignItems: 'center',
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
@@ -319,18 +305,15 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
   },
   placeholderCard: {
-    backgroundColor: C.card,
     borderRadius: 28,
     padding: 36,
     alignItems: 'center',
     gap: 10,
     borderWidth: 2,
-    borderColor: C.divider,
     borderStyle: 'dashed',
   },
   placeholderText: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 14,
-    color: C.hint,
   },
 });

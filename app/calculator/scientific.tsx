@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { Backspace } from 'phosphor-react-native';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '../../lib/theme';
 
 type Op = '÷' | '×' | '−' | '+' | '^' | null;
 type Angle = 'DEG' | 'RAD';
@@ -40,6 +41,7 @@ const fmt = (n: number) => {
 };
 
 export default function ScientificCalculator() {
+  const { theme } = useTheme();
   const [display, setDisplay] = useState('0');
   const [prevValue, setPrevValue] = useState<number | null>(null);
   const [operator, setOperator] = useState<Op>(null);
@@ -152,7 +154,7 @@ export default function ScientificCalculator() {
   const fontSize = display.length > 9 ? 36 : display.length > 6 ? 50 : 64;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
       <Stack.Screen options={{ title: '科學計算機' }} />
 
       <View style={styles.displayArea}>
@@ -161,12 +163,12 @@ export default function ScientificCalculator() {
             <Text style={styles.modeText}>{angleMode}</Text>
           </TouchableOpacity>
           {operator && prevValue !== null && (
-            <Text style={styles.expression}>
+            <Text style={[styles.expression, { color: theme.hint }]}>
               {prevValue} {operator}
             </Text>
           )}
         </View>
-        <Text style={[styles.display, { fontSize }]} numberOfLines={1} adjustsFontSizeToFit>
+        <Text style={[styles.display, { color: theme.text, fontSize }]} numberOfLines={1} adjustsFontSizeToFit>
           {display}
         </Text>
       </View>
@@ -202,9 +204,10 @@ export default function ScientificCalculator() {
                     key={btn}
                     style={[
                       styles.numBtn,
+                      { backgroundColor: theme.cardBg },
                       isOp && styles.btnOp,
                       opActive && styles.btnOpActive,
-                      isFunc && styles.btnFunc,
+                      isFunc && { backgroundColor: theme.inputBg },
                       isEq && styles.btnEq,
                     ]}
                     onPress={() => handleBasic(btn)}
@@ -216,6 +219,7 @@ export default function ScientificCalculator() {
                       <Text
                         style={[
                           styles.numText,
+                          { color: theme.text },
                           isOp && styles.numTextOp,
                           opActive && styles.numTextOpActive,
                           isFunc && styles.numTextFunc,
@@ -236,16 +240,8 @@ export default function ScientificCalculator() {
   );
 }
 
-const C = {
-  bg: '#fff8ed',
-  card: '#fff',
-  text: '#2d2520',
-  hint: '#a3897a',
-  muted: '#8a7a6c',
-};
-
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: C.bg },
+  container: { flex: 1 },
   displayArea: {
     paddingHorizontal: 24,
     paddingTop: 12,
@@ -257,28 +253,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#b8e6d2', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 12,
   },
   modeText: { fontFamily: 'Fredoka_700Bold', fontSize: 12, color: '#2d8765', letterSpacing: 1 },
-  expression: { fontFamily: 'Fredoka_500Medium', fontSize: 18, color: C.hint },
-  display: { fontFamily: 'Fredoka_700Bold', color: C.text, letterSpacing: -1.5, marginTop: 8 },
+  expression: { fontFamily: 'Fredoka_500Medium', fontSize: 18 },
+  display: { fontFamily: 'Fredoka_700Bold', letterSpacing: -1.5, marginTop: 8 },
   keys: { padding: 12, gap: 8, paddingBottom: 32 },
   sci: { gap: 8, marginBottom: 6 },
   sciRow: { flexDirection: 'row', gap: 8 },
   sciBtn: {
     flex: 1, paddingVertical: 12, backgroundColor: '#b8e6d2', borderRadius: 14, alignItems: 'center',
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 1,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 1,
   },
   sciText: { fontFamily: 'Fredoka_700Bold', fontSize: 15, color: '#2d8765' },
   numpad: { gap: 8 },
   numRow: { flexDirection: 'row', gap: 8 },
   numBtn: {
-    flex: 1, aspectRatio: 1, backgroundColor: C.card, borderRadius: 999,
+    flex: 1, aspectRatio: 1, borderRadius: 999,
     alignItems: 'center', justifyContent: 'center',
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 6, elevation: 2,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 6, elevation: 2,
   },
   btnOp: { backgroundColor: '#ffd4ba' },
   btnOpActive: { backgroundColor: '#c4623a' },
-  btnFunc: { backgroundColor: '#f1e3d0' },
   btnEq: { backgroundColor: '#c4623a' },
-  numText: { fontFamily: 'Fredoka_600SemiBold', fontSize: 24, color: C.text },
+  numText: { fontFamily: 'Fredoka_600SemiBold', fontSize: 24 },
   numTextOp: { color: '#c4623a' },
   numTextOpActive: { color: '#fff' },
   numTextFunc: { color: '#8a6a4a', fontSize: 20 },

@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { Fire } from 'phosphor-react-native';
 import { Mascot } from '../../components/Mascot';
+import { useTheme } from '../../lib/theme';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -26,6 +27,7 @@ const ACTIVITIES = [
 const fmt = (n: number) => Math.round(n).toLocaleString();
 
 export default function CalorieCalculator() {
+  const { theme } = useTheme();
   const [gender, setGender] = useState<Gender>('male');
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
@@ -51,11 +53,11 @@ export default function CalorieCalculator() {
   }, [gender, age, height, weight, activity]);
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff8ed' }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Stack.Screen options={{ title: '熱量計算' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>每日熱量</Text>
-        <Text style={styles.subtitle}>知道自己一天該吃多少</Text>
+        <Text style={[styles.title, { color: theme.text }]}>每日熱量</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>知道自己一天該吃多少</Text>
 
         <View style={styles.genderRow}>
           {(['male', 'female'] as Gender[]).map((g) => {
@@ -63,11 +65,11 @@ export default function CalorieCalculator() {
             return (
               <TouchableOpacity
                 key={g}
-                style={[styles.genderBtn, active && styles.genderBtnActive]}
+                style={[styles.genderBtn, { backgroundColor: theme.cardBg }, active && styles.genderBtnActive]}
                 onPress={() => setGender(g)}
                 activeOpacity={0.75}
               >
-                <Text style={[styles.genderText, active && styles.genderTextActive]}>
+                <Text style={[styles.genderText, { color: theme.text }, active && styles.genderTextActive]}>
                   {g === 'male' ? '男生' : '女生'}
                 </Text>
               </TouchableOpacity>
@@ -75,7 +77,7 @@ export default function CalorieCalculator() {
           })}
         </View>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
           {[
             { label: '年齡', value: age, onChange: setAge, unit: '歲', ph: '25' },
             { label: '身高', value: height, onChange: setHeight, unit: 'cm', ph: '170' },
@@ -83,41 +85,41 @@ export default function CalorieCalculator() {
           ].map((f, i, arr) => (
             <View key={f.label}>
               <View style={styles.inputRow}>
-                <Text style={styles.label}>{f.label}</Text>
+                <Text style={[styles.label, { color: theme.text }]}>{f.label}</Text>
                 <View style={styles.inputWrap}>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: theme.text }]}
                     value={f.value}
                     onChangeText={f.onChange}
                     placeholder={f.ph}
-                    placeholderTextColor="#c8b8a8"
+                    placeholderTextColor={theme.hint}
                     keyboardType="decimal-pad"
                     maxLength={5}
                   />
-                  <Text style={styles.suffix}>{f.unit}</Text>
+                  <Text style={[styles.suffix, { color: theme.hint }]}>{f.unit}</Text>
                 </View>
               </View>
-              {i < arr.length - 1 && <View style={styles.divider} />}
+              {i < arr.length - 1 && <View style={[styles.divider, { backgroundColor: theme.divider }]} />}
             </View>
           ))}
         </View>
 
-        <Text style={styles.sectionLabel}>活動量</Text>
+        <Text style={[styles.sectionLabel, { color: theme.textMuted }]}>活動量</Text>
         <View style={styles.activityList}>
           {ACTIVITIES.map((a) => {
             const active = activity === a.id;
             return (
               <TouchableOpacity
                 key={a.id}
-                style={[styles.actBtn, active && styles.actBtnActive]}
+                style={[styles.actBtn, { backgroundColor: theme.cardBg }, active && styles.actBtnActive]}
                 onPress={() => setActivity(a.id)}
                 activeOpacity={0.75}
               >
                 <View>
-                  <Text style={[styles.actLabel, active && styles.actLabelActive]}>{a.label}</Text>
-                  <Text style={[styles.actSub, active && styles.actSubActive]}>{a.sub}</Text>
+                  <Text style={[styles.actLabel, { color: theme.text }, active && styles.actLabelActive]}>{a.label}</Text>
+                  <Text style={[styles.actSub, { color: theme.textMuted }, active && styles.actSubActive]}>{a.sub}</Text>
                 </View>
-                <Text style={[styles.actFactor, active && styles.actFactorActive]}>×{a.id}</Text>
+                <Text style={[styles.actFactor, { color: theme.hint }, active && styles.actFactorActive]}>×{a.id}</Text>
               </TouchableOpacity>
             );
           })}
@@ -136,27 +138,27 @@ export default function CalorieCalculator() {
             </View>
 
             <View style={styles.statsRow}>
-              <View style={styles.statCard}>
-                <Text style={styles.statLabel}>減脂</Text>
-                <Text style={styles.statValue}>{fmt(result.cut)}</Text>
-                <Text style={styles.statUnit}>kcal</Text>
+              <View style={[styles.statCard, { backgroundColor: theme.cardBg }]}>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>減脂</Text>
+                <Text style={[styles.statValue, { color: theme.text }]}>{fmt(result.cut)}</Text>
+                <Text style={[styles.statUnit, { color: theme.hint }]}>kcal</Text>
               </View>
               <View style={[styles.statCard, styles.statCardCenter]}>
                 <Text style={[styles.statLabel, styles.statLabelCenter]}>維持</Text>
                 <Text style={[styles.statValue, styles.statValueCenter]}>{fmt(result.maintain)}</Text>
                 <Text style={[styles.statUnit, styles.statUnitCenter]}>kcal</Text>
               </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statLabel}>增肌</Text>
-                <Text style={styles.statValue}>{fmt(result.bulk)}</Text>
-                <Text style={styles.statUnit}>kcal</Text>
+              <View style={[styles.statCard, { backgroundColor: theme.cardBg }]}>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>增肌</Text>
+                <Text style={[styles.statValue, { color: theme.text }]}>{fmt(result.bulk)}</Text>
+                <Text style={[styles.statUnit, { color: theme.hint }]}>kcal</Text>
               </View>
             </View>
           </>
         ) : (
-          <View style={styles.placeholderCard}>
-            <Mascot expression="sleepy" color="#a3897a" size={48} />
-            <Text style={[styles.placeholderText, { marginTop: 4 }]}>填好上面資料就會出現結果</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Mascot expression="sleepy" color={theme.hint} size={48} />
+            <Text style={[styles.placeholderText, { color: theme.hint, marginTop: 4 }]}>填好上面資料就會出現結果</Text>
           </View>
         )}
       </ScrollView>
@@ -165,45 +167,45 @@ export default function CalorieCalculator() {
 }
 
 const C = {
-  card: '#fff', text: '#2d2520', muted: '#8a7a6c', hint: '#a3897a', divider: '#f1e3d0',
+  hint: '#a3897a',
   accentBg: '#ffc4d4', accent: '#c2456a',
 };
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
-  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, color: C.text, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
-  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, color: C.muted, marginBottom: 22, textAlign: 'center' },
+  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
+  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, marginBottom: 22, textAlign: 'center' },
   genderRow: { flexDirection: 'row', gap: 10, marginBottom: 16 },
   genderBtn: {
-    flex: 1, backgroundColor: C.card, paddingVertical: 14, borderRadius: 16, alignItems: 'center',
+    flex: 1, paddingVertical: 14, borderRadius: 16, alignItems: 'center',
     shadowColor: C.hint, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 1,
   },
   genderBtnActive: { backgroundColor: C.accent },
-  genderText: { fontFamily: 'Fredoka_600SemiBold', fontSize: 15, color: C.text },
+  genderText: { fontFamily: 'Fredoka_600SemiBold', fontSize: 15 },
   genderTextActive: { color: '#fff' },
   card: {
-    backgroundColor: C.card, borderRadius: 24, padding: 6, marginBottom: 16,
+    borderRadius: 24, padding: 6, marginBottom: 16,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
   },
   inputRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 14 },
-  label: { fontFamily: 'Fredoka_600SemiBold', fontSize: 17, color: C.text, width: 64 },
+  label: { fontFamily: 'Fredoka_600SemiBold', fontSize: 17, width: 64 },
   inputWrap: { flex: 1, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'flex-end', gap: 6 },
-  input: { fontFamily: 'Fredoka_700Bold', fontSize: 28, color: C.text, textAlign: 'right', minWidth: 70, padding: 0 },
-  suffix: { fontFamily: 'Fredoka_500Medium', fontSize: 15, color: C.hint },
-  divider: { height: 1, backgroundColor: C.divider, marginHorizontal: 18 },
-  sectionLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, color: C.muted, marginLeft: 8, marginBottom: 10, letterSpacing: 0.5 },
+  input: { fontFamily: 'Fredoka_700Bold', fontSize: 28, textAlign: 'right', minWidth: 70, padding: 0 },
+  suffix: { fontFamily: 'Fredoka_500Medium', fontSize: 15 },
+  divider: { height: 1, marginHorizontal: 18 },
+  sectionLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, marginLeft: 8, marginBottom: 10, letterSpacing: 0.5 },
   activityList: { gap: 8, marginBottom: 18 },
   actBtn: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    backgroundColor: C.card, paddingHorizontal: 18, paddingVertical: 12, borderRadius: 16,
+    paddingHorizontal: 18, paddingVertical: 12, borderRadius: 16,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 4, elevation: 1,
   },
   actBtnActive: { backgroundColor: C.accent },
-  actLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 16, color: C.text },
+  actLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 16 },
   actLabelActive: { color: '#fff' },
-  actSub: { fontFamily: 'Fredoka_400Regular', fontSize: 12, color: C.muted, marginTop: 2 },
+  actSub: { fontFamily: 'Fredoka_400Regular', fontSize: 12, marginTop: 2 },
   actSubActive: { color: 'rgba(255,255,255,0.85)' },
-  actFactor: { fontFamily: 'Fredoka_700Bold', fontSize: 15, color: C.hint },
+  actFactor: { fontFamily: 'Fredoka_700Bold', fontSize: 15 },
   actFactorActive: { color: '#fff' },
   mainCard: {
     backgroundColor: C.accentBg, borderRadius: 28, padding: 26, alignItems: 'center', marginBottom: 12,
@@ -216,19 +218,19 @@ const styles = StyleSheet.create({
   mainSub: { fontFamily: 'Fredoka_500Medium', fontSize: 13, color: C.accent, opacity: 0.7, marginTop: 4 },
   statsRow: { flexDirection: 'row', gap: 10 },
   statCard: {
-    flex: 1, backgroundColor: C.card, borderRadius: 18, padding: 14, alignItems: 'center', gap: 2,
+    flex: 1, borderRadius: 18, padding: 14, alignItems: 'center', gap: 2,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2,
   },
   statCardCenter: { backgroundColor: '#ffe082' },
-  statLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, color: C.muted },
+  statLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13 },
   statLabelCenter: { color: '#8d6e00' },
-  statValue: { fontFamily: 'Fredoka_700Bold', fontSize: 22, color: C.text, letterSpacing: -0.3 },
+  statValue: { fontFamily: 'Fredoka_700Bold', fontSize: 22, letterSpacing: -0.3 },
   statValueCenter: { color: '#8d6e00' },
-  statUnit: { fontFamily: 'Fredoka_500Medium', fontSize: 11, color: C.hint },
+  statUnit: { fontFamily: 'Fredoka_500Medium', fontSize: 11 },
   statUnitCenter: { color: '#8d6e00', opacity: 0.7 },
   placeholderCard: {
-    backgroundColor: C.card, borderRadius: 28, padding: 36, alignItems: 'center', gap: 10,
-    borderWidth: 2, borderColor: C.divider, borderStyle: 'dashed',
+    borderRadius: 28, padding: 36, alignItems: 'center', gap: 10,
+    borderWidth: 2, borderStyle: 'dashed',
   },
-  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.hint },
+  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
 });

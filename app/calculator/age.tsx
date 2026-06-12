@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useTheme } from '../../lib/theme';
 
 const today = new Date();
 
@@ -46,6 +47,7 @@ const calcAge = (y: number, m: number, d: number) => {
 };
 
 export default function AgeCalculator() {
+  const { theme } = useTheme();
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
@@ -60,52 +62,52 @@ export default function AgeCalculator() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: '#fff8ed' }}
+      style={{ flex: 1, backgroundColor: theme.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Stack.Screen options={{ title: '年齡計算' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>來算年齡吧</Text>
-        <Text style={styles.subtitle}>輸入你的生日，看看活了多久</Text>
+        <Text style={[styles.title, { color: theme.text }]}>來算年齡吧</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>輸入你的生日，看看活了多久</Text>
 
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>出生日期</Text>
+        <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
+          <Text style={[styles.cardLabel, { color: theme.textMuted }]}>出生日期</Text>
           <View style={styles.dateRow}>
-            <View style={styles.dateField}>
+            <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
               <TextInput
-                style={styles.dateInput}
+                style={[styles.dateInput, { color: theme.text }]}
                 value={year}
                 onChangeText={setYear}
                 placeholder="2000"
-                placeholderTextColor="#c8b8a8"
+                placeholderTextColor={theme.hint}
                 keyboardType="number-pad"
                 maxLength={4}
               />
-              <Text style={styles.dateUnit}>年</Text>
+              <Text style={[styles.dateUnit, { color: theme.hint }]}>年</Text>
             </View>
-            <View style={styles.dateField}>
+            <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
               <TextInput
-                style={styles.dateInput}
+                style={[styles.dateInput, { color: theme.text }]}
                 value={month}
                 onChangeText={setMonth}
                 placeholder="1"
-                placeholderTextColor="#c8b8a8"
+                placeholderTextColor={theme.hint}
                 keyboardType="number-pad"
                 maxLength={2}
               />
-              <Text style={styles.dateUnit}>月</Text>
+              <Text style={[styles.dateUnit, { color: theme.hint }]}>月</Text>
             </View>
-            <View style={styles.dateField}>
+            <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
               <TextInput
-                style={styles.dateInput}
+                style={[styles.dateInput, { color: theme.text }]}
                 value={day}
                 onChangeText={setDay}
                 placeholder="1"
-                placeholderTextColor="#c8b8a8"
+                placeholderTextColor={theme.hint}
                 keyboardType="number-pad"
                 maxLength={2}
               />
-              <Text style={styles.dateUnit}>日</Text>
+              <Text style={[styles.dateUnit, { color: theme.hint }]}>日</Text>
             </View>
           </View>
         </View>
@@ -154,9 +156,9 @@ export default function AgeCalculator() {
             </View>
           </>
         ) : (
-          <View style={styles.placeholderCard}>
-            <Cake size={32} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>填好年月日就會出現結果</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Cake size={32} color={theme.hint} weight="duotone" />
+            <Text style={[styles.placeholderText, { color: theme.hint }]}>填好年月日就會出現結果</Text>
           </View>
         )}
       </ScrollView>
@@ -164,20 +166,11 @@ export default function AgeCalculator() {
   );
 }
 
-const C = {
-  card: '#fff',
-  text: '#2d2520',
-  muted: '#8a7a6c',
-  hint: '#a3897a',
-  divider: '#f1e3d0',
-};
-
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
   title: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 32,
-    color: C.text,
     letterSpacing: -0.5,
     marginBottom: 6,
     textAlign: 'center',
@@ -185,16 +178,14 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
-    color: C.muted,
     marginBottom: 24,
     textAlign: 'center',
   },
   card: {
-    backgroundColor: C.card,
     borderRadius: 24,
     padding: 20,
     marginBottom: 18,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -203,7 +194,6 @@ const styles = StyleSheet.create({
   cardLabel: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 13,
-    color: C.muted,
     marginBottom: 12,
     letterSpacing: 0.5,
   },
@@ -213,7 +203,6 @@ const styles = StyleSheet.create({
   },
   dateField: {
     flex: 1,
-    backgroundColor: '#fef5e8',
     borderRadius: 16,
     padding: 14,
     flexDirection: 'row',
@@ -224,7 +213,6 @@ const styles = StyleSheet.create({
   dateInput: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 24,
-    color: C.text,
     textAlign: 'center',
     minWidth: 50,
     padding: 0,
@@ -232,7 +220,6 @@ const styles = StyleSheet.create({
   dateUnit: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 14,
-    color: C.hint,
   },
   mainCard: {
     backgroundColor: '#b8d8ff',
@@ -240,7 +227,7 @@ const styles = StyleSheet.create({
     padding: 28,
     alignItems: 'center',
     marginBottom: 12,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
@@ -291,7 +278,7 @@ const styles = StyleSheet.create({
     padding: 18,
     alignItems: 'center',
     gap: 2,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -324,7 +311,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -349,18 +336,15 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   placeholderCard: {
-    backgroundColor: C.card,
     borderRadius: 28,
     padding: 36,
     alignItems: 'center',
     gap: 10,
     borderWidth: 2,
-    borderColor: C.divider,
     borderStyle: 'dashed',
   },
   placeholderText: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 14,
-    color: C.hint,
   },
 });

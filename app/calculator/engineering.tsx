@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from '../../lib/theme';
 
 type Base = 2 | 8 | 10 | 16;
 
@@ -43,6 +44,7 @@ const formatBin = (n: number) => {
 };
 
 export default function EngineeringCalculator() {
+  const { theme } = useTheme();
   const [base, setBase] = useState<Base>(10);
   const [val1, setVal1] = useState('');
   const [val2, setVal2] = useState('');
@@ -76,31 +78,31 @@ export default function EngineeringCalculator() {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff8ed' }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Stack.Screen options={{ title: '工程計算機' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>工程計算機</Text>
-        <Text style={styles.subtitle}>進位轉換、位元運算</Text>
+        <Text style={[styles.title, { color: theme.text }]}>工程計算機</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>進位轉換、位元運算</Text>
 
-        <View style={styles.modes}>
+        <View style={[styles.modes, { backgroundColor: theme.inputBg }]}>
           {BASES.map((b) => {
             const active = base === b.id;
             return (
-              <TouchableOpacity key={b.id} style={[styles.modeBtn, active && styles.modeBtnActive]} onPress={() => switchBase(b.id)} activeOpacity={0.75}>
-                <Text style={[styles.modeText, active && styles.modeTextActive]}>{b.label}</Text>
+              <TouchableOpacity key={b.id} style={[styles.modeBtn, active && styles.modeBtnActive, active && { backgroundColor: theme.cardBg }]} onPress={() => switchBase(b.id)} activeOpacity={0.75}>
+                <Text style={[styles.modeText, { color: theme.textMuted }, active && styles.modeTextActive]}>{b.label}</Text>
               </TouchableOpacity>
             );
           })}
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>輸入</Text>
+        <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
+          <Text style={[styles.cardLabel, { color: theme.textMuted }]}>輸入</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: theme.text }]}
             value={val1}
             onChangeText={(t) => VALID[base].test(t) && setVal1(t.toUpperCase())}
             placeholder="0"
-            placeholderTextColor="#c8b8a8"
+            placeholderTextColor={theme.hint}
             autoCapitalize="characters"
             autoCorrect={false}
             keyboardType={base === 10 ? 'number-pad' : 'default'}
@@ -121,21 +123,21 @@ export default function EngineeringCalculator() {
             ))}
           </View>
         ) : (
-          <View style={styles.placeholderCard}>
-            <Binary size={32} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>輸入數字看各進位</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Binary size={32} color={theme.hint} weight="duotone" />
+            <Text style={[styles.placeholderText, { color: theme.hint }]}>輸入數字看各進位</Text>
           </View>
         )}
 
-        <Text style={styles.sectionLabel}>位元運算（選填）</Text>
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>第二個數字</Text>
+        <Text style={[styles.sectionLabel, { color: theme.textMuted }]}>位元運算（選填）</Text>
+        <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
+          <Text style={[styles.cardLabel, { color: theme.textMuted }]}>第二個數字</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: theme.text }]}
             value={val2}
             onChangeText={(t) => VALID[base].test(t) && setVal2(t.toUpperCase())}
             placeholder="0"
-            placeholderTextColor="#c8b8a8"
+            placeholderTextColor={theme.hint}
             autoCapitalize="characters"
             autoCorrect={false}
             keyboardType={base === 10 ? 'number-pad' : 'default'}
@@ -144,7 +146,7 @@ export default function EngineeringCalculator() {
         </View>
 
         {bitwise ? (
-          <View style={styles.bitCard}>
+          <View style={[styles.bitCard, { backgroundColor: theme.cardBg }]}>
             {([
               { op: 'AND', val: bitwise.and },
               { op: 'OR', val: bitwise.or },
@@ -154,7 +156,7 @@ export default function EngineeringCalculator() {
                 <View style={styles.bitOp}>
                   <Text style={styles.bitOpText}>{b.op}</Text>
                 </View>
-                <Text style={styles.bitValue}>
+                <Text style={[styles.bitValue, { color: theme.text }]}>
                   {b.val.toString(base).toUpperCase()}
                 </Text>
               </View>
@@ -167,32 +169,31 @@ export default function EngineeringCalculator() {
 }
 
 const C = {
-  card: '#fff', text: '#2d2520', muted: '#8a7a6c', hint: '#a3897a', divider: '#f1e3d0',
   accentBg: '#b8e6d2', accent: '#2d8765',
 };
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
-  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, color: C.text, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
-  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, color: C.muted, marginBottom: 22, textAlign: 'center' },
+  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
+  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, marginBottom: 22, textAlign: 'center' },
   modes: {
-    flexDirection: 'row', backgroundColor: '#f1e3d0', borderRadius: 16, padding: 4, gap: 4, marginBottom: 16,
+    flexDirection: 'row', borderRadius: 16, padding: 4, gap: 4, marginBottom: 16,
   },
   modeBtn: { flex: 1, paddingVertical: 11, borderRadius: 12, alignItems: 'center' },
-  modeBtnActive: { backgroundColor: '#fff', shadowColor: C.hint, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 4, elevation: 2 },
-  modeText: { fontFamily: 'Fredoka_700Bold', fontSize: 13, color: C.muted, letterSpacing: 0.5 },
+  modeBtnActive: { shadowColor: '#a3897a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 4, elevation: 2 },
+  modeText: { fontFamily: 'Fredoka_700Bold', fontSize: 13, letterSpacing: 0.5 },
   modeTextActive: { color: C.accent },
   card: {
-    backgroundColor: C.card, borderRadius: 24, padding: 18, marginBottom: 12,
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
+    borderRadius: 24, padding: 18, marginBottom: 12,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
   },
-  cardLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 12, color: C.muted, marginBottom: 8, letterSpacing: 0.5 },
+  cardLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 12, marginBottom: 8, letterSpacing: 0.5 },
   input: {
-    fontFamily: 'Fredoka_700Bold', fontSize: 32, color: C.text, letterSpacing: 1, padding: 0,
+    fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: 1, padding: 0,
   },
   convCard: {
     backgroundColor: C.accentBg, borderRadius: 24, padding: 8, marginBottom: 18,
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 10, elevation: 3,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 10, elevation: 3,
   },
   convRow: {
     flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 14,
@@ -207,10 +208,10 @@ const styles = StyleSheet.create({
   convValue: {
     flex: 1, fontFamily: 'Fredoka_600SemiBold', fontSize: 18, color: C.accent, textAlign: 'right',
   },
-  sectionLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, color: C.muted, marginLeft: 8, marginBottom: 10, letterSpacing: 0.5 },
+  sectionLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, marginLeft: 8, marginBottom: 10, letterSpacing: 0.5 },
   bitCard: {
-    backgroundColor: C.card, borderRadius: 24, padding: 8,
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
+    borderRadius: 24, padding: 8,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
   },
   bitRow: {
     flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 14, gap: 10,
@@ -219,10 +220,10 @@ const styles = StyleSheet.create({
     backgroundColor: C.accentBg, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8,
   },
   bitOpText: { fontFamily: 'Fredoka_700Bold', fontSize: 12, color: C.accent, letterSpacing: 1 },
-  bitValue: { flex: 1, fontFamily: 'Fredoka_700Bold', fontSize: 18, color: C.text, textAlign: 'right' },
+  bitValue: { flex: 1, fontFamily: 'Fredoka_700Bold', fontSize: 18, textAlign: 'right' },
   placeholderCard: {
-    backgroundColor: C.card, borderRadius: 24, padding: 30, alignItems: 'center', gap: 10, marginBottom: 18,
-    borderWidth: 2, borderColor: C.divider, borderStyle: 'dashed',
+    borderRadius: 24, padding: 30, alignItems: 'center', gap: 10, marginBottom: 18,
+    borderWidth: 2, borderStyle: 'dashed',
   },
-  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.hint },
+  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
 });

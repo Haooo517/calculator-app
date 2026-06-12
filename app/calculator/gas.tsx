@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { GasPump } from 'phosphor-react-native';
 import { Mascot } from '../../components/Mascot';
+import { useTheme } from '../../lib/theme';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -15,6 +16,7 @@ import {
 const fmt = (n: number, d = 2) => Number(n.toFixed(d)).toLocaleString();
 
 export default function GasCalculator() {
+  const { theme } = useTheme();
   const [distance, setDistance] = useState('');
   const [fuel, setFuel] = useState('');
   const [price, setPrice] = useState('');
@@ -32,13 +34,13 @@ export default function GasCalculator() {
   }, [distance, fuel, price]);
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff8ed' }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Stack.Screen options={{ title: '油耗計算' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>油耗計算</Text>
-        <Text style={styles.subtitle}>看你車的油耗跟花費</Text>
+        <Text style={[styles.title, { color: theme.text }]}>油耗計算</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>看你車的油耗跟花費</Text>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
           {[
             { label: '行駛距離', value: distance, onChange: setDistance, unit: 'km', ph: '500' },
             { label: '加油量', value: fuel, onChange: setFuel, unit: 'L', ph: '40' },
@@ -46,21 +48,21 @@ export default function GasCalculator() {
           ].map((f, i, arr) => (
             <View key={f.label}>
               <View style={styles.inputRow}>
-                <Text style={styles.label}>{f.label}</Text>
+                <Text style={[styles.label, { color: theme.text }]}>{f.label}</Text>
                 <View style={styles.inputWrap}>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: theme.text }]}
                     value={f.value}
                     onChangeText={f.onChange}
                     placeholder={f.ph}
-                    placeholderTextColor="#c8b8a8"
+                    placeholderTextColor={theme.hint}
                     keyboardType="decimal-pad"
                     maxLength={8}
                   />
-                  <Text style={styles.suffix}>{f.unit}</Text>
+                  <Text style={[styles.suffix, { color: theme.hint }]}>{f.unit}</Text>
                 </View>
               </View>
-              {i < arr.length - 1 && <View style={styles.divider} />}
+              {i < arr.length - 1 && <View style={[styles.divider, { backgroundColor: theme.divider }]} />}
             </View>
           ))}
         </View>
@@ -79,21 +81,21 @@ export default function GasCalculator() {
 
             {result.totalCost !== null && (
               <View style={styles.statsRow}>
-                <View style={styles.statCard}>
-                  <Text style={styles.statLabel}>總花費</Text>
+                <View style={[styles.statCard, { backgroundColor: theme.cardBg }]}>
+                  <Text style={[styles.statLabel, { color: theme.textMuted }]}>總花費</Text>
                   <Text style={styles.statValue}>${fmt(result.totalCost, 0)}</Text>
                 </View>
-                <View style={styles.statCard}>
-                  <Text style={styles.statLabel}>每公里成本</Text>
+                <View style={[styles.statCard, { backgroundColor: theme.cardBg }]}>
+                  <Text style={[styles.statLabel, { color: theme.textMuted }]}>每公里成本</Text>
                   <Text style={styles.statValue}>${fmt(result.costPerKm!, 2)}</Text>
                 </View>
               </View>
             )}
           </>
         ) : (
-          <View style={styles.placeholderCard}>
-            <Mascot expression="sleepy" color="#a3897a" size={48} />
-            <Text style={[styles.placeholderText, { marginTop: 4 }]}>填好距離跟加油量就會出現結果</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Mascot expression="sleepy" color={theme.hint} size={48} />
+            <Text style={[styles.placeholderText, { marginTop: 4, color: theme.hint }]}>填好距離跟加油量就會出現結果</Text>
           </View>
         )}
       </ScrollView>
@@ -102,27 +104,26 @@ export default function GasCalculator() {
 }
 
 const C = {
-  card: '#fff', text: '#2d2520', muted: '#8a7a6c', hint: '#a3897a', divider: '#f1e3d0',
   accentBg: '#b8d8ff', accent: '#2c5fa8',
 };
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
-  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, color: C.text, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
-  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, color: C.muted, marginBottom: 22, textAlign: 'center' },
+  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
+  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, marginBottom: 22, textAlign: 'center' },
   card: {
-    backgroundColor: C.card, borderRadius: 24, padding: 6, marginBottom: 16,
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
+    borderRadius: 24, padding: 6, marginBottom: 16,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
   },
   inputRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 14 },
-  label: { fontFamily: 'Fredoka_600SemiBold', fontSize: 17, color: C.text, width: 88 },
+  label: { fontFamily: 'Fredoka_600SemiBold', fontSize: 17, width: 88 },
   inputWrap: { flex: 1, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'flex-end', gap: 6 },
-  input: { fontFamily: 'Fredoka_700Bold', fontSize: 28, color: C.text, textAlign: 'right', minWidth: 70, padding: 0 },
-  suffix: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.hint },
-  divider: { height: 1, backgroundColor: C.divider, marginHorizontal: 18 },
+  input: { fontFamily: 'Fredoka_700Bold', fontSize: 28, textAlign: 'right', minWidth: 70, padding: 0 },
+  suffix: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
+  divider: { height: 1, marginHorizontal: 18 },
   mainCard: {
     backgroundColor: C.accentBg, borderRadius: 28, padding: 26, alignItems: 'center', marginBottom: 12,
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
   },
   mainIconWrap: { width: 56, height: 56, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.55)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
   mainLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.accent, opacity: 0.85 },
@@ -131,14 +132,14 @@ const styles = StyleSheet.create({
   mainSub: { fontFamily: 'Fredoka_500Medium', fontSize: 13, color: C.accent, opacity: 0.7, marginTop: 4 },
   statsRow: { flexDirection: 'row', gap: 12 },
   statCard: {
-    flex: 1, backgroundColor: C.card, borderRadius: 20, padding: 16, alignItems: 'center', gap: 4,
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2,
+    flex: 1, borderRadius: 20, padding: 16, alignItems: 'center', gap: 4,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2,
   },
-  statLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 12, color: C.muted },
+  statLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 12 },
   statValue: { fontFamily: 'Fredoka_700Bold', fontSize: 20, color: C.accent, letterSpacing: -0.3 },
   placeholderCard: {
-    backgroundColor: C.card, borderRadius: 28, padding: 36, alignItems: 'center', gap: 10,
-    borderWidth: 2, borderColor: C.divider, borderStyle: 'dashed',
+    borderRadius: 28, padding: 36, alignItems: 'center', gap: 10,
+    borderWidth: 2, borderStyle: 'dashed',
   },
-  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.hint },
+  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
 });

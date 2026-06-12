@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { Crown, Minus, Plus } from 'phosphor-react-native';
 import { Mascot } from '../../components/Mascot';
+import { useTheme } from '../../lib/theme';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -25,6 +26,7 @@ const getMultiplier = (cards: number) => {
 };
 
 export default function Big2Calculator() {
+  const { theme } = useTheme();
   const [cards, setCards] = useState<number[]>([5, 5, 5, 0]);
   const [base, setBase] = useState('1');
 
@@ -50,28 +52,28 @@ export default function Big2Calculator() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: '#fff8ed' }}
+      style={{ flex: 1, backgroundColor: theme.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Stack.Screen options={{ title: '大老二點數' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>大老二計分</Text>
-        <Text style={styles.subtitle}>輸入每人剩餘張數，自動算誰勝、誰賠</Text>
+        <Text style={[styles.title, { color: theme.text }]}>大老二計分</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>輸入每人剩餘張數，自動算誰勝、誰賠</Text>
 
-        <View style={styles.baseCard}>
-          <Text style={styles.baseLabel}>底注</Text>
+        <View style={[styles.baseCard, { backgroundColor: theme.cardBg }]}>
+          <Text style={[styles.baseLabel, { color: theme.text }]}>底注</Text>
           <View style={styles.baseInputWrap}>
-            <Text style={styles.basePrefix}>$</Text>
+            <Text style={[styles.basePrefix, { color: theme.hint }]}>$</Text>
             <TextInput
-              style={styles.baseInput}
+              style={[styles.baseInput, { color: theme.text }]}
               value={base}
               onChangeText={setBase}
               placeholder="1"
-              placeholderTextColor="#c8b8a8"
+              placeholderTextColor={theme.hint}
               keyboardType="decimal-pad"
               maxLength={6}
             />
-            <Text style={styles.baseSuffix}>/ 張</Text>
+            <Text style={[styles.baseSuffix, { color: theme.hint }]}>/ 張</Text>
           </View>
         </View>
 
@@ -87,13 +89,14 @@ export default function Big2Calculator() {
                 key={p}
                 style={[
                   styles.playerCard,
+                  { backgroundColor: theme.cardBg },
                   isWinner && styles.playerCardWinner,
                 ]}
               >
                 <View style={styles.playerHead}>
                   <View style={styles.playerNameWrap}>
                     {isWinner && <Crown size={18} color="#8d6e00" weight="fill" />}
-                    <Text style={[styles.playerName, isWinner && styles.playerNameWinner]}>
+                    <Text style={[styles.playerName, { color: theme.text }, isWinner && styles.playerNameWinner]}>
                       玩家 {p}
                     </Text>
                   </View>
@@ -109,11 +112,11 @@ export default function Big2Calculator() {
                       )}
                     </View>
                   ) : (
-                    <Text style={styles.idleText}>未開始</Text>
+                    <Text style={[styles.idleText, { color: theme.hint }]}>未開始</Text>
                   )}
                 </View>
 
-                <View style={styles.stepperRow}>
+                <View style={[styles.stepperRow, { backgroundColor: theme.inputBg }]}>
                   <TouchableOpacity
                     style={[styles.stepBtn, c <= MIN && styles.stepBtnDisabled]}
                     onPress={() => adjust(idx, -1)}
@@ -124,8 +127,8 @@ export default function Big2Calculator() {
                   </TouchableOpacity>
 
                   <View style={styles.countWrap}>
-                    <Text style={styles.countValue}>{c}</Text>
-                    <Text style={styles.countLabel}>張</Text>
+                    <Text style={[styles.countValue, { color: theme.text }]}>{c}</Text>
+                    <Text style={[styles.countLabel, { color: theme.textMuted }]}>張</Text>
                   </View>
 
                   <TouchableOpacity
@@ -151,9 +154,9 @@ export default function Big2Calculator() {
             </View>
           </View>
         ) : (
-          <View style={styles.placeholderCard}>
-            <Mascot expression="thinking" color="#a3897a" size={48} />
-            <Text style={[styles.placeholderText, { marginTop: 4 }]}>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Mascot expression="thinking" color={theme.hint} size={48} />
+            <Text style={[styles.placeholderText, { color: theme.hint, marginTop: 4 }]}>
               {cards.filter((c) => c === 0).length === 0
                 ? '把贏家的張數調成 0'
                 : '只能有一位贏家（張數為 0）'}
@@ -161,8 +164,8 @@ export default function Big2Calculator() {
           </View>
         )}
 
-        <View style={styles.ruleCard}>
-          <Text style={styles.ruleTitle}>倍率規則</Text>
+        <View style={[styles.ruleCard, { backgroundColor: theme.cardBg }]}>
+          <Text style={[styles.ruleTitle, { color: theme.text }]}>倍率規則</Text>
           {[
             { range: '0 – 7 張', label: '一倍', color: '#8a7a6c' },
             { range: '8 – 9 張', label: '雙倍 ×2', color: '#c4623a' },
@@ -171,7 +174,7 @@ export default function Big2Calculator() {
           ].map((r) => (
             <View key={r.range} style={styles.ruleRow}>
               <View style={[styles.ruleDot, { backgroundColor: r.color }]} />
-              <Text style={styles.ruleRange}>{r.range}</Text>
+              <Text style={[styles.ruleRange, { color: theme.text }]}>{r.range}</Text>
               <Text style={[styles.ruleLabel, { color: r.color }]}>{r.label}</Text>
             </View>
           ))}
@@ -188,11 +191,7 @@ const multStyle = (factor: number) => {
 };
 
 const C = {
-  card: '#fff',
-  text: '#2d2520',
-  muted: '#8a7a6c',
   hint: '#a3897a',
-  divider: '#f1e3d0',
   accentBg: '#d4baf0',
   accent: '#6a3da8',
 };
@@ -202,7 +201,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 32,
-    color: C.text,
     letterSpacing: -0.5,
     marginBottom: 6,
     textAlign: 'center',
@@ -210,7 +208,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
-    color: C.muted,
     marginBottom: 22,
     textAlign: 'center',
   },
@@ -218,7 +215,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: C.card,
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 14,
@@ -232,7 +228,6 @@ const styles = StyleSheet.create({
   baseLabel: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 15,
-    color: C.text,
   },
   baseInputWrap: {
     flexDirection: 'row',
@@ -242,12 +237,10 @@ const styles = StyleSheet.create({
   basePrefix: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 14,
-    color: C.hint,
   },
   baseInput: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 22,
-    color: C.text,
     textAlign: 'right',
     minWidth: 36,
     padding: 0,
@@ -255,14 +248,12 @@ const styles = StyleSheet.create({
   baseSuffix: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 13,
-    color: C.hint,
   },
   players: {
     gap: 10,
     marginBottom: 18,
   },
   playerCard: {
-    backgroundColor: C.card,
     borderRadius: 22,
     padding: 16,
     shadowColor: C.hint,
@@ -288,7 +279,6 @@ const styles = StyleSheet.create({
   playerName: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 18,
-    color: C.text,
   },
   playerNameWinner: {
     color: '#8d6e00',
@@ -322,13 +312,11 @@ const styles = StyleSheet.create({
   idleText: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 13,
-    color: C.hint,
   },
   stepperRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#faf3e4',
     borderRadius: 16,
     paddingVertical: 8,
     paddingHorizontal: 8,
@@ -354,13 +342,11 @@ const styles = StyleSheet.create({
   countValue: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 28,
-    color: C.text,
     letterSpacing: -0.5,
   },
   countLabel: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 13,
-    color: C.muted,
   },
   totalCard: {
     flexDirection: 'row',
@@ -389,24 +375,20 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   placeholderCard: {
-    backgroundColor: C.card,
     borderRadius: 22,
     padding: 22,
     marginBottom: 16,
     alignItems: 'center',
     gap: 10,
     borderWidth: 2,
-    borderColor: C.divider,
     borderStyle: 'dashed',
   },
   placeholderText: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 13,
-    color: C.hint,
     textAlign: 'center',
   },
   ruleCard: {
-    backgroundColor: C.card,
     borderRadius: 22,
     padding: 18,
     shadowColor: C.hint,
@@ -418,7 +400,6 @@ const styles = StyleSheet.create({
   ruleTitle: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 15,
-    color: C.text,
     marginBottom: 10,
   },
   ruleRow: {
@@ -435,7 +416,6 @@ const styles = StyleSheet.create({
   ruleRange: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 13,
-    color: C.text,
     width: 90,
   },
   ruleLabel: {

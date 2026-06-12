@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Mascot, MascotExpression } from '../../components/Mascot';
+import { useTheme } from '../../lib/theme';
 
 type Status = {
   label: string;
@@ -21,6 +22,7 @@ const classify = (bmi: number): Status => {
 };
 
 export default function BMICalculator() {
+  const { theme } = useTheme();
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
 
@@ -35,46 +37,46 @@ export default function BMICalculator() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: '#fff8ed' }}
+      style={{ flex: 1, backgroundColor: theme.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Stack.Screen options={{ title: 'BMI 計算' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>來算 BMI 吧</Text>
-        <Text style={styles.subtitle}>輸入身高體重，馬上知道結果</Text>
+        <Text style={[styles.title, { color: theme.text }]}>來算 BMI 吧</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>輸入身高體重，馬上知道結果</Text>
 
-        <View style={styles.inputCard}>
+        <View style={[styles.inputCard, { backgroundColor: theme.cardBg }]}>
           <View style={styles.inputRow}>
-            <Text style={styles.label}>身高</Text>
+            <Text style={[styles.label, { color: theme.text }]}>身高</Text>
             <View style={styles.inputWrap}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: theme.text }]}
                 value={height}
                 onChangeText={setHeight}
                 placeholder="170"
-                placeholderTextColor="#c8b8a8"
+                placeholderTextColor={theme.hint}
                 keyboardType="decimal-pad"
                 maxLength={5}
               />
-              <Text style={styles.unit}>cm</Text>
+              <Text style={[styles.unit, { color: theme.hint }]}>cm</Text>
             </View>
           </View>
 
-          <View style={styles.divider} />
+          <View style={[styles.divider, { backgroundColor: theme.divider }]} />
 
           <View style={styles.inputRow}>
-            <Text style={styles.label}>體重</Text>
+            <Text style={[styles.label, { color: theme.text }]}>體重</Text>
             <View style={styles.inputWrap}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: theme.text }]}
                 value={weight}
                 onChangeText={setWeight}
                 placeholder="60"
-                placeholderTextColor="#c8b8a8"
+                placeholderTextColor={theme.hint}
                 keyboardType="decimal-pad"
                 maxLength={5}
               />
-              <Text style={styles.unit}>kg</Text>
+              <Text style={[styles.unit, { color: theme.hint }]}>kg</Text>
             </View>
           </View>
         </View>
@@ -87,14 +89,14 @@ export default function BMICalculator() {
             <Text style={[styles.resultTip, { color: status.fg }]}>{status.tip}</Text>
           </View>
         ) : (
-          <View style={styles.placeholderCard}>
-            <Mascot expression="sleepy" color="#a3897a" size={52} />
-            <Text style={[styles.placeholderText, { marginTop: 6 }]}>填好上面兩格就會出現結果</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Mascot expression="sleepy" color={theme.hint} size={52} />
+            <Text style={[styles.placeholderText, { color: theme.hint, marginTop: 6 }]}>填好上面兩格就會出現結果</Text>
           </View>
         )}
 
-        <View style={styles.refCard}>
-          <Text style={styles.refTitle}>BMI 對照表</Text>
+        <View style={[styles.refCard, { backgroundColor: theme.cardBg }]}>
+          <Text style={[styles.refTitle, { color: theme.text }]}>BMI 對照表</Text>
           {[
             { range: '< 18.5', label: '體重過輕', color: '#2c5fa8' },
             { range: '18.5 – 24', label: '健康體重', color: '#2d8765' },
@@ -105,8 +107,8 @@ export default function BMICalculator() {
           ].map((r) => (
             <View key={r.range} style={styles.refRow}>
               <View style={[styles.refDot, { backgroundColor: r.color }]} />
-              <Text style={styles.refRange}>{r.range}</Text>
-              <Text style={styles.refLabel}>{r.label}</Text>
+              <Text style={[styles.refRange, { color: theme.text }]}>{r.range}</Text>
+              <Text style={[styles.refLabel, { color: theme.textMuted }]}>{r.label}</Text>
             </View>
           ))}
         </View>
@@ -123,7 +125,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 32,
-    color: '#2d2520',
     letterSpacing: -0.5,
     marginBottom: 6,
     textAlign: 'center',
@@ -131,12 +132,10 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
-    color: '#8a7a6c',
     marginBottom: 24,
     textAlign: 'center',
   },
   inputCard: {
-    backgroundColor: '#fff',
     borderRadius: 24,
     padding: 6,
     marginBottom: 16,
@@ -155,7 +154,6 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 17,
-    color: '#2d2520',
     width: 56,
   },
   inputWrap: {
@@ -168,7 +166,6 @@ const styles = StyleSheet.create({
   input: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 30,
-    color: '#2d2520',
     textAlign: 'right',
     minWidth: 80,
     padding: 0,
@@ -176,11 +173,9 @@ const styles = StyleSheet.create({
   unit: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 16,
-    color: '#a3897a',
   },
   divider: {
     height: 1,
-    backgroundColor: '#f1e3d0',
     marginHorizontal: 18,
   },
   resultCard: {
@@ -221,23 +216,19 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   placeholderCard: {
-    backgroundColor: '#fff',
     borderRadius: 28,
     padding: 36,
     alignItems: 'center',
     gap: 10,
     marginBottom: 16,
     borderWidth: 2,
-    borderColor: '#f1e3d0',
     borderStyle: 'dashed',
   },
   placeholderText: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 14,
-    color: '#a3897a',
   },
   refCard: {
-    backgroundColor: '#fff',
     borderRadius: 24,
     padding: 20,
     shadowColor: '#a3897a',
@@ -249,7 +240,6 @@ const styles = StyleSheet.create({
   refTitle: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 17,
-    color: '#2d2520',
     marginBottom: 12,
   },
   refRow: {
@@ -266,12 +256,10 @@ const styles = StyleSheet.create({
   refRange: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 14,
-    color: '#2d2520',
     width: 90,
   },
   refLabel: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
-    color: '#8a7a6c',
   },
 });

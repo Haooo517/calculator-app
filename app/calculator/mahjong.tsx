@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { Check, Confetti, Minus, Plus } from 'phosphor-react-native';
 import { useMemo, useState } from 'react';
+import { useTheme } from '../../lib/theme';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -59,6 +60,7 @@ const SECTIONS: Section[] = [
 ];
 
 export default function MahjongCalculator() {
+  const { theme } = useTheme();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [chain, setChain] = useState(0);
   const [flowers, setFlowers] = useState(0);
@@ -93,7 +95,7 @@ export default function MahjongCalculator() {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff8ed' }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Stack.Screen
         options={{
           title: '麻將台數',
@@ -105,8 +107,8 @@ export default function MahjongCalculator() {
         }}
       />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>麻將台數</Text>
-        <Text style={styles.subtitle}>勾選達成的台，自動加總</Text>
+        <Text style={[styles.title, { color: theme.text }]}>麻將台數</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>勾選達成的台，自動加總</Text>
 
         <View style={styles.totalCard}>
           <View style={styles.totalIconWrap}>
@@ -124,8 +126,8 @@ export default function MahjongCalculator() {
 
         {SECTIONS.map((section) => (
           <View key={section.title} style={styles.section}>
-            <Text style={styles.sectionTitle}>{section.title}</Text>
-            <View style={styles.itemList}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
+            <View style={[styles.itemList, { backgroundColor: theme.cardBg }]}>
               {section.items.map((item) => {
                 const active = selected.has(item.id);
                 return (
@@ -138,11 +140,11 @@ export default function MahjongCalculator() {
                     <View style={[styles.checkBox, active && styles.checkBoxActive]}>
                       {active && <Check size={14} color="#fff" weight="bold" />}
                     </View>
-                    <Text style={[styles.itemLabel, active && styles.itemLabelActive]}>
+                    <Text style={[styles.itemLabel, { color: theme.text }, active && styles.itemLabelActive]}>
                       {item.label}
                     </Text>
-                    <View style={[styles.taiBadge, active && styles.taiBadgeActive]}>
-                      <Text style={[styles.taiText, active && styles.taiTextActive]}>
+                    <View style={[styles.taiBadge, { backgroundColor: theme.divider }, active && styles.taiBadgeActive]}>
+                      <Text style={[styles.taiText, { color: theme.textMuted }, active && styles.taiTextActive]}>
                         {item.tai} 台
                       </Text>
                     </View>
@@ -154,15 +156,15 @@ export default function MahjongCalculator() {
         ))}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>連莊 / 花牌</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>連莊 / 花牌</Text>
           {[
             { label: '連莊次數', value: chain, set: setChain, max: 20, hint: '每連 1 莊加 1 台' },
             { label: '花牌數量', value: flowers, set: setFlowers, max: 8, hint: '每朵相應花 1 台' },
           ].map((s) => (
-            <View key={s.label} style={styles.stepperCard}>
+            <View key={s.label} style={[styles.stepperCard, { backgroundColor: theme.cardBg }]}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.stepperLabel}>{s.label}</Text>
-                <Text style={styles.stepperHint}>{s.hint}</Text>
+                <Text style={[styles.stepperLabel, { color: theme.text }]}>{s.label}</Text>
+                <Text style={[styles.stepperHint, { color: theme.textMuted }]}>{s.hint}</Text>
               </View>
               <View style={styles.stepperRow}>
                 <TouchableOpacity
@@ -173,7 +175,7 @@ export default function MahjongCalculator() {
                 >
                   <Minus size={18} color="#6a3da8" weight="bold" />
                 </TouchableOpacity>
-                <Text style={styles.stepperValue}>{s.value}</Text>
+                <Text style={[styles.stepperValue, { color: theme.text }]}>{s.value}</Text>
                 <TouchableOpacity
                   style={[styles.stepBtn, s.value >= s.max && styles.stepBtnDisabled]}
                   onPress={() => s.set(Math.min(s.max, s.value + 1))}
@@ -188,19 +190,19 @@ export default function MahjongCalculator() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>每台底注（選填）</Text>
-          <View style={styles.baseCard}>
-            <Text style={styles.basePrefix}>$</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>每台底注（選填）</Text>
+          <View style={[styles.baseCard, { backgroundColor: theme.cardBg }]}>
+            <Text style={[styles.basePrefix, { color: theme.hint }]}>$</Text>
             <TextInput
-              style={styles.baseInput}
+              style={[styles.baseInput, { color: theme.text }]}
               value={basePerTai}
               onChangeText={setBasePerTai}
               placeholder="10"
-              placeholderTextColor="#c8b8a8"
+              placeholderTextColor={theme.hint}
               keyboardType="decimal-pad"
               maxLength={6}
             />
-            <Text style={styles.baseSuffix}>/ 台</Text>
+            <Text style={[styles.baseSuffix, { color: theme.hint }]}>/ 台</Text>
           </View>
         </View>
       </ScrollView>
@@ -209,14 +211,14 @@ export default function MahjongCalculator() {
 }
 
 const C = {
-  card: '#fff', text: '#2d2520', muted: '#8a7a6c', hint: '#a3897a', divider: '#f1e3d0',
+  hint: '#a3897a',
   accentBg: '#d4baf0', accent: '#6a3da8',
 };
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
-  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, color: C.text, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
-  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, color: C.muted, marginBottom: 22, textAlign: 'center' },
+  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
+  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, marginBottom: 22, textAlign: 'center' },
   totalCard: {
     backgroundColor: C.accentBg, borderRadius: 28, padding: 24, alignItems: 'center', marginBottom: 18,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
@@ -227,9 +229,9 @@ const styles = StyleSheet.create({
   totalUnit: { fontSize: 22 },
   totalPoints: { fontFamily: 'Fredoka_600SemiBold', fontSize: 18, color: C.accent, opacity: 0.85, marginTop: 6 },
   section: { marginBottom: 18 },
-  sectionTitle: { fontFamily: 'Fredoka_700Bold', fontSize: 15, color: C.text, marginBottom: 10, marginLeft: 4 },
+  sectionTitle: { fontFamily: 'Fredoka_700Bold', fontSize: 15, marginBottom: 10, marginLeft: 4 },
   itemList: {
-    backgroundColor: C.card, borderRadius: 20, padding: 4,
+    borderRadius: 20, padding: 4,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2,
   },
   itemRow: {
@@ -241,21 +243,21 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   checkBoxActive: { backgroundColor: C.accent, borderColor: C.accent },
-  itemLabel: { flex: 1, fontFamily: 'Fredoka_500Medium', fontSize: 15, color: C.text },
+  itemLabel: { flex: 1, fontFamily: 'Fredoka_500Medium', fontSize: 15 },
   itemLabelActive: { fontFamily: 'Fredoka_700Bold', color: C.accent },
   taiBadge: {
-    backgroundColor: '#f1e3d0', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10,
+    paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10,
   },
   taiBadgeActive: { backgroundColor: C.accent },
-  taiText: { fontFamily: 'Fredoka_600SemiBold', fontSize: 12, color: C.muted },
+  taiText: { fontFamily: 'Fredoka_600SemiBold', fontSize: 12 },
   taiTextActive: { color: '#fff' },
   stepperCard: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: C.card, borderRadius: 20,
+    flexDirection: 'row', alignItems: 'center', borderRadius: 20,
     padding: 14, marginBottom: 8, gap: 10,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2,
   },
-  stepperLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 15, color: C.text },
-  stepperHint: { fontFamily: 'Fredoka_400Regular', fontSize: 11, color: C.muted, marginTop: 2 },
+  stepperLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 15 },
+  stepperHint: { fontFamily: 'Fredoka_400Regular', fontSize: 11, marginTop: 2 },
   stepperRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   stepBtn: {
     width: 36, height: 36, borderRadius: 12, backgroundColor: C.accentBg,
@@ -263,14 +265,14 @@ const styles = StyleSheet.create({
   },
   stepBtnDisabled: { opacity: 0.35 },
   stepperValue: {
-    fontFamily: 'Fredoka_700Bold', fontSize: 20, color: C.text, width: 30, textAlign: 'center',
+    fontFamily: 'Fredoka_700Bold', fontSize: 20, width: 30, textAlign: 'center',
   },
   baseCard: {
     flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center',
-    backgroundColor: C.card, borderRadius: 20, padding: 16, gap: 6,
+    borderRadius: 20, padding: 16, gap: 6,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2,
   },
-  basePrefix: { fontFamily: 'Fredoka_500Medium', fontSize: 18, color: C.hint },
-  baseInput: { fontFamily: 'Fredoka_700Bold', fontSize: 28, color: C.text, textAlign: 'center', minWidth: 70, padding: 0 },
-  baseSuffix: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.hint },
+  basePrefix: { fontFamily: 'Fredoka_500Medium', fontSize: 18 },
+  baseInput: { fontFamily: 'Fredoka_700Bold', fontSize: 28, textAlign: 'center', minWidth: 70, padding: 0 },
+  baseSuffix: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
 });

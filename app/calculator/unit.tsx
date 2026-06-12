@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from '../../lib/theme';
 
 type Unit = { id: string; label: string };
 
@@ -85,6 +86,7 @@ const formatNum = (n: number) => {
 };
 
 export default function UnitCalculator() {
+  const { theme } = useTheme();
   const [groupId, setGroupId] = useState(GROUPS[0].id);
   const [fromUnit, setFromUnit] = useState(GROUPS[0].units[1].id);
   const [value, setValue] = useState('');
@@ -107,13 +109,13 @@ export default function UnitCalculator() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: '#fff8ed' }}
+      style={{ flex: 1, backgroundColor: theme.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Stack.Screen options={{ title: '單位換算' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>單位換算</Text>
-        <Text style={styles.subtitle}>選類型、選單位、輸入數值</Text>
+        <Text style={[styles.title, { color: theme.text }]}>單位換算</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>選類型、選單位、輸入數值</Text>
 
         <View style={styles.groupRow}>
           {GROUPS.map((g) => {
@@ -122,12 +124,12 @@ export default function UnitCalculator() {
             return (
               <TouchableOpacity
                 key={g.id}
-                style={[styles.groupBtn, active && styles.groupBtnActive]}
+                style={[styles.groupBtn, { backgroundColor: theme.cardBg }, active && styles.groupBtnActive]}
                 onPress={() => switchGroup(g)}
                 activeOpacity={0.75}
               >
                 <Icon size={22} color={active ? '#fff' : '#2d8765'} weight={active ? 'fill' : 'regular'} />
-                <Text style={[styles.groupText, active && styles.groupTextActive]}>{g.label}</Text>
+                <Text style={[styles.groupText, { color: theme.text }, active && styles.groupTextActive]}>{g.label}</Text>
               </TouchableOpacity>
             );
           })}
@@ -139,14 +141,14 @@ export default function UnitCalculator() {
             value={value}
             onChangeText={setValue}
             placeholder="0"
-            placeholderTextColor="#c8b8a8"
+            placeholderTextColor={theme.hint}
             keyboardType="decimal-pad"
             maxLength={12}
           />
           <Text style={styles.inputUnit}>{group.units.find((u) => u.id === fromUnit)?.label}</Text>
         </View>
 
-        <Text style={styles.unitSelectorLabel}>從</Text>
+        <Text style={[styles.unitSelectorLabel, { color: theme.textMuted }]}>從</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -157,29 +159,29 @@ export default function UnitCalculator() {
             return (
               <TouchableOpacity
                 key={u.id}
-                style={[styles.unitPill, active && styles.unitPillActive]}
+                style={[styles.unitPill, { backgroundColor: theme.cardBg }, active && styles.unitPillActive]}
                 onPress={() => setFromUnit(u.id)}
                 activeOpacity={0.75}
               >
-                <Text style={[styles.unitPillText, active && styles.unitPillTextActive]}>{u.label}</Text>
+                <Text style={[styles.unitPillText, { color: theme.text }, active && styles.unitPillTextActive]}>{u.label}</Text>
               </TouchableOpacity>
             );
           })}
         </ScrollView>
 
         {conversions ? (
-          <View style={styles.resultList}>
+          <View style={[styles.resultList, { backgroundColor: theme.cardBg }]}>
             {conversions.map(({ unit, result }) => (
-              <View key={unit.id} style={styles.resultRow}>
-                <Text style={styles.resultUnit}>{unit.label}</Text>
-                <Text style={styles.resultValue}>{formatNum(result)}</Text>
+              <View key={unit.id} style={[styles.resultRow, { borderBottomColor: theme.divider }]}>
+                <Text style={[styles.resultUnit, { color: theme.textMuted }]}>{unit.label}</Text>
+                <Text style={[styles.resultValue, { color: theme.text }]}>{formatNum(result)}</Text>
               </View>
             ))}
           </View>
         ) : (
-          <View style={styles.placeholderCard}>
-            <group.Icon size={32} color="#c8b8a8" weight="duotone" />
-            <Text style={styles.placeholderText}>輸入數字看換算結果</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <group.Icon size={32} color={theme.hint} weight="duotone" />
+            <Text style={[styles.placeholderText, { color: theme.hint }]}>輸入數字看換算結果</Text>
           </View>
         )}
       </ScrollView>
@@ -188,11 +190,6 @@ export default function UnitCalculator() {
 }
 
 const C = {
-  card: '#fff',
-  text: '#2d2520',
-  muted: '#8a7a6c',
-  hint: '#a3897a',
-  divider: '#f1e3d0',
   accentBg: '#b8e6d2',
   accent: '#2d8765',
 };
@@ -202,7 +199,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 32,
-    color: C.text,
     letterSpacing: -0.5,
     marginBottom: 6,
     textAlign: 'center',
@@ -210,7 +206,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
-    color: C.muted,
     marginBottom: 22,
     textAlign: 'center',
   },
@@ -225,10 +220,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: C.card,
     paddingVertical: 14,
     borderRadius: 18,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.08,
     shadowRadius: 6,
@@ -240,7 +234,6 @@ const styles = StyleSheet.create({
   groupText: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 14,
-    color: C.text,
   },
   groupTextActive: {
     color: '#fff',
@@ -254,7 +247,7 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     justifyContent: 'space-between',
     marginBottom: 18,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,
     shadowRadius: 10,
@@ -278,7 +271,6 @@ const styles = StyleSheet.create({
   unitSelectorLabel: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 12,
-    color: C.muted,
     marginLeft: 8,
     marginBottom: 8,
     letterSpacing: 0.5,
@@ -293,8 +285,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 14,
-    backgroundColor: C.card,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 4,
@@ -306,17 +297,15 @@ const styles = StyleSheet.create({
   unitPillText: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 14,
-    color: C.text,
   },
   unitPillTextActive: {
     color: '#fff',
   },
   resultList: {
-    backgroundColor: C.card,
     borderRadius: 24,
     marginTop: 18,
     padding: 4,
-    shadowColor: C.hint,
+    shadowColor: '#a3897a',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -329,33 +318,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: C.divider,
   },
   resultUnit: {
     fontFamily: 'Fredoka_600SemiBold',
     fontSize: 16,
-    color: C.muted,
   },
   resultValue: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 22,
-    color: C.text,
     letterSpacing: -0.5,
   },
   placeholderCard: {
-    backgroundColor: C.card,
     borderRadius: 28,
     padding: 36,
     marginTop: 18,
     alignItems: 'center',
     gap: 10,
     borderWidth: 2,
-    borderColor: C.divider,
     borderStyle: 'dashed',
   },
   placeholderText: {
     fontFamily: 'Fredoka_500Medium',
     fontSize: 14,
-    color: C.hint,
   },
 });

@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { Baby } from 'phosphor-react-native';
 import { Mascot } from '../../components/Mascot';
+import { useTheme } from '../../lib/theme';
 import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -29,6 +30,7 @@ const formatDate = (d: Date) =>
   `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
 
 export default function PregnancyCalculator() {
+  const { theme } = useTheme();
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
@@ -50,26 +52,26 @@ export default function PregnancyCalculator() {
   }, [year, month, day]);
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff8ed' }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Stack.Screen options={{ title: '預產期' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>預產期計算</Text>
-        <Text style={styles.subtitle}>輸入最後一次月經的第一天</Text>
+        <Text style={[styles.title, { color: theme.text }]}>預產期計算</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>輸入最後一次月經的第一天</Text>
 
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>最後一次月經</Text>
+        <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
+          <Text style={[styles.cardLabel, { color: theme.textMuted }]}>最後一次月經</Text>
           <View style={styles.dateRow}>
-            <View style={styles.dateField}>
-              <TextInput style={styles.dateInput} value={year} onChangeText={setYear} placeholder="2026" placeholderTextColor="#c8b8a8" keyboardType="number-pad" maxLength={4} />
-              <Text style={styles.dateUnit}>年</Text>
+            <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
+              <TextInput style={[styles.dateInput, { color: theme.text }]} value={year} onChangeText={setYear} placeholder="2026" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={4} />
+              <Text style={[styles.dateUnit, { color: theme.hint }]}>年</Text>
             </View>
-            <View style={styles.dateField}>
-              <TextInput style={styles.dateInput} value={month} onChangeText={setMonth} placeholder="1" placeholderTextColor="#c8b8a8" keyboardType="number-pad" maxLength={2} />
-              <Text style={styles.dateUnit}>月</Text>
+            <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
+              <TextInput style={[styles.dateInput, { color: theme.text }]} value={month} onChangeText={setMonth} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
+              <Text style={[styles.dateUnit, { color: theme.hint }]}>月</Text>
             </View>
-            <View style={styles.dateField}>
-              <TextInput style={styles.dateInput} value={day} onChangeText={setDay} placeholder="1" placeholderTextColor="#c8b8a8" keyboardType="number-pad" maxLength={2} />
-              <Text style={styles.dateUnit}>日</Text>
+            <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
+              <TextInput style={[styles.dateInput, { color: theme.text }]} value={day} onChangeText={setDay} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
+              <Text style={[styles.dateUnit, { color: theme.hint }]}>日</Text>
             </View>
           </View>
         </View>
@@ -89,22 +91,22 @@ export default function PregnancyCalculator() {
             </View>
 
             <View style={styles.statsRow}>
-              <View style={styles.statCard}>
-                <Text style={styles.statLabel}>目前週數</Text>
+              <View style={[styles.statCard, { backgroundColor: theme.cardBg }]}>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>目前週數</Text>
                 <Text style={styles.statValue}>{result.weeks}</Text>
-                <Text style={styles.statUnit}>週 {result.days} 天</Text>
+                <Text style={[styles.statUnit, { color: theme.hint }]}>週 {result.days} 天</Text>
               </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statLabel}>孕期</Text>
+              <View style={[styles.statCard, { backgroundColor: theme.cardBg }]}>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>孕期</Text>
                 <Text style={styles.statValue}>第 {result.trimester}</Text>
-                <Text style={styles.statUnit}>孕期</Text>
+                <Text style={[styles.statUnit, { color: theme.hint }]}>孕期</Text>
               </View>
             </View>
           </>
         ) : (
-          <View style={styles.placeholderCard}>
-            <Mascot expression="sleepy" color="#a3897a" size={48} />
-            <Text style={[styles.placeholderText, { marginTop: 4 }]}>填好日期就會出現結果</Text>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+            <Mascot expression="sleepy" color={theme.hint} size={48} />
+            <Text style={[styles.placeholderText, { color: theme.hint, marginTop: 4 }]}>填好日期就會出現結果</Text>
           </View>
         )}
       </ScrollView>
@@ -113,26 +115,26 @@ export default function PregnancyCalculator() {
 }
 
 const C = {
-  card: '#fff', text: '#2d2520', muted: '#8a7a6c', hint: '#a3897a', divider: '#f1e3d0',
+  hint: '#a3897a',
   accentBg: '#ffc4d4', accent: '#c2456a',
 };
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
-  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, color: C.text, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
-  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, color: C.muted, marginBottom: 22, textAlign: 'center' },
+  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
+  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, marginBottom: 22, textAlign: 'center' },
   card: {
-    backgroundColor: C.card, borderRadius: 24, padding: 20, marginBottom: 16,
+    borderRadius: 24, padding: 20, marginBottom: 16,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
   },
-  cardLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, color: C.muted, marginBottom: 12, letterSpacing: 0.5 },
+  cardLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13, marginBottom: 12, letterSpacing: 0.5 },
   dateRow: { flexDirection: 'row', gap: 10 },
   dateField: {
-    flex: 1, backgroundColor: '#fef5e8', borderRadius: 16, padding: 14,
+    flex: 1, borderRadius: 16, padding: 14,
     flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center', gap: 6,
   },
-  dateInput: { fontFamily: 'Fredoka_700Bold', fontSize: 22, color: C.text, textAlign: 'center', minWidth: 46, padding: 0 },
-  dateUnit: { fontFamily: 'Fredoka_500Medium', fontSize: 13, color: C.hint },
+  dateInput: { fontFamily: 'Fredoka_700Bold', fontSize: 22, textAlign: 'center', minWidth: 46, padding: 0 },
+  dateUnit: { fontFamily: 'Fredoka_500Medium', fontSize: 13 },
   mainCard: {
     backgroundColor: C.accentBg, borderRadius: 28, padding: 26, alignItems: 'center', marginBottom: 12,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
@@ -145,15 +147,15 @@ const styles = StyleSheet.create({
   mainSub: { fontFamily: 'Fredoka_500Medium', fontSize: 13, color: C.accent, opacity: 0.8 },
   statsRow: { flexDirection: 'row', gap: 12 },
   statCard: {
-    flex: 1, backgroundColor: C.card, borderRadius: 20, padding: 16, alignItems: 'center', gap: 2,
+    flex: 1, borderRadius: 20, padding: 16, alignItems: 'center', gap: 2,
     shadowColor: C.hint, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2,
   },
-  statLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 12, color: C.muted },
+  statLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 12 },
   statValue: { fontFamily: 'Fredoka_700Bold', fontSize: 30, color: C.accent, letterSpacing: -0.5 },
-  statUnit: { fontFamily: 'Fredoka_500Medium', fontSize: 12, color: C.hint },
+  statUnit: { fontFamily: 'Fredoka_500Medium', fontSize: 12 },
   placeholderCard: {
-    backgroundColor: C.card, borderRadius: 28, padding: 36, alignItems: 'center', gap: 10,
-    borderWidth: 2, borderColor: C.divider, borderStyle: 'dashed',
+    borderRadius: 28, padding: 36, alignItems: 'center', gap: 10,
+    borderWidth: 2, borderStyle: 'dashed',
   },
-  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.hint },
+  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
 });

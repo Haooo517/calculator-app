@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from '../../lib/theme';
 
 const CURRENCIES = [
   { code: 'twd', label: 'TWD', name: '新台幣' },
@@ -39,6 +40,7 @@ const formatMoney = (n: number) => {
 };
 
 export default function CurrencyCalculator() {
+  const { theme } = useTheme();
   const [amount, setAmount] = useState('100');
   const [from, setFrom] = useState('twd');
   const [rates, setRates] = useState<Record<string, number> | null>(null);
@@ -80,7 +82,7 @@ export default function CurrencyCalculator() {
   }, [rates, value, from]);
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff8ed' }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Stack.Screen
         options={{
           title: '匯率換算',
@@ -89,15 +91,15 @@ export default function CurrencyCalculator() {
               {loading ? (
                 <ActivityIndicator color="#8d6e00" />
               ) : (
-                <ArrowsClockwise size={20} color="#2d2520" weight="bold" />
+                <ArrowsClockwise size={20} color={theme.text} weight="bold" />
               )}
             </TouchableOpacity>
           ),
         }}
       />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>匯率換算</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, { color: theme.text }]}>匯率換算</Text>
+        <Text style={[styles.subtitle, { color: theme.textMuted }]}>
           {updated ? `匯率日期 ${updated}` : '即時匯率'}
         </Text>
 
@@ -109,7 +111,7 @@ export default function CurrencyCalculator() {
               value={amount}
               onChangeText={setAmount}
               placeholder="100"
-              placeholderTextColor="#c8b8a8"
+              placeholderTextColor={theme.hint}
               keyboardType="decimal-pad"
               maxLength={10}
             />
@@ -117,7 +119,7 @@ export default function CurrencyCalculator() {
           </View>
         </View>
 
-        <Text style={styles.sectionLabel}>從</Text>
+        <Text style={[styles.sectionLabel, { color: theme.textMuted }]}>從</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -128,12 +130,12 @@ export default function CurrencyCalculator() {
             return (
               <TouchableOpacity
                 key={c.code}
-                style={[styles.pill, active && styles.pillActive]}
+                style={[styles.pill, { backgroundColor: theme.cardBg }, active && styles.pillActive]}
                 onPress={() => setFrom(c.code)}
                 activeOpacity={0.75}
               >
-                <Text style={[styles.pillLabel, active && styles.pillLabelActive]}>{c.label}</Text>
-                <Text style={[styles.pillName, active && styles.pillNameActive]}>{c.name}</Text>
+                <Text style={[styles.pillLabel, { color: theme.text }, active && styles.pillLabelActive]}>{c.label}</Text>
+                <Text style={[styles.pillName, { color: theme.textMuted }, active && styles.pillNameActive]}>{c.name}</Text>
               </TouchableOpacity>
             );
           })}
@@ -148,27 +150,27 @@ export default function CurrencyCalculator() {
             </TouchableOpacity>
           </View>
         ) : results.length === 0 ? (
-          <View style={styles.placeholderCard}>
+          <View style={[styles.placeholderCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
             <Mascot
               expression={loading ? 'thinking' : 'sleepy'}
-              color="#a3897a"
+              color={theme.hint}
               size={48}
             />
-            <Text style={[styles.placeholderText, { marginTop: 4 }]}>
+            <Text style={[styles.placeholderText, { color: theme.hint, marginTop: 4 }]}>
               {loading ? '正在載入匯率' : '輸入金額看換算'}
             </Text>
           </View>
         ) : (
-          <View style={styles.results}>
+          <View style={[styles.results, { backgroundColor: theme.cardBg }]}>
             {results.map((r) => (
-              <View key={r.code} style={styles.resultRow}>
+              <View key={r.code} style={[styles.resultRow, { borderBottomColor: theme.divider }]}>
                 <View style={styles.resultLeft}>
-                  <Text style={styles.resultLabel}>{r.label}</Text>
-                  <Text style={styles.resultName}>{r.name}</Text>
+                  <Text style={[styles.resultLabel, { color: theme.text }]}>{r.label}</Text>
+                  <Text style={[styles.resultName, { color: theme.textMuted }]}>{r.name}</Text>
                 </View>
                 <View style={styles.resultRight}>
                   <Text style={styles.resultValue}>{formatMoney(r.result)}</Text>
-                  <Text style={styles.resultRate}>
+                  <Text style={[styles.resultRate, { color: theme.textMuted }]}>
                     1 {fromInfo?.label} = {formatMoney(r.rate)}
                   </Text>
                 </View>
@@ -182,54 +184,53 @@ export default function CurrencyCalculator() {
 }
 
 const C = {
-  card: '#fff', text: '#2d2520', muted: '#8a7a6c', hint: '#a3897a', divider: '#f1e3d0',
   accentBg: '#ffe082', accent: '#8d6e00',
 };
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
-  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, color: C.text, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
-  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 13, color: C.muted, marginBottom: 22, textAlign: 'center' },
+  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
+  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 13, marginBottom: 22, textAlign: 'center' },
   amountCard: {
     backgroundColor: C.accentBg, borderRadius: 24, padding: 18, marginBottom: 18,
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 10, elevation: 3,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 10, elevation: 3,
   },
   amountRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   amountInput: {
     flex: 1, fontFamily: 'Fredoka_700Bold', fontSize: 36, color: C.accent, letterSpacing: -1, padding: 0,
   },
   amountUnit: { fontFamily: 'Fredoka_700Bold', fontSize: 20, color: C.accent, opacity: 0.8 },
-  sectionLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 12, color: C.muted, marginLeft: 8, marginBottom: 8, letterSpacing: 0.5 },
+  sectionLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 12, marginLeft: 8, marginBottom: 8, letterSpacing: 0.5 },
   pills: { flexDirection: 'row', gap: 8, paddingBottom: 4, paddingRight: 8, marginBottom: 16 },
   pill: {
-    backgroundColor: C.card, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 14, alignItems: 'center',
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 1,
+    paddingHorizontal: 14, paddingVertical: 10, borderRadius: 14, alignItems: 'center',
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 1,
   },
   pillActive: { backgroundColor: C.accent },
-  pillLabel: { fontFamily: 'Fredoka_700Bold', fontSize: 14, color: C.text, letterSpacing: 0.5 },
+  pillLabel: { fontFamily: 'Fredoka_700Bold', fontSize: 14, letterSpacing: 0.5 },
   pillLabelActive: { color: '#fff' },
-  pillName: { fontFamily: 'Fredoka_400Regular', fontSize: 10, color: C.muted, marginTop: 1 },
+  pillName: { fontFamily: 'Fredoka_400Regular', fontSize: 10, marginTop: 1 },
   pillNameActive: { color: 'rgba(255,255,255,0.85)' },
   results: {
-    backgroundColor: C.card, borderRadius: 24, padding: 4,
-    shadowColor: C.hint, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
+    borderRadius: 24, padding: 4,
+    shadowColor: '#a3897a', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
   },
   resultRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingVertical: 14, paddingHorizontal: 16,
-    borderBottomWidth: 1, borderBottomColor: C.divider,
+    borderBottomWidth: 1,
   },
   resultLeft: {},
-  resultLabel: { fontFamily: 'Fredoka_700Bold', fontSize: 16, color: C.text, letterSpacing: 0.5 },
-  resultName: { fontFamily: 'Fredoka_400Regular', fontSize: 11, color: C.muted, marginTop: 2 },
+  resultLabel: { fontFamily: 'Fredoka_700Bold', fontSize: 16, letterSpacing: 0.5 },
+  resultName: { fontFamily: 'Fredoka_400Regular', fontSize: 11, marginTop: 2 },
   resultRight: { alignItems: 'flex-end' },
   resultValue: { fontFamily: 'Fredoka_700Bold', fontSize: 20, color: C.accent, letterSpacing: -0.3 },
-  resultRate: { fontFamily: 'Fredoka_400Regular', fontSize: 10, color: C.muted, marginTop: 2 },
+  resultRate: { fontFamily: 'Fredoka_400Regular', fontSize: 10, marginTop: 2 },
   placeholderCard: {
-    backgroundColor: C.card, borderRadius: 24, padding: 36, alignItems: 'center', gap: 10,
-    borderWidth: 2, borderColor: C.divider, borderStyle: 'dashed',
+    borderRadius: 24, padding: 36, alignItems: 'center', gap: 10,
+    borderWidth: 2, borderStyle: 'dashed',
   },
-  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14, color: C.hint },
+  placeholderText: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
   errorCard: {
     backgroundColor: '#ffc4d4', borderRadius: 24, padding: 24, alignItems: 'center', gap: 12,
   },
