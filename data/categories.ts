@@ -67,7 +67,7 @@ export const CATEGORIES: Category[] = [
       { id: 'currency', title: '匯率換算', subtitle: '即時匯率', route: '/calculator/currency' },
       { id: 'loan', title: '貸款試算', subtitle: '月付、利息', route: '/calculator/loan' },
       { id: 'money-score', title: '金錢評分', subtitle: '理財健康分數', route: '/calculator/money-score' },
-      { id: 'compound', title: '複利計算', subtitle: '長期投資試算', comingSoon: true },
+      { id: 'compound', title: '複利計算', subtitle: '長期投資試算', route: '/calculator/compound' },
       { id: 'bookkeeping', title: '記帳', subtitle: '收支管理', comingSoon: true },
     ],
   },
@@ -81,8 +81,8 @@ export const CATEGORIES: Category[] = [
     calculators: [
       { id: 'big2', title: '大老二點數', subtitle: '四人計分', route: '/calculator/big2' },
       { id: 'mahjong', title: '麻將台數', subtitle: '台數計算', route: '/calculator/mahjong' },
-      { id: 'poker-odds', title: '撲克勝率', subtitle: '德州撲克', comingSoon: true },
-      { id: 'lottery', title: '樂透機率', subtitle: '中獎機率試算', comingSoon: true },
+      { id: 'poker-odds', title: '撲克勝率', subtitle: '德州撲克', route: '/calculator/poker-odds' },
+      { id: 'lottery', title: '樂透機率', subtitle: '中獎機率試算', route: '/calculator/lottery' },
     ],
   },
   {
@@ -165,10 +165,10 @@ export const CATEGORIES: Category[] = [
     calculators: [
       { id: 'speed-math', title: '速算', subtitle: '限時內算對幾題', route: '/game/speed-math' },
       { id: 'tap-speed', title: '手速測試', subtitle: '10 秒按幾下', route: '/game/tap-speed' },
-      { id: 'blind-timer', title: '盲計時', subtitle: '不看時間估秒數', comingSoon: true },
-      { id: 'distance', title: '盲測距離', subtitle: '估計兩點距離', comingSoon: true },
-      { id: 'tracking', title: '追物體', subtitle: '點移動的方塊', comingSoon: true },
-      { id: 'ad-game', title: '廣告糞遊', subtitle: '看廣告解鎖嘲諷遊戲', comingSoon: true },
+      { id: 'blind-timer', title: '盲計時', subtitle: '不看時間估秒數', route: '/game/blind-timer' },
+      { id: 'distance', title: '盲測距離', subtitle: '考驗位置記憶', route: '/game/distance' },
+      { id: 'tracking', title: '追物體', subtitle: '點移動的方塊', route: '/game/tracking' },
+      { id: 'ad-game', title: '廣告糞遊', subtitle: '嘲諷手遊生態（假廣告）', route: '/game/ad-game' },
     ],
   },
 ];
