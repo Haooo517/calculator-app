@@ -1,7 +1,9 @@
 import Constants from 'expo-constants';
 import { Stack, useRouter } from 'expo-router';
 import {
+  ArrowCounterClockwise,
   CaretRight,
+  Crown,
   HandWaving,
   Info,
   Palette,
@@ -15,6 +17,7 @@ import { BackgroundPattern } from '../components/BackgroundPattern';
 import { resetOnboarding } from '../components/Onboarding';
 import { haptics, useHapticsToggle } from '../lib/haptics';
 import { clearAllPins, usePins } from '../lib/pins';
+import { ALLCU_PLUS, useOwnership } from '../lib/purchases';
 import { useTheme } from '../lib/theme';
 
 export default function SettingsScreen() {
@@ -23,7 +26,36 @@ export default function SettingsScreen() {
   const { pins } = usePins();
   const { enabled: hapticsOn, setEnabled: setHapticsOn, supported: hapticsSupported } =
     useHapticsToggle();
+  const { owned, has, purchase, resetAll } = useOwnership();
+  const hasPlus = has(ALLCU_PLUS);
   const version = Constants.expoConfig?.version ?? '1.0.0';
+
+  // 模擬購買 Allcu+：之後接真 IAP 只換這裡的「確認即解鎖」
+  const handleBuyPlus = () => {
+    haptics.light();
+    Alert.alert(
+      '解鎖 Allcu+ 全功能',
+      '模擬購買 NT$150 — 解鎖所有主題（之後也會包含免廣告）。正式版會接 App 內購。',
+      [
+        { text: '取消', style: 'cancel' },
+        {
+          text: '購買 NT$150',
+          onPress: () => {
+            purchase(ALLCU_PLUS);
+            haptics.success();
+          },
+        },
+      ]
+    );
+  };
+
+  const handleResetPurchases = () => {
+    haptics.warning();
+    Alert.alert('重置購買紀錄', `會清掉 ${owned.size} 筆已購項目（dev 測試用），確定嗎？`, [
+      { text: '取消', style: 'cancel' },
+      { text: '清空', style: 'destructive', onPress: () => resetAll() },
+    ]);
+  };
 
   const handleResetPins = () => {
     Alert.alert('重設釘選', '所有釘選的工具會被清空，要繼續嗎？', [
@@ -62,6 +94,28 @@ export default function SettingsScreen() {
             router.push('/themes' as any);
           },
         },
+      ],
+    },
+    {
+      title: '解鎖',
+      items: [
+        {
+          label: 'Allcu+ 全功能',
+          sub: hasPlus ? '已解鎖，謝謝支持！' : '解鎖所有主題（模擬購買 NT$150）',
+          Icon: Crown,
+          onPress: hasPlus ? undefined : handleBuyPlus,
+          right: hasPlus ? '已擁有' : undefined,
+        },
+        ...(__DEV__
+          ? [
+              {
+                label: '重置購買紀錄',
+                sub: `dev 測試用，目前已購 ${owned.size} 項`,
+                Icon: ArrowCounterClockwise,
+                onPress: handleResetPurchases,
+              },
+            ]
+          : []),
       ],
     },
     {

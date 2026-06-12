@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { Check, Heart, Lock, Moon, Sun, X } from 'phosphor-react-native';
 import { useState } from 'react';
 import {
+  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -10,13 +11,40 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { haptics } from '../lib/haptics';
+import { themeProduct, useOwnership } from '../lib/purchases';
 import { ALL_THEMES, Theme, categoryColors, useTheme } from '../lib/theme';
 import { useThemeFavorites } from '../lib/themeFavorites';
 
 export default function ThemesScreen() {
   const { theme, themeId, setThemeId } = useTheme();
   const { isFav, toggle: toggleFav } = useThemeFavorites();
+  const { ownsTheme, purchase } = useOwnership();
   const [preview, setPreview] = useState<Theme | null>(null);
+
+  const isLocked = (t: Theme) => t.isPremium && !ownsTheme(t.id);
+
+  // 模擬購買：之後接真 IAP 只要換掉這裡的「確認即解鎖」
+  const handlePurchase = () => {
+    if (!preview) return;
+    haptics.light();
+    Alert.alert(
+      `解鎖「${preview.name}」`,
+      '模擬購買 NT$20。正式版會接 App 內購，現在按下去直接解鎖，方便先體驗流程。',
+      [
+        { text: '取消', style: 'cancel' },
+        {
+          text: '購買 NT$20',
+          onPress: () => {
+            purchase(themeProduct(preview.id));
+            haptics.success();
+            setThemeId(preview.id);
+            setPreview(null);
+          },
+        },
+      ]
+    );
+  };
 
   // 我的最愛排前面
   const sorted = [...ALL_THEMES].sort((a, b) => {
@@ -42,6 +70,7 @@ export default function ThemesScreen() {
               target={t}
               active={t.id === themeId}
               favorited={isFav(t.id)}
+              locked={isLocked(t)}
               onPress={() => setPreview(t)}
               onToggleFav={() => toggleFav(t.id)}
             />
@@ -59,6 +88,8 @@ export default function ThemesScreen() {
             setPreview(null);
           }
         }}
+        onPurchase={handlePurchase}
+        locked={preview ? isLocked(preview) : false}
         active={preview?.id === themeId}
         favorited={preview ? isFav(preview.id) : false}
         onToggleFav={() => preview && toggleFav(preview.id)}
@@ -72,12 +103,14 @@ function ThemeRow({
   target,
   active,
   favorited,
+  locked,
   onPress,
   onToggleFav,
 }: {
   target: Theme;
   active: boolean;
   favorited: boolean;
+  locked: boolean;
   onPress: () => void;
   onToggleFav: () => void;
 }) {
@@ -132,6 +165,7 @@ function ThemeRow({
               <Check size={9} color="#fff" weight="bold" />
             </View>
           )}
+          {locked && !active && <Lock size={13} color={theme.hint} weight="duotone" />}
         </View>
         {target.description && (
           <Text style={[styles.rowDesc, { color: theme.textMuted }]} numberOfLines={1}>
@@ -162,6 +196,8 @@ function PreviewModal({
   visible,
   onClose,
   onApply,
+  onPurchase,
+  locked,
   active,
   favorited,
   onToggleFav,
@@ -170,12 +206,13 @@ function PreviewModal({
   visible: boolean;
   onClose: () => void;
   onApply: () => void;
+  onPurchase: () => void;
+  locked: boolean;
   active: boolean;
   favorited: boolean;
   onToggleFav: () => void;
 }) {
   if (!target) return null;
-  const locked = target.isPremium && !__DEV__;
 
   return (
     <Modal
@@ -252,18 +289,17 @@ function PreviewModal({
             </TouchableOpacity>
 
             {locked ? (
-              <View
+              <TouchableOpacity
+                onPress={onPurchase}
+                activeOpacity={0.8}
                 style={[
                   styles.applyBtn,
-                  styles.applyBtnLocked,
-                  { backgroundColor: target.inputBg, borderRadius: target.radius * 0.5 },
+                  { backgroundColor: target.brandColor, borderRadius: target.radius * 0.5 },
                 ]}
               >
-                <Lock size={16} color={target.textMuted} weight="duotone" />
-                <Text style={[styles.applyTextLocked, { color: target.textMuted }]}>
-                  即將開放
-                </Text>
-              </View>
+                <Lock size={16} color="#fff" weight="fill" />
+                <Text style={styles.applyText}>NT$20 解鎖</Text>
+              </TouchableOpacity>
             ) : active ? (
               <View
                 style={[
