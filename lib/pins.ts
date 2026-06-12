@@ -68,6 +68,13 @@ export function usePins() {
   return { pins, toggle, isPinned };
 }
 
+// 清空所有釘選（設定頁「重設釘選」用）
+export function clearAllPins() {
+  pinsState = new Set();
+  notify();
+  persist();
+}
+
 export function getPinnedCalculators(pins: Set<string>): Calculator[] {
   const out: Calculator[] = [];
   for (const cat of CATEGORIES) {

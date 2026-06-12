@@ -14,7 +14,7 @@ import { Alert, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } f
 import { BackgroundPattern } from '../components/BackgroundPattern';
 import { resetOnboarding } from '../components/Onboarding';
 import { haptics, useHapticsToggle } from '../lib/haptics';
-import { usePins } from '../lib/pins';
+import { clearAllPins, usePins } from '../lib/pins';
 import { useTheme } from '../lib/theme';
 
 export default function SettingsScreen() {
@@ -32,9 +32,8 @@ export default function SettingsScreen() {
         text: '清空',
         style: 'destructive',
         onPress: () => {
-          // pins are managed by lib/pins; toggle each off
-          // simplest path: tell user to manually unpin, or expand pins API
-          Alert.alert('已清空（請重啟 App 套用）');
+          clearAllPins();
+          haptics.success();
         },
       },
     ]);

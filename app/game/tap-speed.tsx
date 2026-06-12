@@ -1,8 +1,10 @@
 import { Stack } from 'expo-router';
-import { ArrowClockwise, Hand, Timer } from 'phosphor-react-native';
+import { ArrowClockwise, Hand, Timer, Trophy } from 'phosphor-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Mascot, MascotExpression } from '../../components/Mascot';
+import { haptics } from '../../lib/haptics';
+import { useBestScore } from '../../lib/scores';
 import { useTheme } from '../../lib/theme';
 
 const DURATION = 10;
@@ -12,32 +14,44 @@ export default function TapSpeed() {
   const [phase, setPhase] = useState<'idle' | 'playing' | 'done'>('idle');
   const [taps, setTaps] = useState(0);
   const [timeLeft, setTimeLeft] = useState(DURATION);
-  const [best, setBest] = useState(0);
+  const { best, report } = useBestScore('tap-speed');
+  const [newBest, setNewBest] = useState(false);
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startedAtRef = useRef(0);
 
   const start = useCallback(() => {
+    haptics.soft();
+    startedAtRef.current = Date.now();
     setPhase('playing');
     setTaps(0);
     setTimeLeft(DURATION);
+    setNewBest(false);
   }, []);
 
+  // 計時只看 phase；startedAt 放 ref，避免每次點擊都重置時鐘
   useEffect(() => {
     if (phase !== 'playing') return;
-    const startedAt = Date.now();
     tickRef.current = setInterval(() => {
-      const elapsed = (Date.now() - startedAt) / 1000;
+      const elapsed = (Date.now() - startedAtRef.current) / 1000;
       const remaining = Math.max(0, DURATION - elapsed);
       setTimeLeft(remaining);
       if (remaining <= 0) {
         if (tickRef.current) clearInterval(tickRef.current);
         setPhase('done');
-        setBest((b) => Math.max(b, taps));
       }
     }, 50);
     return () => {
       if (tickRef.current) clearInterval(tickRef.current);
     };
-  }, [phase, taps]);
+  }, [phase]);
+
+  // 結束時回報成績，破紀錄給 success 觸感
+  useEffect(() => {
+    if (phase !== 'done') return;
+    const isNew = report(taps);
+    setNewBest(isNew);
+    if (isNew) haptics.success();
+  }, [phase, report, taps]);
 
   const tap = () => {
     if (phase !== 'playing') return;
@@ -71,6 +85,15 @@ export default function TapSpeed() {
             <Hand size={20} color={accent} weight="fill" />
             <Text style={[styles.infoText, { color: theme.text }]}>盡量瘋狂連點圓圈</Text>
           </View>
+          {best !== null && (
+            <>
+              <View style={[styles.divider, { backgroundColor: theme.divider }]} />
+              <View style={styles.infoRow}>
+                <Trophy size={20} color={accent} weight="fill" />
+                <Text style={[styles.infoText, { color: theme.text }]}>目前最佳紀錄 {best} 下</Text>
+              </View>
+            </>
+          )}
         </View>
         <TouchableOpacity style={[styles.startBtn, { backgroundColor: accent }]} onPress={start} activeOpacity={0.85}>
           <Text style={styles.startText}>開始</Text>
@@ -91,8 +114,14 @@ export default function TapSpeed() {
           <Text style={[styles.scoreLabel, { color: theme.textMuted }]}>總點擊數</Text>
           <Text style={[styles.scoreValue, { color: accent }]}>{taps}</Text>
           <Text style={[styles.scoreSub, { color: theme.textMuted }]}>
-            平均每秒 {tps} 下 · 紀錄 {best}
+            平均每秒 {tps} 下{best !== null && !newBest ? ` · 最佳紀錄 ${best} 下` : ''}
           </Text>
+          {newBest && (
+            <View style={[styles.newBestPill, { backgroundColor: accent }]}>
+              <Trophy size={14} color="#fff" weight="fill" />
+              <Text style={styles.newBestText}>新紀錄！</Text>
+            </View>
+          )}
         </View>
         <TouchableOpacity style={[styles.startBtn, { backgroundColor: accent }]} onPress={start} activeOpacity={0.85}>
           <ArrowClockwise size={18} color="#fff" weight="bold" />
@@ -175,6 +204,16 @@ const styles = StyleSheet.create({
   scoreLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
   scoreValue: { fontFamily: 'Fredoka_700Bold', fontSize: 96, letterSpacing: -4, lineHeight: 100 },
   scoreSub: { fontFamily: 'Fredoka_400Regular', fontSize: 13, marginTop: 6 },
+  newBestPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    marginTop: 10,
+  },
+  newBestText: { fontFamily: 'Fredoka_700Bold', fontSize: 13, color: '#fff' },
   playArea: {
     flex: 1,
     padding: 20,

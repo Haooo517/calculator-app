@@ -1,8 +1,10 @@
 import { Stack } from 'expo-router';
-import { ArrowClockwise, Lightning, Timer } from 'phosphor-react-native';
+import { ArrowClockwise, Lightning, Timer, Trophy } from 'phosphor-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Mascot, MascotExpression } from '../../components/Mascot';
+import { haptics } from '../../lib/haptics';
+import { useBestScore } from '../../lib/scores';
 import { useTheme } from '../../lib/theme';
 
 type Question = { a: number; b: number; op: '+' | '−' | '×'; answer: number; choices: number[] };
@@ -47,8 +49,11 @@ export default function SpeedMath() {
   const [question, setQuestion] = useState<Question>(() => generateQuestion());
   const [feedback, setFeedback] = useState<'none' | 'correct' | 'wrong'>('none');
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { best, report } = useBestScore('speed-math');
+  const [newBest, setNewBest] = useState(false);
 
   const start = useCallback(() => {
+    haptics.soft();
     setPhase('playing');
     setTimeLeft(TOTAL_TIME);
     setScore(0);
@@ -56,7 +61,16 @@ export default function SpeedMath() {
     setBestStreak(0);
     setQuestion(generateQuestion());
     setFeedback('none');
+    setNewBest(false);
   }, []);
+
+  // 結束時回報成績，破紀錄給 success 觸感
+  useEffect(() => {
+    if (phase !== 'done') return;
+    const isNew = report(score);
+    setNewBest(isNew);
+    if (isNew) haptics.success();
+  }, [phase, report, score]);
 
   useEffect(() => {
     if (phase !== 'playing') return;
@@ -78,6 +92,7 @@ export default function SpeedMath() {
   const answer = (n: number) => {
     if (phase !== 'playing') return;
     if (n === question.answer) {
+      haptics.light();
       setScore((s) => s + 1);
       setStreak((s) => {
         const next = s + 1;
@@ -86,6 +101,7 @@ export default function SpeedMath() {
       });
       setFeedback('correct');
     } else {
+      haptics.rigid();
       setStreak(0);
       setFeedback('wrong');
     }
@@ -127,6 +143,15 @@ export default function SpeedMath() {
             <Lightning size={20} color={accent} weight="fill" />
             <Text style={[styles.infoText, { color: theme.text }]}>連續答對會累積連擊</Text>
           </View>
+          {best !== null && (
+            <>
+              <View style={[styles.divider, { backgroundColor: theme.divider }]} />
+              <View style={styles.infoRow}>
+                <Trophy size={20} color={accent} weight="fill" />
+                <Text style={[styles.infoText, { color: theme.text }]}>目前最佳紀錄 {best} 題</Text>
+              </View>
+            </>
+          )}
         </View>
         <TouchableOpacity style={[styles.startBtn, { backgroundColor: accent }]} onPress={start} activeOpacity={0.85}>
           <Text style={styles.startText}>開始遊戲</Text>
@@ -147,8 +172,14 @@ export default function SpeedMath() {
           <Text style={[styles.scoreLabel, { color: theme.textMuted }]}>分數</Text>
           <Text style={[styles.scoreValue, { color: accent }]}>{score}</Text>
           <Text style={[styles.scoreSub, { color: theme.textMuted }]}>
-            最高連擊 {bestStreak} 題
+            最高連擊 {bestStreak} 題{best !== null && !newBest ? ` · 最佳紀錄 ${best} 題` : ''}
           </Text>
+          {newBest && (
+            <View style={[styles.newBestPill, { backgroundColor: accent }]}>
+              <Trophy size={14} color="#fff" weight="fill" />
+              <Text style={styles.newBestText}>新紀錄！</Text>
+            </View>
+          )}
         </View>
         <TouchableOpacity style={[styles.startBtn, { backgroundColor: accent }]} onPress={start} activeOpacity={0.85}>
           <ArrowClockwise size={18} color="#fff" weight="bold" />
@@ -278,6 +309,16 @@ const styles = StyleSheet.create({
   scoreLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 14 },
   scoreValue: { fontFamily: 'Fredoka_700Bold', fontSize: 80, letterSpacing: -3, lineHeight: 88 },
   scoreSub: { fontFamily: 'Fredoka_400Regular', fontSize: 13, marginTop: 4 },
+  newBestPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    marginTop: 10,
+  },
+  newBestText: { fontFamily: 'Fredoka_700Bold', fontSize: 13, color: '#fff' },
   playContent: {
     flex: 1,
     padding: 20,
