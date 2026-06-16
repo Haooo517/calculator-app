@@ -68,7 +68,7 @@ export type Theme = {
   // mascot rendering variant
   mascotVariant?: 'default' | 'cat';
   // page background overlay pattern
-  bgPattern?: 'dots' | 'stripes';
+  bgPattern?: 'dots' | 'stripes' | 'grid' | 'waves' | 'sparkle';
   bgPatternColor?: string;
   // overlay pattern inside the LCD frame
   lcdFramePattern?: 'dots' | 'stripes' | 'candy';
@@ -158,8 +158,6 @@ const candy: Theme = {
     display: 'PixelifySans_700Bold',
     mono: 'PixelifySans_700Bold',
   },
-  bgPattern: 'dots',
-  bgPatternColor: '#ff80a8',
   lcdFramePattern: 'candy',
   lcdFramePatternColor: '#ff3060', // 紅色拐杖糖條紋
   lcdFramePatternColor2: '#ffffff', // 白色間隔
@@ -236,8 +234,6 @@ const cat: Theme = {
   lcdLed: '#ff8a30',
   lcdBrandColor: '#7a3a10', // 深棕，在 #ffb868 框上才看得到
   mascotVariant: 'cat',
-  bgPattern: 'dots',
-  bgPatternColor: '#e8a868',
   // 不同毛色的貓
   categoryPalette: {
     favorites: { bg: '#ffe0b8', accent: '#d46820' }, // 橘貓
@@ -339,8 +335,8 @@ const cyberpunk: Theme = {
     display: 'ShareTechMono_400Regular',
     mono: 'ShareTechMono_400Regular',
   },
-  bgPattern: 'stripes',
-  bgPatternColor: NEON_PINK,
+  bgPattern: 'grid',
+  bgPatternColor: NEON_CYAN,
   cardBorder: { color: '#3a1a5a', width: 1 },
   // 霓虹燈招牌：每個分類一個霓虹色（粉、青、綠、黃、紫、橘…）
   categoryPalette: {
@@ -625,8 +621,7 @@ const doggy: Theme = {
   lcdText: '#4a2818',
   lcdLed: '#ff9038',
   lcdBrandColor: '#4a2818', // 深棕，在 #d4a468 框上才看得到
-  bgPattern: 'dots',
-  bgPatternColor: '#d4a468',
+  // 狗狗：乾淨奶油底，不放圖案
   // 各種狗狗的毛色
   categoryPalette: {
     favorites: { bg: '#fad0a0', accent: '#c87030' }, // 黃金獵犬
@@ -671,7 +666,7 @@ const aquarium: Theme = {
   lcdBorder: '#40d8e0',
   lcdText: '#a8e8ff',
   lcdLed: '#ff80c0',
-  bgPattern: 'dots',
+  bgPattern: 'waves',
   bgPatternColor: '#40d8e0',
   // 海洋生物配色
   categoryPalette: {
@@ -767,7 +762,7 @@ const magic: Theme = {
   lcdLed: '#a060ff',
   lcdBrandColor: '#ffc060',
   font: { display: 'Fraunces_700Bold' },
-  bgPattern: 'dots',
+  bgPattern: 'sparkle',
   bgPatternColor: '#ffc060',
   cardBorder: { color: '#a060ff', width: 1 },
   // 魔法元素：金、紫、青、玫瑰金
@@ -818,8 +813,7 @@ const flower: Theme = {
   lcdText: '#5a2840',
   lcdLed: '#e84080',
   font: { display: 'Caveat_700Bold' },
-  bgPattern: 'dots',
-  bgPatternColor: '#e8a0c0',
+  // 花朵：乾淨粉色底，圓潤卡片即是特色
   // 各種花朵的色彩
   categoryPalette: {
     favorites: { bg: '#fad8e4', accent: '#e84080' }, // 玫瑰
