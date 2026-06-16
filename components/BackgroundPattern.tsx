@@ -71,16 +71,13 @@ export function BackgroundPattern({ type, color, color2, opacity = 0.18 }: Props
           </Pattern>
         )}
 
-        {/* 拐杖糖斜紋：白底另外全覆蓋（見下），這裡只用 Path 畫斜的紅線（不旋轉 pattern） */}
+        {/* 拐杖糖斜紋：用原本的底色，疊上細細的斜白線（不旋轉 pattern、不蓋白底） */}
         {type === 'candy' && (
-          <Pattern id={id} x={0} y={0} width={18} height={18} patternUnits="userSpaceOnUse">
-            <Path d={diagonal(18)} stroke={color} strokeWidth={4.5} opacity={opacity} fill="none" />
+          <Pattern id={id} x={0} y={0} width={15} height={15} patternUnits="userSpaceOnUse">
+            <Path d={diagonal(15)} stroke={color} strokeWidth={2.4} opacity={opacity} fill="none" />
           </Pattern>
         )}
       </Defs>
-
-      {/* candy 需要一層「全覆蓋」的白底，斜紅線疊在上面 */}
-      {type === 'candy' && color2 ? <Rect width="100%" height="100%" fill={color2} /> : null}
 
       <Rect width="100%" height="100%" fill={`url(#${id})`} />
     </Svg>

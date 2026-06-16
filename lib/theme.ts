@@ -159,8 +159,7 @@ const candy: Theme = {
     mono: 'PixelifySans_700Bold',
   },
   lcdFramePattern: 'candy',
-  lcdFramePatternColor: '#ff3060', // 紅色拐杖糖條紋
-  lcdFramePatternColor2: '#ffffff', // 白色間隔
+  lcdFramePatternColor: '#ffffff', // 細白斜線（底色用原本的 lcdFrame 粉色）
   categoryPalette: {
     favorites: { bg: '#ffd4e8', accent: '#ff3a80' },
     life: { bg: '#c8e8ff', accent: '#2090ff' },
