@@ -9,10 +9,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { useTheme } from '../../lib/theme';
 
 const CURRENCIES = [
@@ -106,7 +106,7 @@ export default function CurrencyCalculator() {
         <View style={styles.amountCard}>
           <View style={styles.amountRow}>
             <CurrencyDollar size={26} color="#8d6e00" weight="fill" />
-            <TextInput
+            <FocusInput
               style={styles.amountInput}
               value={amount}
               onChangeText={setAmount}

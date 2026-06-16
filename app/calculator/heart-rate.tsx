@@ -6,10 +6,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -94,7 +94,7 @@ export default function HeartRateCalculator() {
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>年齡</Text>
             <View style={styles.inputWrap}>
-              <TextInput
+              <FocusInput
                 style={[styles.input, { color: theme.text }]}
                 value={age}
                 onChangeText={setAge}
@@ -112,7 +112,7 @@ export default function HeartRateCalculator() {
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>靜止心率</Text>
             <View style={styles.inputWrap}>
-              <TextInput
+              <FocusInput
                 style={[styles.input, { color: theme.text }]}
                 value={rhr}
                 onChangeText={setRhr}

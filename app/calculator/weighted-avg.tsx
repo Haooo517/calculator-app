@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot, MascotExpression } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -91,7 +91,7 @@ export default function WeightedAvgCalculator() {
           {rows.map((row, idx) => (
             <View key={row.id} style={[styles.itemCard, { backgroundColor: theme.cardBg }]}>
               <View style={styles.itemHead}>
-                <TextInput
+                <FocusInput
                   style={[styles.nameInput, { color: theme.text, backgroundColor: theme.inputBg }]}
                   value={row.name}
                   onChangeText={(t) => updateRow(row.id, { name: t })}
@@ -110,7 +110,7 @@ export default function WeightedAvgCalculator() {
 
               <View style={styles.itemBody}>
                 <View style={[styles.fieldWrap, { backgroundColor: theme.inputBg }]}>
-                  <TextInput
+                  <FocusInput
                     style={[styles.fieldInput, { color: theme.text }]}
                     value={row.score}
                     onChangeText={(t) => updateRow(row.id, { score: t })}
@@ -123,7 +123,7 @@ export default function WeightedAvgCalculator() {
                 </View>
 
                 <View style={[styles.fieldWrap, { backgroundColor: theme.inputBg }]}>
-                  <TextInput
+                  <FocusInput
                     style={[styles.fieldInput, { color: theme.text }]}
                     value={row.weight}
                     onChangeText={(t) => updateRow(row.id, { weight: t })}

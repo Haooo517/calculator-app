@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -107,7 +107,7 @@ export default function WorkHoursCalculator() {
 
               <View style={styles.timeLine}>
                 <Text style={[styles.fieldLabel, { color: theme.textMuted }]}>上班</Text>
-                <TextInput
+                <FocusInput
                   style={[styles.timeInput, { backgroundColor: theme.inputBg, color: theme.text }]}
                   value={row.inH}
                   onChangeText={(t) => update(row.id, 'inH', t)}
@@ -117,7 +117,7 @@ export default function WorkHoursCalculator() {
                   maxLength={2}
                 />
                 <Text style={[styles.colon, { color: theme.hint }]}>:</Text>
-                <TextInput
+                <FocusInput
                   style={[styles.timeInput, { backgroundColor: theme.inputBg, color: theme.text }]}
                   value={row.inM}
                   onChangeText={(t) => update(row.id, 'inM', t)}
@@ -127,7 +127,7 @@ export default function WorkHoursCalculator() {
                   maxLength={2}
                 />
                 <Text style={[styles.fieldLabel, { color: theme.textMuted, marginLeft: 12 }]}>下班</Text>
-                <TextInput
+                <FocusInput
                   style={[styles.timeInput, { backgroundColor: theme.inputBg, color: theme.text }]}
                   value={row.outH}
                   onChangeText={(t) => update(row.id, 'outH', t)}
@@ -137,7 +137,7 @@ export default function WorkHoursCalculator() {
                   maxLength={2}
                 />
                 <Text style={[styles.colon, { color: theme.hint }]}>:</Text>
-                <TextInput
+                <FocusInput
                   style={[styles.timeInput, { backgroundColor: theme.inputBg, color: theme.text }]}
                   value={row.outM}
                   onChangeText={(t) => update(row.id, 'outM', t)}
@@ -150,7 +150,7 @@ export default function WorkHoursCalculator() {
 
               <View style={styles.timeLine}>
                 <Text style={[styles.fieldLabel, { color: theme.textMuted }]}>休息</Text>
-                <TextInput
+                <FocusInput
                   style={[styles.timeInput, styles.breakInput, { backgroundColor: theme.inputBg, color: theme.text }]}
                   value={row.breakMin}
                   onChangeText={(t) => update(row.id, 'breakMin', t)}

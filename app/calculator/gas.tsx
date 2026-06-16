@@ -9,9 +9,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 
 const fmt = (n: number, d = 2) => Number(n.toFixed(d)).toLocaleString();
 
@@ -50,7 +50,7 @@ export default function GasCalculator() {
               <View style={styles.inputRow}>
                 <Text style={[styles.label, { color: theme.text }]}>{f.label}</Text>
                 <View style={styles.inputWrap}>
-                  <TextInput
+                  <FocusInput
                     style={[styles.input, { color: theme.text }]}
                     value={f.value}
                     onChangeText={f.onChange}

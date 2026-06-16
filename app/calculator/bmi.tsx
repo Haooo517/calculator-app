@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot, MascotExpression } from '../../components/Mascot';
 import { useTheme } from '../../lib/theme';
 
@@ -49,7 +50,7 @@ export default function BMICalculator() {
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>身高</Text>
             <View style={styles.inputWrap}>
-              <TextInput
+              <FocusInput
                 style={[styles.input, { color: theme.text }]}
                 value={height}
                 onChangeText={setHeight}
@@ -67,7 +68,7 @@ export default function BMICalculator() {
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>體重</Text>
             <View style={styles.inputWrap}>
-              <TextInput
+              <FocusInput
                 style={[styles.input, { color: theme.text }]}
                 value={weight}
                 onChangeText={setWeight}

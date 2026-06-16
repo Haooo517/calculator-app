@@ -9,9 +9,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -62,15 +62,15 @@ export default function PregnancyCalculator() {
           <Text style={[styles.cardLabel, { color: theme.textMuted }]}>最後一次月經</Text>
           <View style={styles.dateRow}>
             <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-              <TextInput style={[styles.dateInput, { color: theme.text }]} value={year} onChangeText={setYear} placeholder="2026" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={4} />
+              <FocusInput style={[styles.dateInput, { color: theme.text }]} value={year} onChangeText={setYear} placeholder="2026" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={4} />
               <Text style={[styles.dateUnit, { color: theme.hint }]}>年</Text>
             </View>
             <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-              <TextInput style={[styles.dateInput, { color: theme.text }]} value={month} onChangeText={setMonth} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
+              <FocusInput style={[styles.dateInput, { color: theme.text }]} value={month} onChangeText={setMonth} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
               <Text style={[styles.dateUnit, { color: theme.hint }]}>月</Text>
             </View>
             <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-              <TextInput style={[styles.dateInput, { color: theme.text }]} value={day} onChangeText={setDay} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
+              <FocusInput style={[styles.dateInput, { color: theme.text }]} value={day} onChangeText={setDay} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
               <Text style={[styles.dateUnit, { color: theme.hint }]}>日</Text>
             </View>
           </View>

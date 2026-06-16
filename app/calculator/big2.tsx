@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { Crown, Minus, Plus, Trash, TrendUp } from 'phosphor-react-native';
 import { useMemo, useState } from 'react';
 import { Alert } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useBig2Match } from '../../lib/big2Match';
@@ -12,7 +13,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -183,7 +183,7 @@ export default function Big2Calculator() {
           <View style={styles.namesGrid}>
             {PLAYERS.map((idx) => (
               <View key={idx} style={[styles.nameInputWrap, { backgroundColor: theme.inputBg }]}>
-                <TextInput
+                <FocusInput
                   style={[styles.nameInput, { color: theme.text }]}
                   value={match.names[idx]}
                   onChangeText={(t) => setName(idx, t)}
@@ -202,7 +202,7 @@ export default function Big2Calculator() {
           <Text style={[styles.baseLabel, { color: theme.text }]}>底注</Text>
           <View style={styles.baseInputWrap}>
             <Text style={[styles.basePrefix, { color: theme.hint }]}>$</Text>
-            <TextInput
+            <FocusInput
               style={[styles.baseInput, { color: theme.text }]}
               value={base}
               onChangeText={setBase}

@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { useTheme } from '../../lib/theme';
 
 type Mode = 'linear1' | 'quadratic' | 'linear2';
@@ -217,7 +217,7 @@ const CoefInput = ({ label, value, onChange }: { label: string; value?: string; 
   return (
     <View style={[styles.coefBox, { backgroundColor: theme.inputBg }]}>
       <Text style={styles.coefLabel}>{label}</Text>
-      <TextInput
+      <FocusInput
         style={[styles.coefInput, { color: theme.text }]}
         value={value ?? ''}
         onChangeText={onChange}

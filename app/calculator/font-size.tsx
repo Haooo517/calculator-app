@@ -6,10 +6,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -68,7 +68,7 @@ export default function FontSizeCalculator() {
         <View style={[styles.baseCard, { backgroundColor: theme.cardBg }]}>
           <Text style={[styles.baseLabel, { color: theme.text }]}>基準字級</Text>
           <View style={styles.baseInputWrap}>
-            <TextInput
+            <FocusInput
               style={[styles.baseInput, { color: theme.text, backgroundColor: theme.inputBg }]}
               value={base}
               onChangeText={setBase}
@@ -101,7 +101,7 @@ export default function FontSizeCalculator() {
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>數值</Text>
             <View style={styles.inputWrap}>
-              <TextInput
+              <FocusInput
                 style={[styles.input, { color: theme.text }]}
                 value={value}
                 onChangeText={setValue}

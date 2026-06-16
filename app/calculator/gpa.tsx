@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot, MascotExpression } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -118,7 +118,7 @@ export default function GPACalculator() {
             return (
               <View key={row.id} style={[styles.courseCard, { backgroundColor: theme.cardBg }]}>
                 <View style={styles.courseHead}>
-                  <TextInput
+                  <FocusInput
                     style={[styles.nameInput, { color: theme.text, backgroundColor: theme.inputBg }]}
                     value={row.name}
                     onChangeText={(t) => updateRow(row.id, { name: t })}
@@ -137,7 +137,7 @@ export default function GPACalculator() {
 
                 <View style={styles.courseBody}>
                   <View style={[styles.creditWrap, { backgroundColor: theme.inputBg }]}>
-                    <TextInput
+                    <FocusInput
                       style={[styles.creditInput, { color: theme.text }]}
                       value={row.credits}
                       onChangeText={(t) => updateRow(row.id, { credits: t })}

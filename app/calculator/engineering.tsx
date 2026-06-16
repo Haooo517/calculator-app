@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { useTheme } from '../../lib/theme';
 
 type Base = 2 | 8 | 10 | 16;
@@ -97,7 +97,7 @@ export default function EngineeringCalculator() {
 
         <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
           <Text style={[styles.cardLabel, { color: theme.textMuted }]}>輸入</Text>
-          <TextInput
+          <FocusInput
             style={[styles.input, { color: theme.text }]}
             value={val1}
             onChangeText={(t) => VALID[base].test(t) && setVal1(t.toUpperCase())}
@@ -132,7 +132,7 @@ export default function EngineeringCalculator() {
         <Text style={[styles.sectionLabel, { color: theme.textMuted }]}>位元運算（選填）</Text>
         <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
           <Text style={[styles.cardLabel, { color: theme.textMuted }]}>第二個數字</Text>
-          <TextInput
+          <FocusInput
             style={[styles.input, { color: theme.text }]}
             value={val2}
             onChangeText={(t) => VALID[base].test(t) && setVal2(t.toUpperCase())}

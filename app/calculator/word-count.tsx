@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -73,7 +73,7 @@ export default function WordCountCalculator() {
         <Text style={[styles.subtitle, { color: theme.textMuted }]}>貼上或打字，邊打邊幫你數</Text>
 
         <View style={[styles.inputCard, { backgroundColor: theme.cardBg }]}>
-          <TextInput
+          <FocusInput
             style={[styles.textArea, { color: theme.text }]}
             value={text}
             onChangeText={setText}

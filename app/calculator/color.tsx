@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { useTheme } from '../../lib/theme';
 
@@ -132,7 +133,7 @@ export default function ColorCalculator() {
         <View style={[styles.inputCard, { backgroundColor: theme.cardBg }]}>
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>HEX</Text>
-            <TextInput
+            <FocusInput
               style={[styles.hexInput, { color: theme.text }]}
               value={hex}
               onChangeText={onHexChange}
@@ -154,7 +155,7 @@ export default function ColorCalculator() {
             ] as const).map(([label, value, channel]) => (
               <View key={channel} style={styles.channelWrap}>
                 <Text style={[styles.channelLabel, { color: theme.textMuted }]}>{label}</Text>
-                <TextInput
+                <FocusInput
                   style={[styles.channelInput, { color: theme.text, backgroundColor: theme.inputBg }]}
                   value={value}
                   onChangeText={(t) => onRgbChange(channel, t)}

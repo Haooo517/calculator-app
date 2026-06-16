@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { useTheme } from '../../lib/theme';
 
 type Unit = { id: string; label: string };
@@ -136,7 +136,7 @@ export default function UnitCalculator() {
         </View>
 
         <View style={styles.inputCard}>
-          <TextInput
+          <FocusInput
             style={styles.input}
             value={value}
             onChangeText={setValue}

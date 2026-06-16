@@ -6,9 +6,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot, MascotExpression } from '../../components/Mascot';
 import { useTheme } from '../../lib/theme';
 
@@ -109,7 +109,7 @@ export default function CompoundCalculator() {
               <View style={styles.inputRow}>
                 <Text style={[styles.label, { color: theme.text }]}>{f.label}</Text>
                 <View style={styles.inputWrap}>
-                  <TextInput
+                  <FocusInput
                     style={[styles.input, { color: theme.text }]}
                     value={f.value}
                     onChangeText={f.onChange}

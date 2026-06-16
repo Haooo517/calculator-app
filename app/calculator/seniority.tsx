@@ -7,9 +7,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot, MascotExpression } from '../../components/Mascot';
 import { useTheme } from '../../lib/theme';
 
@@ -134,7 +134,7 @@ export default function SeniorityCalculator() {
           <Text style={[styles.cardLabel, { color: theme.textMuted }]}>到職日期</Text>
           <View style={styles.dateRow}>
             <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-              <TextInput
+              <FocusInput
                 style={[styles.dateInput, { color: theme.text }]}
                 value={year}
                 onChangeText={setYear}
@@ -146,7 +146,7 @@ export default function SeniorityCalculator() {
               <Text style={[styles.dateUnit, { color: theme.hint }]}>年</Text>
             </View>
             <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-              <TextInput
+              <FocusInput
                 style={[styles.dateInput, { color: theme.text }]}
                 value={month}
                 onChangeText={setMonth}
@@ -158,7 +158,7 @@ export default function SeniorityCalculator() {
               <Text style={[styles.dateUnit, { color: theme.hint }]}>月</Text>
             </View>
             <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-              <TextInput
+              <FocusInput
                 style={[styles.dateInput, { color: theme.text }]}
                 value={day}
                 onChangeText={setDay}

@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { useTheme } from '../../lib/theme';
 
@@ -47,7 +48,7 @@ export default function GoldenRatioCalculator() {
         <View style={[styles.inputCard, { backgroundColor: theme.cardBg }]}>
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>總長</Text>
-            <TextInput
+            <FocusInput
               style={[styles.input, { color: theme.text }]}
               value={length}
               onChangeText={setLength}
@@ -89,7 +90,7 @@ export default function GoldenRatioCalculator() {
         <View style={[styles.inputCard, { backgroundColor: theme.cardBg }]}>
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>寬</Text>
-            <TextInput
+            <FocusInput
               style={[styles.input, { color: theme.text }]}
               value={rectW}
               onChangeText={setRectW}

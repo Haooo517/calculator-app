@@ -9,9 +9,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 
 const fmt = (n: number) => Math.round(n).toLocaleString();
 
@@ -129,7 +129,7 @@ export default function MoneyScoreCalculator() {
                 <Text style={[styles.label, { color: theme.text }]}>{f.label}</Text>
                 <View style={styles.inputWrap}>
                   <Text style={[styles.prefix, { color: theme.hint }]}>$</Text>
-                  <TextInput
+                  <FocusInput
                     style={[styles.input, { color: theme.text }]}
                     value={f.value}
                     onChangeText={f.onChange}

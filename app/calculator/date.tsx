@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { useTheme } from '../../lib/theme';
 
 type Mode = 'gap' | 'offset';
@@ -43,15 +43,15 @@ const DateInput = ({ year, month, day, onYear, onMonth, onDay }: DateInputProps)
   return (
     <View style={styles.dateRow}>
       <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-        <TextInput style={[styles.dateInput, { color: theme.text }]} value={year} onChangeText={onYear} placeholder="2024" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={4} />
+        <FocusInput style={[styles.dateInput, { color: theme.text }]} value={year} onChangeText={onYear} placeholder="2024" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={4} />
         <Text style={[styles.dateUnit, { color: theme.hint }]}>年</Text>
       </View>
       <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-        <TextInput style={[styles.dateInput, { color: theme.text }]} value={month} onChangeText={onMonth} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
+        <FocusInput style={[styles.dateInput, { color: theme.text }]} value={month} onChangeText={onMonth} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
         <Text style={[styles.dateUnit, { color: theme.hint }]}>月</Text>
       </View>
       <View style={[styles.dateField, { backgroundColor: theme.inputBg }]}>
-        <TextInput style={[styles.dateInput, { color: theme.text }]} value={day} onChangeText={onDay} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
+        <FocusInput style={[styles.dateInput, { color: theme.text }]} value={day} onChangeText={onDay} placeholder="1" placeholderTextColor={theme.hint} keyboardType="number-pad" maxLength={2} />
         <Text style={[styles.dateUnit, { color: theme.hint }]}>日</Text>
       </View>
     </View>
@@ -127,7 +127,7 @@ export default function DateCalculator() {
           <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
             <Text style={[styles.cardLabel, { color: theme.textMuted }]}>加減天數（負數倒推）</Text>
             <View style={[styles.offsetWrap, { backgroundColor: theme.inputBg }]}>
-              <TextInput
+              <FocusInput
                 style={[styles.offsetInput, { color: theme.text }]}
                 value={offset}
                 onChangeText={setOffset}

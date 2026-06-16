@@ -6,10 +6,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -118,7 +118,7 @@ export default function AspectRatioCalculator() {
         <View style={[styles.inputCard, { backgroundColor: theme.cardBg }]}>
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>寬</Text>
-            <TextInput
+            <FocusInput
               style={[styles.input, { color: theme.text }]}
               value={simpW}
               onChangeText={setSimpW}
@@ -131,7 +131,7 @@ export default function AspectRatioCalculator() {
           <View style={[styles.divider, { backgroundColor: theme.divider }]} />
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>高</Text>
-            <TextInput
+            <FocusInput
               style={[styles.input, { color: theme.text }]}
               value={simpH}
               onChangeText={setSimpH}
@@ -184,7 +184,7 @@ export default function AspectRatioCalculator() {
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>比例</Text>
             <View style={styles.ratioWrap}>
-              <TextInput
+              <FocusInput
                 style={[styles.ratioInput, { color: theme.text, backgroundColor: theme.inputBg }]}
                 value={ratioW}
                 onChangeText={setRatioW}
@@ -194,7 +194,7 @@ export default function AspectRatioCalculator() {
                 maxLength={6}
               />
               <Text style={[styles.ratioColon, { color: theme.textMuted }]}>:</Text>
-              <TextInput
+              <FocusInput
                 style={[styles.ratioInput, { color: theme.text, backgroundColor: theme.inputBg }]}
                 value={ratioH}
                 onChangeText={setRatioH}
@@ -208,7 +208,7 @@ export default function AspectRatioCalculator() {
           <View style={[styles.divider, { backgroundColor: theme.divider }]} />
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>寬</Text>
-            <TextInput
+            <FocusInput
               style={[styles.input, { color: theme.text }]}
               value={shownW}
               onChangeText={(t) => {
@@ -224,7 +224,7 @@ export default function AspectRatioCalculator() {
           <View style={[styles.divider, { backgroundColor: theme.divider }]} />
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>高</Text>
-            <TextInput
+            <FocusInput
               style={[styles.input, { color: theme.text }]}
               value={shownH}
               onChangeText={(t) => {

@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot, MascotExpression } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -129,7 +129,7 @@ export default function CountdownTimer() {
             <Text style={[styles.cardLabel, { color: theme.textMuted }]}>自訂時間</Text>
             <View style={styles.timeRow}>
               <View style={[styles.timeField, { backgroundColor: theme.inputBg }]}>
-                <TextInput
+                <FocusInput
                   style={[styles.timeInput, { color: theme.text }]}
                   value={min}
                   onChangeText={(t) => setMin(t.replace(/[^0-9]/g, ''))}
@@ -141,7 +141,7 @@ export default function CountdownTimer() {
                 <Text style={[styles.timeUnit, { color: theme.hint }]}>分</Text>
               </View>
               <View style={[styles.timeField, { backgroundColor: theme.inputBg }]}>
-                <TextInput
+                <FocusInput
                   style={[styles.timeInput, { color: theme.text }]}
                   value={sec}
                   onChangeText={(t) => setSec(t.replace(/[^0-9]/g, ''))}

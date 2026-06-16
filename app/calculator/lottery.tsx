@@ -6,10 +6,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { FocusInput } from '../../components/FocusInput';
 import { Mascot } from '../../components/Mascot';
 import { haptics } from '../../lib/haptics';
 import { useTheme } from '../../lib/theme';
@@ -131,7 +131,7 @@ export default function LotteryCalculator() {
             <View style={styles.inputRow}>
               <Text style={[styles.label, { color: theme.text }]}>號碼池</Text>
               <View style={styles.customWrap}>
-                <TextInput
+                <FocusInput
                   style={[styles.customInput, { color: theme.text, backgroundColor: theme.inputBg }]}
                   value={customN}
                   onChangeText={setCustomN}
@@ -141,7 +141,7 @@ export default function LotteryCalculator() {
                   maxLength={2}
                 />
                 <Text style={[styles.customJoin, { color: theme.textMuted }]}>選</Text>
-                <TextInput
+                <FocusInput
                   style={[styles.customInput, { color: theme.text, backgroundColor: theme.inputBg }]}
                   value={customK}
                   onChangeText={setCustomK}
@@ -175,7 +175,7 @@ export default function LotteryCalculator() {
           <View style={styles.inputRow}>
             <Text style={[styles.label, { color: theme.text }]}>買幾注</Text>
             <View style={styles.inputWrap}>
-              <TextInput
+              <FocusInput
                 style={[styles.input, { color: theme.text }]}
                 value={tickets}
                 onChangeText={setTickets}
