@@ -1,6 +1,14 @@
 import {
+  Acorn,
+  Anchor,
+  Atom,
   Bird,
+  Bone,
+  BowlFood,
+  Bug,
+  Butterfly,
   Calculator,
+  Carrot,
   Cat,
   Cherries,
   Clock,
@@ -11,28 +19,43 @@ import {
   Fish,
   Flask,
   Flower,
+  FlowerLotus,
+  FlowerTulip,
   GameController,
+  Gift,
   GraduationCap,
+  HandHeart,
   Heart,
   Heartbeat,
+  Horse,
   HouseLine,
   IconWeight,
   Leaf,
   Lightning,
+  MagicWand,
   Moon,
+  MoonStars,
   MusicNote,
   Palette,
   PawPrint,
   Pizza,
   PokerChip,
+  PottedPlant,
   PushPin,
   Rabbit,
+  Rainbow,
+  Sailboat,
+  ShootingStar,
+  Shrimp,
+  SoccerBall,
   Sparkle,
   Star,
   Sun,
   Sword,
+  TennisBall,
   Tree,
   Wallet,
+  Waves,
   Wind,
 } from 'phosphor-react-native';
 import { ComponentType } from 'react';
@@ -45,11 +68,17 @@ export const ICON_REGISTRY: Record<string, PhosphorIcon> = {
   // 預設分類 icon
   Calculator, PushPin, HouseLine, Flask, Wallet, PokerChip, Heartbeat,
   Palette, Clock, GraduationCap, CookingPot, GameController,
-  // 主題替換選項
-  Cat, Dog, Rabbit, Bird, Fish, PawPrint,
-  Star, Heart, Sparkle, Crown, Sword, Lightning,
-  Flower, Leaf, Tree, Sun, Moon, Wind, Drop,
-  Cherries, Pizza, MusicNote,
+  // 動物
+  Cat, Dog, Rabbit, Bird, Fish, PawPrint, Bone, Butterfly, Horse, Shrimp, Bug,
+  // 植物 / 自然
+  Flower, FlowerLotus, FlowerTulip, Leaf, Tree, PottedPlant, Acorn, Carrot,
+  Sun, Moon, MoonStars, Wind, Drop, Rainbow, Waves,
+  // 魔法 / 奇幻
+  Star, Heart, HandHeart, Sparkle, Crown, Sword, Lightning, MagicWand, ShootingStar, Atom,
+  // 海洋
+  Anchor, Sailboat,
+  // 其他
+  Cherries, Pizza, MusicNote, BowlFood, Gift, TennisBall, SoccerBall,
 };
 
 // 預設分類 → icon 名稱（會在 ICON_REGISTRY 中查找）

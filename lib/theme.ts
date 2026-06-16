@@ -248,14 +248,19 @@ const cat: Theme = {
     cooking: { bg: '#ffe8d0', accent: '#b85820' }, // 起司貓
     game: { bg: '#f0f0f0', accent: '#606060' }, // 灰貓
   },
-  // 換掉 icon：貓主題要全是貓世界的東西
+  // 全分類換成貓世界
   iconOverrides: {
-    favorites: 'Star',       // 貓最愛的閃亮東西
-    health: 'Heart',         // 心心（取代 Heartbeat）
-    time: 'Moon',            // 貓是夜行動物
-    cooking: 'Fish',         // 罐罐！
-    game: 'PawPrint',        // 貓掌印
+    favorites: 'Cat',        // 主角貓
+    life: 'HandHeart',       // 撒嬌
     science: 'Sparkle',      // 貓眼閃光
+    wealth: 'Fish',          // 貓的寶藏
+    gambling: 'PawPrint',    // 貓掌
+    health: 'Heart',
+    design: 'Star',
+    time: 'Moon',            // 夜行
+    education: 'Bird',       // 賞鳥
+    cooking: 'BowlFood',     // 貓碗
+    game: 'Butterfly',       // 追蝴蝶
   },
 };
 
@@ -636,12 +641,19 @@ const doggy: Theme = {
     cooking:   { bg: '#fae0c0', accent: '#a85820' }, // 法鬥
     game:      { bg: '#f0f0e8', accent: '#707060' }, // 哈士奇
   },
+  // 全分類換成狗狗世界
   iconOverrides: {
-    favorites: 'Dog',
+    favorites: 'Dog',        // 主角狗
+    life: 'Bone',            // 骨頭
+    science: 'PawPrint',     // 腳印
+    wealth: 'Gift',          // 零食獎勵
+    gambling: 'TennisBall',  // 撿球
     health: 'Heart',
-    game: 'PawPrint',
-    cooking: 'PawPrint',
-    science: 'PawPrint',
+    design: 'Star',
+    time: 'Moon',
+    education: 'HandHeart',  // 訓練羈絆
+    cooking: 'BowlFood',     // 狗碗
+    game: 'SoccerBall',      // 玩球
   },
 };
 
@@ -682,13 +694,19 @@ const aquarium: Theme = {
     cooking:   { bg: '#1a4870', accent: '#ff7080' }, // 鮭魚
     game:      { bg: '#1a4870', accent: '#80f0e0' }, // 熱帶魚
   },
+  // 全分類換成海洋世界
   iconOverrides: {
-    favorites: 'Star',     // 海星
-    life: 'Drop',
-    cooking: 'Fish',
-    game: 'Fish',
+    favorites: 'Star',       // 海星
+    life: 'Fish',            // 魚
+    science: 'Drop',         // 水滴
+    wealth: 'Anchor',        // 船錨/沉船寶藏
+    gambling: 'Sailboat',    // 出海
     health: 'Heart',
-    time: 'Drop',
+    design: 'Waves',         // 水波
+    time: 'Moon',            // 潮汐
+    education: 'Shrimp',     // 蝦
+    cooking: 'BowlFood',     // 海鮮
+    game: 'Sparkle',         // 水光
   },
 };
 
@@ -729,13 +747,19 @@ const zoo: Theme = {
     cooking:   { bg: '#fae0a8', accent: '#a86020' }, // 河馬
     game:      { bg: '#e0f0c8', accent: '#5a8030' }, // 鸚鵡
   },
+  // 全分類換成動物園世界
   iconOverrides: {
-    favorites: 'PawPrint',
-    life: 'Tree',
+    favorites: 'PawPrint',   // 腳印
+    life: 'Tree',            // 棲地
+    science: 'Bug',          // 昆蟲
+    wealth: 'Acorn',         // 松鼠的寶物
+    gambling: 'Butterfly',   // 蝴蝶
     health: 'Heart',
-    cooking: 'Leaf',
-    game: 'Bird',
-    education: 'PawPrint',
+    design: 'Bird',          // 鸚鵡
+    time: 'Sun',             // 草原日出
+    education: 'Rabbit',     // 兔
+    cooking: 'Carrot',       // 紅蘿蔔
+    game: 'Horse',           // 馬
   },
 };
 
@@ -779,15 +803,19 @@ const magic: Theme = {
     cooking:   { bg: '#241a70', accent: '#ff9050' }, // 火焰
     game:      { bg: '#241a70', accent: '#60ffd0' }, // 仙術
   },
+  // 全分類換成魔法世界
   iconOverrides: {
-    favorites: 'Star',
-    science: 'Sparkle',
-    gambling: 'Crown',
-    design: 'Sparkle',
+    favorites: 'MagicWand',  // 魔杖
+    life: 'MoonStars',       // 星月
+    science: 'Atom',         // 鍊金
+    wealth: 'Crown',         // 皇冠
+    gambling: 'ShootingStar',// 許願流星
+    health: 'HandHeart',     // 治癒咒
+    design: 'Sparkle',       // 魔法閃光
     time: 'Moon',
-    game: 'Lightning',
-    cooking: 'Lightning',
-    education: 'Sword',
+    education: 'Star',        // 占星
+    cooking: 'Flask',        // 魔藥
+    game: 'Lightning',       // 法術
   },
 };
 
@@ -828,14 +856,19 @@ const flower: Theme = {
     cooking:   { bg: '#fad0c8', accent: '#d84830' }, // 朱槿
     game:      { bg: '#f0e0d8', accent: '#a06848' }, // 鳶尾
   },
+  // 全分類換成花園世界
   iconOverrides: {
-    favorites: 'Flower',
-    life: 'Leaf',
-    health: 'Flower',
-    design: 'Flower',
-    science: 'Sparkle',
-    cooking: 'Cherries',
-    game: 'Leaf',
+    favorites: 'Flower',     // 花
+    life: 'PottedPlant',     // 盆栽
+    science: 'Leaf',         // 葉
+    wealth: 'FlowerTulip',   // 鬱金香
+    gambling: 'Butterfly',   // 蝴蝶
+    health: 'Heart',
+    design: 'FlowerLotus',   // 蓮花
+    time: 'Sun',             // 向陽
+    education: 'Tree',       // 成長
+    cooking: 'Cherries',     // 櫻桃
+    game: 'Rainbow',         // 彩虹
   },
 };
 

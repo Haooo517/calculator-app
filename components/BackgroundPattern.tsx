@@ -10,6 +10,12 @@ type Props = {
   opacity?: number;
 };
 
+// 無縫 45° 對角線（不用 patternTransform —— 原生 react-native-svg 對 patternTransform 支援有 bug，
+// 會把旋轉後的 tile 裁切成碎片。改用三段 Path 自己鋪滿，web / iOS / Android 都正確）。
+// 主線 x+y=tile，加左上、右下兩個角的補線讓相鄰 tile 接得起來。
+const diagonal = (tile: number) =>
+  `M-1 1 l2 -2 M0 ${tile} l${tile} -${tile} M${tile - 1} ${tile + 1} l2 -2`;
+
 export function BackgroundPattern({ type, color, color2, opacity = 0.18 }: Props) {
   const id = `bg-${type}`;
   return (
@@ -22,17 +28,10 @@ export function BackgroundPattern({ type, color, color2, opacity = 0.18 }: Props
           </Pattern>
         )}
 
+        {/* 斜紋：Path 對角線（不旋轉 pattern） */}
         {type === 'stripes' && (
-          <Pattern
-            id={id}
-            x={0}
-            y={0}
-            width={18}
-            height={18}
-            patternUnits="userSpaceOnUse"
-            patternTransform="rotate(45)"
-          >
-            <Rect width={6} height={18} fill={color} opacity={opacity} />
+          <Pattern id={id} x={0} y={0} width={16} height={16} patternUnits="userSpaceOnUse">
+            <Path d={diagonal(16)} stroke={color} strokeWidth={5} opacity={opacity} fill="none" />
           </Pattern>
         )}
 
@@ -72,23 +71,15 @@ export function BackgroundPattern({ type, color, color2, opacity = 0.18 }: Props
           </Pattern>
         )}
 
-        {/* 拐杖糖斜紋：白底另外全覆蓋（見下），這裡只畫斜的紅線 */}
+        {/* 拐杖糖斜紋：白底另外全覆蓋（見下），這裡只用 Path 畫斜的紅線（不旋轉 pattern） */}
         {type === 'candy' && (
-          <Pattern
-            id={id}
-            x={0}
-            y={0}
-            width={20}
-            height={20}
-            patternUnits="userSpaceOnUse"
-            patternTransform="rotate(45)"
-          >
-            <Rect x={0} y={0} width={4} height={20} fill={color} opacity={opacity} />
+          <Pattern id={id} x={0} y={0} width={18} height={18} patternUnits="userSpaceOnUse">
+            <Path d={diagonal(18)} stroke={color} strokeWidth={4.5} opacity={opacity} fill="none" />
           </Pattern>
         )}
       </Defs>
 
-      {/* candy 需要一層「不旋轉、全覆蓋」的白底，避免旋轉 pattern 在邊界露出底色 */}
+      {/* candy 需要一層「全覆蓋」的白底，斜紅線疊在上面 */}
       {type === 'candy' && color2 ? <Rect width="100%" height="100%" fill={color2} /> : null}
 
       <Rect width="100%" height="100%" fill={`url(#${id})`} />
