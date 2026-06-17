@@ -219,12 +219,15 @@ export function LCDScreen() {
       ]}
     >
       {theme.lcdFramePattern && (
-        <BackgroundPattern
-          type={theme.lcdFramePattern}
-          color={theme.lcdFramePatternColor ?? '#fff'}
-          color2={theme.lcdFramePatternColor2}
-          opacity={theme.lcdFramePattern === 'candy' ? 1 : 0.65}
-        />
+        // 裁切到 frame 的圓角（frame 本身不能 overflow:hidden，否則陰影被裁）
+        <View style={[StyleSheet.absoluteFill, styles.patternClip]} pointerEvents="none">
+          <BackgroundPattern
+            type={theme.lcdFramePattern}
+            color={theme.lcdFramePatternColor ?? '#fff'}
+            color2={theme.lcdFramePatternColor2}
+            opacity={theme.lcdFramePattern === 'candy' ? 1 : 0.65}
+          />
+        </View>
       )}
       <TouchableOpacity
         style={[styles.screen, { backgroundColor: theme.lcdScreen, borderColor: theme.lcdBorder }]}
@@ -300,6 +303,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 16,
     elevation: 6,
+  },
+  patternClip: {
+    borderRadius: 26, // 跟 frame 一樣，把斜紋裁進圓角
+    overflow: 'hidden',
   },
   screen: {
     backgroundColor: '#d8e0b8',

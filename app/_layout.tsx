@@ -17,9 +17,33 @@ import { ZCOOLKuaiLe_400Regular } from '@expo-google-fonts/zcool-kuaile';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackButton } from '../components/BackButton';
 import { ThemeProvider, useTheme } from '../lib/theme';
+
+// 自訂 header：純 RN 元件，取代原生 header，避開 iOS 26 對返回鈕加的 liquid glass 玻璃框
+function CustomHeader({ title, canGoBack }: { title?: string; canGoBack: boolean }) {
+  const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={{ backgroundColor: theme.bg, paddingTop: insets.top }}>
+      <View style={styles.headerRow}>
+        <View style={styles.headerSide}>{canGoBack ? <BackButton /> : null}</View>
+        <Text
+          numberOfLines={1}
+          style={[
+            styles.headerTitle,
+            { color: theme.text, fontFamily: theme.font?.display ?? 'Fredoka_700Bold' },
+          ]}
+        >
+          {title ?? ''}
+        </Text>
+        <View style={styles.headerSide} />
+      </View>
+    </View>
+  );
+}
 
 function StackWithTheme() {
   const { theme } = useTheme();
@@ -28,13 +52,9 @@ function StackWithTheme() {
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: theme.bg },
-          headerTintColor: theme.text,
-          headerTitleStyle: { fontFamily: 'Fredoka_700Bold', fontSize: 20, color: theme.text },
-          headerTitleAlign: 'center',
-          headerShadowVisible: false,
-          headerBackVisible: false, // 關掉 iOS 預設的玻璃圓框
-          headerLeft: ({ canGoBack }) => (canGoBack ? <BackButton /> : null),
+          header: ({ options, back }) => (
+            <CustomHeader title={options.title} canGoBack={!!back} />
+          ),
           contentStyle: { backgroundColor: theme.bg },
         }}
       />
@@ -69,3 +89,22 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  headerRow: {
+    height: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  headerSide: {
+    width: 44,
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 18,
+    letterSpacing: -0.2,
+  },
+});
