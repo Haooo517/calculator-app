@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { Crown, Minus, Plus, Trash, TrendUp } from 'phosphor-react-native';
+import { Check, Crown, Minus, Plus, Trash, TrendUp } from 'phosphor-react-native';
 import { useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import { FocusInput } from '../../components/FocusInput';
@@ -12,6 +12,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -34,15 +35,31 @@ const multStyle = (factor: number) => {
   return { backgroundColor: '#c4623a' };
 };
 
+type Tab = 'score' | 'history';
+
 export default function Big2Calculator() {
   const { theme } = useTheme();
-  const { match, setName, addRound, removeRound, clearMatch } = useBig2Match();
+  const { match, setName, addRound, removeRound, clearMatch, setTenCardDouble } = useBig2Match();
+  const [tab, setTab] = useState<Tab>('score');
   const [cards, setCards] = useState<number[]>([5, 5, 5, 0]);
   const [base, setBase] = useState('1');
+  // 每位玩家「持 2」勾選（該輪罰分 ×2），記錄完重置
+  const [holdTwo, setHoldTwo] = useState<boolean[]>([false, false, false, false]);
+
+  const switchTab = (next: Tab) => {
+    if (next === tab) return;
+    haptics.selection();
+    setTab(next);
+  };
 
   const adjust = (idx: number, delta: number) => {
     haptics.selection();
     setCards((prev) => prev.map((v, i) => (i === idx ? Math.max(MIN, Math.min(MAX, v + delta)) : v)));
+  };
+
+  const toggleHoldTwo = (idx: number) => {
+    haptics.selection();
+    setHoldTwo((prev) => prev.map((v, i) => (i === idx ? !v : v)));
   };
 
   const baseNum = Math.max(1, parseFloat(base) || 1);
@@ -56,7 +73,10 @@ export default function Big2Calculator() {
     const losses = cards.map((c, idx) => {
       if (idx === winnerIdx) return 0;
       const m = getMultiplier(c);
-      return c * baseNum * m.factor;
+      // 兩個新雙倍是再乘上去的 modifier，可疊加
+      const tenMod = match.tenCardDouble && c >= 10 ? 2 : 1;
+      const holdMod = holdTwo[idx] ? 2 : 1;
+      return c * baseNum * m.factor * tenMod * holdMod;
     });
     const total = losses.reduce((a, b) => a + b, 0);
     const scores = losses.map((l, idx) => (idx === winnerIdx ? total : -l)) as [
@@ -66,7 +86,7 @@ export default function Big2Calculator() {
       number
     ];
     return { winnerIdx, losses, total, scores };
-  }, [cards, baseNum]);
+  }, [cards, baseNum, match.tenCardDouble, holdTwo]);
 
   // 累計統計
   const stats = useMemo(() => {
@@ -101,6 +121,7 @@ export default function Big2Calculator() {
     haptics.success();
     addRound(round.scores, baseNum);
     setCards([5, 5, 5, 0]);
+    setHoldTwo([false, false, false, false]);
   };
 
   const handleRemove = (id: string) => {
@@ -131,233 +152,309 @@ export default function Big2Calculator() {
     >
       <Stack.Screen options={{ title: '大老二' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={[styles.title, { color: theme.text }]}>大老二計分</Text>
-        <Text style={[styles.subtitle, { color: theme.textMuted }]}>逐輪記錄每人輸贏，自動累計整局</Text>
-
-        {/* 累計統計 */}
-        <View style={[styles.statsCard, { backgroundColor: C.accentBg }]}>
-          <View style={styles.statsHead}>
-            <Mascot expression={mascotExpr} color={C.accent} size={48} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.statsTitle}>累計戰績</Text>
-              <Text style={styles.statsSub}>
-                共 {match.rounds.length} 輪
-                {stats.leader >= 0 ? ` · ${match.names[stats.leader]} 領先` : ''}
-              </Text>
-            </View>
+        {/* Header：標題在左、歐古在右 */}
+        <View style={styles.header}>
+          <View style={styles.headerText}>
+            <Text style={[styles.title, { color: theme.text }]}>大老二</Text>
+            <Text style={[styles.subtitle, { color: theme.textMuted }]}>逐輪記錄每人輸贏，自動累計整局</Text>
           </View>
-          <View style={styles.statsGrid}>
-            {PLAYERS.map((idx) => {
-              const total = stats.totals[idx];
-              const isLeader = stats.leader === idx;
-              return (
-                <View
-                  key={idx}
-                  style={[styles.statCell, isLeader && styles.statCellLeader]}
-                >
-                  <View style={styles.statNameRow}>
-                    {isLeader && <Crown size={13} color="#8d6e00" weight="fill" />}
-                    <Text style={[styles.statName, isLeader && styles.statNameLeader]} numberOfLines={1}>
-                      {match.names[idx]}
-                    </Text>
-                  </View>
-                  <Text
-                    style={[
-                      styles.statTotal,
-                      { color: total > 0 ? '#2d8765' : total < 0 ? '#c2456a' : C.accent },
-                    ]}
-                  >
-                    {total > 0 ? '+' : ''}
-                    {total}
-                  </Text>
-                  <Text style={styles.statWins}>{stats.wins[idx]} 勝</Text>
-                </View>
-              );
-            })}
-          </View>
+          <Mascot expression={mascotExpr} color={C.accent} size={56} />
         </View>
 
-        {/* 玩家名稱 */}
-        <View style={[styles.namesCard, { backgroundColor: theme.cardBg }]}>
-          <Text style={[styles.cardLabel, { color: theme.text }]}>玩家名稱</Text>
-          <View style={styles.namesGrid}>
-            {PLAYERS.map((idx) => (
-              <View key={idx} style={[styles.nameInputWrap, { backgroundColor: theme.inputBg }]}>
-                <FocusInput
-                  style={[styles.nameInput, { color: theme.text }]}
-                  value={match.names[idx]}
-                  onChangeText={(t) => setName(idx, t)}
-                  placeholder={`玩家${idx + 1}`}
-                  placeholderTextColor={theme.hint}
-                  maxLength={6}
-                />
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* 本輪輸入 */}
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>本輪</Text>
-        <View style={[styles.baseCard, { backgroundColor: theme.cardBg }]}>
-          <Text style={[styles.baseLabel, { color: theme.text }]}>底注</Text>
-          <View style={styles.baseInputWrap}>
-            <Text style={[styles.basePrefix, { color: theme.hint }]}>$</Text>
-            <FocusInput
-              style={[styles.baseInput, { color: theme.text }]}
-              value={base}
-              onChangeText={setBase}
-              placeholder="1"
-              placeholderTextColor={theme.hint}
-              keyboardType="decimal-pad"
-              maxLength={6}
-            />
-            <Text style={[styles.baseSuffix, { color: theme.hint }]}>/ 張</Text>
-          </View>
-        </View>
-
-        <View style={styles.players}>
-          {PLAYERS.map((idx) => {
-            const c = cards[idx];
-            const m = getMultiplier(c);
-            const isWinner = round?.winnerIdx === idx;
-            const loss = round?.losses[idx] ?? 0;
-
+        {/* 分頁切換器 */}
+        <View style={[styles.tabBar, { backgroundColor: theme.inputBg }]}>
+          {([
+            { key: 'score', label: '計分' },
+            { key: 'history', label: '紀錄' },
+          ] as const).map((t) => {
+            const active = tab === t.key;
             return (
-              <View
-                key={idx}
-                style={[styles.playerCard, { backgroundColor: theme.cardBg }, isWinner && styles.playerCardWinner]}
+              <TouchableOpacity
+                key={t.key}
+                style={[styles.tabPill, active && styles.tabPillActive]}
+                onPress={() => switchTab(t.key)}
+                activeOpacity={0.85}
               >
-                <View style={styles.playerHead}>
-                  <View style={styles.playerNameWrap}>
-                    {isWinner && <Crown size={18} color="#8d6e00" weight="fill" />}
-                    <Text
-                      style={[styles.playerName, { color: theme.text }, isWinner && styles.playerNameWinner]}
-                      numberOfLines={1}
-                    >
-                      {match.names[idx]}
-                    </Text>
-                  </View>
-                  {isWinner ? (
-                    <Text style={styles.winnerPayout}>+{round!.total}</Text>
-                  ) : c > 0 ? (
-                    <View style={styles.lossWrap}>
-                      <Text style={styles.lossValue}>−{loss}</Text>
-                      {m.factor > 1 && (
-                        <View style={[styles.multBadge, multStyle(m.factor)]}>
-                          <Text style={styles.multText}>{m.label}</Text>
-                        </View>
-                      )}
-                    </View>
-                  ) : (
-                    <Text style={[styles.idleText, { color: theme.hint }]}>贏家</Text>
-                  )}
-                </View>
-
-                <View style={[styles.stepperRow, { backgroundColor: theme.inputBg }]}>
-                  <TouchableOpacity
-                    style={[styles.stepBtn, c <= MIN && styles.stepBtnDisabled]}
-                    onPress={() => adjust(idx, -1)}
-                    activeOpacity={0.7}
-                    disabled={c <= MIN}
-                  >
-                    <Minus size={20} color="#6a3da8" weight="bold" />
-                  </TouchableOpacity>
-
-                  <View style={styles.countWrap}>
-                    <Text style={[styles.countValue, { color: theme.text }]}>{c}</Text>
-                    <Text style={[styles.countLabel, { color: theme.textMuted }]}>張</Text>
-                  </View>
-
-                  <TouchableOpacity
-                    style={[styles.stepBtn, c >= MAX && styles.stepBtnDisabled]}
-                    onPress={() => adjust(idx, 1)}
-                    activeOpacity={0.7}
-                    disabled={c >= MAX}
-                  >
-                    <Plus size={20} color="#6a3da8" weight="bold" />
-                  </TouchableOpacity>
-                </View>
-              </View>
+                <Text style={[styles.tabText, { color: theme.textMuted }, active && styles.tabTextActive]}>
+                  {t.label}
+                  {t.key === 'history' && match.rounds.length > 0 ? `（${match.rounds.length}）` : ''}
+                </Text>
+              </TouchableOpacity>
             );
           })}
         </View>
 
-        {round ? (
-          <TouchableOpacity style={styles.recordBtn} onPress={handleRecord} activeOpacity={0.85}>
-            <TrendUp size={20} color="#fff" weight="bold" />
-            <Text style={styles.recordBtnText}>
-              記錄這輪（{match.names[round.winnerIdx]} +{round.total}）
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={[styles.hintCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
-            <Text style={[styles.hintText, { color: theme.hint }]}>
-              {cards.filter((c) => c === 0).length === 0
-                ? '把贏家的張數調成 0'
-                : '只能有一位贏家（張數為 0）'}
-            </Text>
-          </View>
-        )}
-
-        {/* 歷史紀錄 */}
-        {match.rounds.length > 0 && (
+        {tab === 'score' ? (
           <>
-            <View style={styles.historyHead}>
-              <Text style={[styles.sectionTitle, { color: theme.text, marginBottom: 0 }]}>歷史紀錄</Text>
-              <TouchableOpacity onPress={handleClear} activeOpacity={0.7}>
-                <Text style={styles.clearText}>結束本局</Text>
-              </TouchableOpacity>
+            {/* 玩家名稱 */}
+            <View style={[styles.namesCard, { backgroundColor: theme.cardBg }]}>
+              <Text style={[styles.cardLabel, { color: theme.text }]}>玩家名稱</Text>
+              <View style={styles.namesGrid}>
+                {PLAYERS.map((idx) => (
+                  <View key={idx} style={[styles.nameInputWrap, { backgroundColor: theme.inputBg }]}>
+                    <FocusInput
+                      style={[styles.nameInput, { color: theme.text }]}
+                      value={match.names[idx]}
+                      onChangeText={(t) => setName(idx, t)}
+                      placeholder={`玩家${idx + 1}`}
+                      placeholderTextColor={theme.hint}
+                      maxLength={6}
+                    />
+                  </View>
+                ))}
+              </View>
             </View>
-            <View style={[styles.historyCard, { backgroundColor: theme.cardBg }]}>
-              {match.rounds.map((r, i) => (
-                <View
-                  key={r.id}
-                  style={[styles.historyRow, i > 0 && { borderTopWidth: 1, borderTopColor: theme.divider }]}
-                >
-                  <View style={styles.roundBadge}>
-                    <Text style={styles.roundBadgeText}>{i + 1}</Text>
-                  </View>
-                  <View style={styles.historyScores}>
-                    {r.scores.map((s, pi) => (
-                      <Text key={pi} style={styles.historyScore}>
-                        <Text style={[styles.historyName, { color: theme.textMuted }]}>{match.names[pi]} </Text>
-                        <Text style={{ color: s > 0 ? '#2d8765' : s < 0 ? '#c2456a' : theme.hint }}>
-                          {s > 0 ? '+' : ''}
-                          {s}
-                        </Text>
-                      </Text>
-                    ))}
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => handleRemove(r.id)}
-                    style={styles.deleteBtn}
-                    activeOpacity={0.6}
-                    hitSlop={8}
+
+            {/* 滿 10 張雙倍 全域開關 */}
+            <View style={[styles.toggleCard, { backgroundColor: theme.cardBg }]}>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.toggleLabel, { color: theme.text }]}>滿 10 張雙倍</Text>
+                <Text style={[styles.toggleHint, { color: theme.textMuted }]}>
+                  任一玩家剩牌 ≥10 張，其罰分 ×2
+                </Text>
+              </View>
+              <Switch
+                value={match.tenCardDouble}
+                onValueChange={(v) => {
+                  haptics.selection();
+                  setTenCardDouble(v);
+                }}
+                trackColor={{ false: theme.divider, true: C.accent }}
+                thumbColor="#fff"
+              />
+            </View>
+
+            {/* 本輪輸入 */}
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>本輪</Text>
+            <View style={[styles.baseCard, { backgroundColor: theme.cardBg }]}>
+              <Text style={[styles.baseLabel, { color: theme.text }]}>底注</Text>
+              <View style={styles.baseInputWrap}>
+                <Text style={[styles.basePrefix, { color: theme.hint }]}>$</Text>
+                <FocusInput
+                  style={[styles.baseInput, { color: theme.text }]}
+                  value={base}
+                  onChangeText={setBase}
+                  placeholder="1"
+                  placeholderTextColor={theme.hint}
+                  keyboardType="decimal-pad"
+                  maxLength={6}
+                />
+                <Text style={[styles.baseSuffix, { color: theme.hint }]}>/ 張</Text>
+              </View>
+            </View>
+
+            <View style={styles.players}>
+              {PLAYERS.map((idx) => {
+                const c = cards[idx];
+                const m = getMultiplier(c);
+                const isWinner = round?.winnerIdx === idx;
+                const loss = round?.losses[idx] ?? 0;
+                const held = holdTwo[idx];
+
+                return (
+                  <View
+                    key={idx}
+                    style={[styles.playerCard, { backgroundColor: theme.cardBg }, isWinner && styles.playerCardWinner]}
                   >
-                    <Trash size={18} color={theme.hint} weight="bold" />
-                  </TouchableOpacity>
+                    <View style={styles.playerHead}>
+                      <View style={styles.playerNameWrap}>
+                        {isWinner && <Crown size={18} color="#8d6e00" weight="fill" />}
+                        <Text
+                          style={[styles.playerName, { color: theme.text }, isWinner && styles.playerNameWinner]}
+                          numberOfLines={1}
+                        >
+                          {match.names[idx]}
+                        </Text>
+                      </View>
+                      {isWinner ? (
+                        <Text style={styles.winnerPayout}>+{round!.total}</Text>
+                      ) : c > 0 ? (
+                        <View style={styles.lossWrap}>
+                          <Text style={styles.lossValue}>−{loss}</Text>
+                          {m.factor > 1 && (
+                            <View style={[styles.multBadge, multStyle(m.factor)]}>
+                              <Text style={styles.multText}>{m.label}</Text>
+                            </View>
+                          )}
+                        </View>
+                      ) : (
+                        <Text style={[styles.idleText, { color: theme.hint }]}>贏家</Text>
+                      )}
+                    </View>
+
+                    <View style={[styles.stepperRow, { backgroundColor: theme.inputBg }]}>
+                      <TouchableOpacity
+                        style={[styles.stepBtn, c <= MIN && styles.stepBtnDisabled]}
+                        onPress={() => adjust(idx, -1)}
+                        activeOpacity={0.7}
+                        disabled={c <= MIN}
+                      >
+                        <Minus size={20} color="#6a3da8" weight="bold" />
+                      </TouchableOpacity>
+
+                      <View style={styles.countWrap}>
+                        <Text style={[styles.countValue, { color: theme.text }]}>{c}</Text>
+                        <Text style={[styles.countLabel, { color: theme.textMuted }]}>張</Text>
+                      </View>
+
+                      <TouchableOpacity
+                        style={[styles.stepBtn, c >= MAX && styles.stepBtnDisabled]}
+                        onPress={() => adjust(idx, 1)}
+                        activeOpacity={0.7}
+                        disabled={c >= MAX}
+                      >
+                        <Plus size={20} color="#6a3da8" weight="bold" />
+                      </TouchableOpacity>
+                    </View>
+
+                    {/* 持 2 勾選（贏家無罰分，不顯示） */}
+                    {!isWinner && (
+                      <TouchableOpacity
+                        style={styles.holdRow}
+                        onPress={() => toggleHoldTwo(idx)}
+                        activeOpacity={0.7}
+                      >
+                        <View style={[styles.checkBox, held && styles.checkBoxActive]}>
+                          {held && <Check size={13} color="#fff" weight="bold" />}
+                        </View>
+                        <Text style={[styles.holdLabel, { color: theme.textMuted }, held && styles.holdLabelActive]}>
+                          持 2（罰分 ×2）
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                );
+              })}
+            </View>
+
+            {round ? (
+              <TouchableOpacity style={styles.recordBtn} onPress={handleRecord} activeOpacity={0.85}>
+                <TrendUp size={20} color="#fff" weight="bold" />
+                <Text style={styles.recordBtnText}>
+                  記錄這輪（{match.names[round.winnerIdx]} +{round.total}）
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.hintCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+                <Text style={[styles.hintText, { color: theme.hint }]}>
+                  {cards.filter((c) => c === 0).length === 0
+                    ? '把贏家的張數調成 0'
+                    : '只能有一位贏家（張數為 0）'}
+                </Text>
+              </View>
+            )}
+
+            {/* 倍率規則 */}
+            <View style={[styles.ruleCard, { backgroundColor: theme.cardBg }]}>
+              <Text style={[styles.ruleTitle, { color: theme.text }]}>倍率規則</Text>
+              {[
+                { range: '0 – 7 張', label: '一倍', color: '#8a7a6c' },
+                { range: '8 – 9 張', label: '雙倍 ×2', color: '#c4623a' },
+                { range: '10 – 12 張', label: '三倍 ×3', color: '#c2456a' },
+                { range: '13 張', label: '四倍 ×4', color: '#6a3da8' },
+              ].map((r) => (
+                <View key={r.range} style={styles.ruleRow}>
+                  <View style={[styles.ruleDot, { backgroundColor: r.color }]} />
+                  <Text style={[styles.ruleRange, { color: theme.text }]}>{r.range}</Text>
+                  <Text style={[styles.ruleLabel, { color: r.color }]}>{r.label}</Text>
                 </View>
               ))}
+              <Text style={[styles.ruleNote, { color: theme.hint }]}>
+                滿 10 張雙倍、持 2 為「再乘上去」的加倍，可疊加。
+              </Text>
             </View>
           </>
-        )}
-
-        {/* 倍率規則 */}
-        <View style={[styles.ruleCard, { backgroundColor: theme.cardBg }]}>
-          <Text style={[styles.ruleTitle, { color: theme.text }]}>倍率規則</Text>
-          {[
-            { range: '0 – 7 張', label: '一倍', color: '#8a7a6c' },
-            { range: '8 – 9 張', label: '雙倍 ×2', color: '#c4623a' },
-            { range: '10 – 12 張', label: '三倍 ×3', color: '#c2456a' },
-            { range: '13 張', label: '四倍 ×4', color: '#6a3da8' },
-          ].map((r) => (
-            <View key={r.range} style={styles.ruleRow}>
-              <View style={[styles.ruleDot, { backgroundColor: r.color }]} />
-              <Text style={[styles.ruleRange, { color: theme.text }]}>{r.range}</Text>
-              <Text style={[styles.ruleLabel, { color: r.color }]}>{r.label}</Text>
+        ) : (
+          <>
+            {/* 累計統計 */}
+            <View style={[styles.statsCard, { backgroundColor: C.accentBg }]}>
+              <View style={styles.statsHead}>
+                <Mascot expression={mascotExpr} color={C.accent} size={48} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.statsTitle}>累計戰績</Text>
+                  <Text style={styles.statsSub}>
+                    共 {match.rounds.length} 輪
+                    {stats.leader >= 0 ? ` · ${match.names[stats.leader]} 領先` : ''}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.statsGrid}>
+                {PLAYERS.map((idx) => {
+                  const total = stats.totals[idx];
+                  const isLeader = stats.leader === idx;
+                  return (
+                    <View key={idx} style={[styles.statCell, isLeader && styles.statCellLeader]}>
+                      <View style={styles.statNameRow}>
+                        {isLeader && <Crown size={13} color="#8d6e00" weight="fill" />}
+                        <Text style={[styles.statName, isLeader && styles.statNameLeader]} numberOfLines={1}>
+                          {match.names[idx]}
+                        </Text>
+                      </View>
+                      <Text
+                        style={[
+                          styles.statTotal,
+                          { color: total > 0 ? '#2d8765' : total < 0 ? '#c2456a' : C.accent },
+                        ]}
+                      >
+                        {total > 0 ? '+' : ''}
+                        {total}
+                      </Text>
+                      <Text style={styles.statWins}>{stats.wins[idx]} 勝</Text>
+                    </View>
+                  );
+                })}
+              </View>
             </View>
-          ))}
-        </View>
+
+            {/* 歷史紀錄 */}
+            {match.rounds.length > 0 ? (
+              <>
+                <View style={styles.historyHead}>
+                  <Text style={[styles.sectionTitle, { color: theme.text, marginBottom: 0 }]}>歷史紀錄</Text>
+                  <TouchableOpacity onPress={handleClear} activeOpacity={0.7}>
+                    <Text style={styles.clearText}>結束本局</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={[styles.historyCard, { backgroundColor: theme.cardBg }]}>
+                  {match.rounds.map((r, i) => (
+                    <View
+                      key={r.id}
+                      style={[styles.historyRow, i > 0 && { borderTopWidth: 1, borderTopColor: theme.divider }]}
+                    >
+                      <View style={styles.roundBadge}>
+                        <Text style={styles.roundBadgeText}>{i + 1}</Text>
+                      </View>
+                      <View style={styles.historyScores}>
+                        {r.scores.map((s, pi) => (
+                          <Text key={pi} style={styles.historyScore}>
+                            <Text style={[styles.historyName, { color: theme.textMuted }]}>{match.names[pi]} </Text>
+                            <Text style={{ color: s > 0 ? '#2d8765' : s < 0 ? '#c2456a' : theme.hint }}>
+                              {s > 0 ? '+' : ''}
+                              {s}
+                            </Text>
+                          </Text>
+                        ))}
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => handleRemove(r.id)}
+                        style={styles.deleteBtn}
+                        activeOpacity={0.6}
+                        hitSlop={8}
+                      >
+                        <Trash size={18} color={theme.hint} weight="bold" />
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+              </>
+            ) : (
+              <View style={[styles.emptyCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+                <Mascot expression="sleepy" color={theme.hint} size={48} />
+                <Text style={[styles.emptyText, { color: theme.hint }]}>還沒有紀錄，去「計分」記第一輪吧</Text>
+              </View>
+            )}
+          </>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -379,19 +476,49 @@ const cardShadow = {
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
+  // header
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 18,
+    gap: 12,
+  },
+  headerText: { flex: 1 },
   title: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 32,
     letterSpacing: -0.5,
-    marginBottom: 6,
-    textAlign: 'center',
+    marginBottom: 4,
   },
   subtitle: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 14,
-    marginBottom: 22,
-    textAlign: 'center',
   },
+  // tabs
+  tabBar: {
+    flexDirection: 'row',
+    borderRadius: 16,
+    padding: 4,
+    marginBottom: 20,
+    gap: 4,
+  },
+  tabPill: {
+    flex: 1,
+    paddingVertical: 11,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  tabPillActive: {
+    backgroundColor: C.accent,
+    shadowColor: C.accent,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  tabText: { fontFamily: 'Fredoka_600SemiBold', fontSize: 15 },
+  tabTextActive: { color: '#fff', fontFamily: 'Fredoka_700Bold' },
   sectionTitle: {
     fontFamily: 'Fredoka_700Bold',
     fontSize: 16,
@@ -438,6 +565,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 0,
   },
+  // 滿10張雙倍 toggle
+  toggleCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 18,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    marginBottom: 18,
+    gap: 12,
+    ...cardShadow,
+  },
+  toggleLabel: { fontFamily: 'Fredoka_700Bold', fontSize: 15 },
+  toggleHint: { fontFamily: 'Fredoka_400Regular', fontSize: 12, marginTop: 2 },
   // base
   baseCard: {
     flexDirection: 'row',
@@ -499,6 +639,20 @@ const styles = StyleSheet.create({
   countWrap: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'baseline', gap: 4 },
   countValue: { fontFamily: 'Fredoka_700Bold', fontSize: 28, letterSpacing: -0.5 },
   countLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 13 },
+  // 持 2 checkbox row
+  holdRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 10, paddingHorizontal: 2 },
+  checkBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#d8c5e8',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkBoxActive: { backgroundColor: C.accent, borderColor: C.accent },
+  holdLabel: { fontFamily: 'Fredoka_500Medium', fontSize: 13 },
+  holdLabelActive: { fontFamily: 'Fredoka_700Bold', color: C.accent },
   // record button
   recordBtn: {
     flexDirection: 'row',
@@ -525,6 +679,16 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   hintText: { fontFamily: 'Fredoka_500Medium', fontSize: 13, textAlign: 'center' },
+  // empty state (history tab)
+  emptyCard: {
+    borderRadius: 24,
+    padding: 36,
+    alignItems: 'center',
+    gap: 12,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+  },
+  emptyText: { fontFamily: 'Fredoka_500Medium', fontSize: 14, textAlign: 'center' },
   // history
   historyHead: {
     flexDirection: 'row',
@@ -555,4 +719,5 @@ const styles = StyleSheet.create({
   ruleDot: { width: 8, height: 8, borderRadius: 4 },
   ruleRange: { fontFamily: 'Fredoka_500Medium', fontSize: 13, width: 90 },
   ruleLabel: { fontFamily: 'Fredoka_600SemiBold', fontSize: 13 },
+  ruleNote: { fontFamily: 'Fredoka_400Regular', fontSize: 12, marginTop: 8, lineHeight: 17 },
 });

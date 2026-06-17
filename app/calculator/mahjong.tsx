@@ -63,10 +63,13 @@ const SECTIONS: Section[] = [
   },
 ];
 
+type Tab = 'score' | 'history';
+
 export default function MahjongCalculator() {
   const { theme } = useTheme();
   const { match, setName, addRound, removeRound, clearMatch } = useMahjongMatch();
 
+  const [tab, setTab] = useState<Tab>('score');
   const [winner, setWinner] = useState(0);
   const [selfDraw, setSelfDraw] = useState(true);
   const [loser, setLoser] = useState<number | null>(null);
@@ -74,6 +77,12 @@ export default function MahjongCalculator() {
   const [chain, setChain] = useState(0);
   const [flowers, setFlowers] = useState(0);
   const [basePerTai, setBasePerTai] = useState('10');
+
+  const switchTab = (next: Tab) => {
+    if (next === tab) return;
+    haptics.selection();
+    setTab(next);
+  };
 
   const toggle = (id: string) => {
     haptics.selection();
@@ -183,309 +192,349 @@ export default function MahjongCalculator() {
     >
       <Stack.Screen options={{ title: '麻將' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={[styles.title, { color: theme.text }]}>麻將計分</Text>
-        <Text style={[styles.subtitle, { color: theme.textMuted }]}>選胡家、台數、自摸或放槍，逐輪累計</Text>
-
-        {/* 累計統計 */}
-        <View style={[styles.statsCard, { backgroundColor: C.accentBg }]}>
-          <View style={styles.statsHead}>
-            <Mascot expression={mascotExpr} color={C.accent} size={48} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.statsTitle}>累計戰績</Text>
-              <Text style={styles.statsSub}>
-                共 {match.rounds.length} 局
-                {stats.leader >= 0 ? ` · ${match.names[stats.leader]} 領先` : ''}
-              </Text>
-            </View>
+        {/* Header：標題在左、歐古在右 */}
+        <View style={styles.header}>
+          <View style={styles.headerText}>
+            <Text style={[styles.title, { color: theme.text }]}>麻將</Text>
+            <Text style={[styles.subtitle, { color: theme.textMuted }]}>選胡家、台數、自摸或放槍，逐輪累計</Text>
           </View>
-          <View style={styles.statsGrid}>
-            {PLAYERS.map((idx) => {
-              const total = stats.totals[idx];
-              const isLeader = stats.leader === idx;
-              return (
-                <View key={idx} style={[styles.statCell, isLeader && styles.statCellLeader]}>
-                  <View style={styles.statNameRow}>
-                    {isLeader && <Crown size={13} color="#8d6e00" weight="fill" />}
-                    <Text style={[styles.statName, isLeader && styles.statNameLeader]} numberOfLines={1}>
-                      {match.names[idx]}
-                    </Text>
-                  </View>
-                  <Text
-                    style={[
-                      styles.statTotal,
-                      { color: total > 0 ? '#2d8765' : total < 0 ? '#c2456a' : C.accent },
-                    ]}
-                  >
-                    {total > 0 ? '+' : ''}
-                    {total}
-                  </Text>
-                  <Text style={styles.statWins}>{stats.wins[idx]} 胡</Text>
-                </View>
-              );
-            })}
-          </View>
+          <Mascot expression={mascotExpr} color={C.accent} size={56} />
         </View>
 
-        {/* 玩家名稱 */}
-        <View style={[styles.namesCard, { backgroundColor: theme.cardBg }]}>
-          <Text style={[styles.cardLabel, { color: theme.text }]}>玩家名稱</Text>
-          <View style={styles.namesGrid}>
-            {PLAYERS.map((idx) => (
-              <View key={idx} style={[styles.nameInputWrap, { backgroundColor: theme.inputBg }]}>
-                <FocusInput
-                  style={[styles.nameInput, { color: theme.text }]}
-                  value={match.names[idx]}
-                  onChangeText={(t) => setName(idx, t)}
-                  placeholder={['東', '南', '西', '北'][idx]}
-                  placeholderTextColor={theme.hint}
-                  maxLength={6}
-                />
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* 本輪設定 */}
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>誰胡牌</Text>
-        <View style={styles.pickRow}>
-          {PLAYERS.map((idx) => {
-            const active = winner === idx;
+        {/* 分頁切換器 */}
+        <View style={[styles.tabBar, { backgroundColor: theme.inputBg }]}>
+          {([
+            { key: 'score', label: '計分' },
+            { key: 'history', label: '紀錄' },
+          ] as const).map((t) => {
+            const active = tab === t.key;
             return (
               <TouchableOpacity
-                key={idx}
-                style={[styles.pickBtn, { backgroundColor: theme.cardBg }, active && styles.pickBtnActive]}
-                onPress={() => {
-                  haptics.selection();
-                  setWinner(idx);
-                  if (loser === idx) setLoser(null);
-                }}
-                activeOpacity={0.8}
+                key={t.key}
+                style={[styles.tabPill, active && styles.tabPillActive]}
+                onPress={() => switchTab(t.key)}
+                activeOpacity={0.85}
               >
-                <Text style={[styles.pickText, { color: theme.text }, active && styles.pickTextActive]} numberOfLines={1}>
-                  {match.names[idx]}
+                <Text style={[styles.tabText, { color: theme.textMuted }, active && styles.tabTextActive]}>
+                  {t.label}
+                  {t.key === 'history' && match.rounds.length > 0 ? `（${match.rounds.length}）` : ''}
                 </Text>
               </TouchableOpacity>
             );
           })}
         </View>
 
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>胡牌方式</Text>
-        <View style={styles.modeRow}>
-          <TouchableOpacity
-            style={[styles.modeBtn, { backgroundColor: theme.cardBg }, selfDraw && styles.modeBtnActive]}
-            onPress={() => {
-              haptics.selection();
-              setSelfDraw(true);
-              setLoser(null);
-            }}
-            activeOpacity={0.8}
-          >
-            <Text style={[styles.modeText, { color: theme.text }, selfDraw && styles.modeTextActive]}>自摸</Text>
-            <Text style={[styles.modeHint, { color: theme.textMuted }, selfDraw && styles.modeHintActive]}>三家付</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.modeBtn, { backgroundColor: theme.cardBg }, !selfDraw && styles.modeBtnActive]}
-            onPress={() => {
-              haptics.selection();
-              setSelfDraw(false);
-            }}
-            activeOpacity={0.8}
-          >
-            <Text style={[styles.modeText, { color: theme.text }, !selfDraw && styles.modeTextActive]}>放槍</Text>
-            <Text style={[styles.modeHint, { color: theme.textMuted }, !selfDraw && styles.modeHintActive]}>一家付</Text>
-          </TouchableOpacity>
-        </View>
-
-        {!selfDraw && (
+        {tab === 'score' ? (
           <>
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>誰放槍</Text>
+            {/* 玩家名稱 */}
+            <View style={[styles.namesCard, { backgroundColor: theme.cardBg }]}>
+              <Text style={[styles.cardLabel, { color: theme.text }]}>玩家名稱</Text>
+              <View style={styles.namesGrid}>
+                {PLAYERS.map((idx) => (
+                  <View key={idx} style={[styles.nameInputWrap, { backgroundColor: theme.inputBg }]}>
+                    <FocusInput
+                      style={[styles.nameInput, { color: theme.text }]}
+                      value={match.names[idx]}
+                      onChangeText={(t) => setName(idx, t)}
+                      placeholder={['東', '南', '西', '北'][idx]}
+                      placeholderTextColor={theme.hint}
+                      maxLength={6}
+                    />
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            {/* 本輪設定 */}
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>誰胡牌</Text>
             <View style={styles.pickRow}>
-              {PLAYERS.filter((i) => i !== winner).map((idx) => {
-                const active = loser === idx;
+              {PLAYERS.map((idx) => {
+                const active = winner === idx;
                 return (
                   <TouchableOpacity
                     key={idx}
-                    style={[styles.pickBtn, { backgroundColor: theme.cardBg }, active && styles.pickBtnLoser]}
+                    style={[styles.pickBtn, { backgroundColor: theme.cardBg }, active && styles.pickBtnActive]}
                     onPress={() => {
                       haptics.selection();
-                      setLoser(idx);
+                      setWinner(idx);
+                      if (loser === idx) setLoser(null);
                     }}
                     activeOpacity={0.8}
                   >
-                    <Text style={[styles.pickText, { color: theme.text }, active && styles.pickTextLoser]} numberOfLines={1}>
+                    <Text style={[styles.pickText, { color: theme.text }, active && styles.pickTextActive]} numberOfLines={1}>
                       {match.names[idx]}
                     </Text>
                   </TouchableOpacity>
                 );
               })}
             </View>
-          </>
-        )}
 
-        {/* 台數總計 */}
-        <View style={styles.totalCard}>
-          <Text style={styles.totalLabel}>本局台數</Text>
-          <Text style={styles.totalValue}>
-            {totalTai}
-            <Text style={styles.totalUnit}> 台</Text>
-          </Text>
-          {base > 0 && totalTai > 0 && (
-            <Text style={styles.totalPoints}>每家 ${pointsPerLoser.toLocaleString()}</Text>
-          )}
-        </View>
-
-        {SECTIONS.map((section) => (
-          <View key={section.title} style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
-            <View style={[styles.itemList, { backgroundColor: theme.cardBg }]}>
-              {section.items.map((item) => {
-                const active = selected.has(item.id);
-                return (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={[styles.itemRow, active && styles.itemRowActive]}
-                    onPress={() => toggle(item.id)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[styles.checkBox, active && styles.checkBoxActive]}>
-                      {active && <Check size={14} color="#fff" weight="bold" />}
-                    </View>
-                    <Text style={[styles.itemLabel, { color: theme.text }, active && styles.itemLabelActive]}>
-                      {item.label}
-                    </Text>
-                    <View style={[styles.taiBadge, { backgroundColor: theme.divider }, active && styles.taiBadgeActive]}>
-                      <Text style={[styles.taiTextBadge, { color: theme.textMuted }, active && styles.taiTextActive]}>
-                        {item.tai} 台
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </View>
-        ))}
-
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>連莊 / 花牌</Text>
-          {[
-            { label: '連莊台數', value: chain, set: setChain, max: 20, hint: '連 N 拉 N，直接填總台' },
-            { label: '花牌數量', value: flowers, set: setFlowers, max: 8, hint: '每朵相應花 1 台' },
-          ].map((s) => (
-            <View key={s.label} style={[styles.stepperCard, { backgroundColor: theme.cardBg }]}>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.stepperLabel, { color: theme.text }]}>{s.label}</Text>
-                <Text style={[styles.stepperHint, { color: theme.textMuted }]}>{s.hint}</Text>
-              </View>
-              <View style={styles.stepperRow}>
-                <TouchableOpacity
-                  style={[styles.stepBtn, s.value <= 0 && styles.stepBtnDisabled]}
-                  onPress={() => {
-                    haptics.selection();
-                    s.set(Math.max(0, s.value - 1));
-                  }}
-                  activeOpacity={0.7}
-                  disabled={s.value <= 0}
-                >
-                  <Minus size={18} color="#6a3da8" weight="bold" />
-                </TouchableOpacity>
-                <Text style={[styles.stepperValue, { color: theme.text }]}>{s.value}</Text>
-                <TouchableOpacity
-                  style={[styles.stepBtn, s.value >= s.max && styles.stepBtnDisabled]}
-                  onPress={() => {
-                    haptics.selection();
-                    s.set(Math.min(s.max, s.value + 1));
-                  }}
-                  activeOpacity={0.7}
-                  disabled={s.value >= s.max}
-                >
-                  <Plus size={18} color="#6a3da8" weight="bold" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>每台底注</Text>
-          <View style={[styles.baseCard, { backgroundColor: theme.cardBg }]}>
-            <Text style={[styles.basePrefix, { color: theme.hint }]}>$</Text>
-            <FocusInput
-              style={[styles.baseInput, { color: theme.text }]}
-              value={basePerTai}
-              onChangeText={setBasePerTai}
-              placeholder="10"
-              placeholderTextColor={theme.hint}
-              keyboardType="decimal-pad"
-              maxLength={6}
-            />
-            <Text style={[styles.baseSuffix, { color: theme.hint }]}>/ 台</Text>
-          </View>
-        </View>
-
-        {canRecord ? (
-          <TouchableOpacity style={styles.recordBtn} onPress={handleRecord} activeOpacity={0.85}>
-            <TrendUp size={20} color="#fff" weight="bold" />
-            <Text style={styles.recordBtnText}>
-              記錄這局（{match.names[winner]} +{roundScores[winner]}）
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={[styles.hintCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
-            <Text style={[styles.hintText, { color: theme.hint }]}>
-              {base <= 0
-                ? '請填每台底注'
-                : totalTai <= 0
-                ? '請勾選台數（至少 1 台）'
-                : '放槍時請選誰放槍'}
-            </Text>
-          </View>
-        )}
-
-        {/* 歷史紀錄 */}
-        {match.rounds.length > 0 && (
-          <>
-            <View style={styles.historyHead}>
-              <Text style={[styles.sectionTitle, { color: theme.text, marginBottom: 0 }]}>歷史紀錄</Text>
-              <TouchableOpacity onPress={handleClear} activeOpacity={0.7}>
-                <Text style={styles.clearText}>結束本局</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>胡牌方式</Text>
+            <View style={styles.modeRow}>
+              <TouchableOpacity
+                style={[styles.modeBtn, { backgroundColor: theme.cardBg }, selfDraw && styles.modeBtnActive]}
+                onPress={() => {
+                  haptics.selection();
+                  setSelfDraw(true);
+                  setLoser(null);
+                }}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.modeText, { color: theme.text }, selfDraw && styles.modeTextActive]}>自摸</Text>
+                <Text style={[styles.modeHint, { color: theme.textMuted }, selfDraw && styles.modeHintActive]}>三家付</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modeBtn, { backgroundColor: theme.cardBg }, !selfDraw && styles.modeBtnActive]}
+                onPress={() => {
+                  haptics.selection();
+                  setSelfDraw(false);
+                }}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.modeText, { color: theme.text }, !selfDraw && styles.modeTextActive]}>放槍</Text>
+                <Text style={[styles.modeHint, { color: theme.textMuted }, !selfDraw && styles.modeHintActive]}>一家付</Text>
               </TouchableOpacity>
             </View>
-            <View style={[styles.historyCard, { backgroundColor: theme.cardBg }]}>
-              {match.rounds.map((r, i) => (
-                <View
-                  key={r.id}
-                  style={[styles.historyRow, i > 0 && { borderTopWidth: 1, borderTopColor: theme.divider }]}
-                >
-                  <View style={styles.roundBadge}>
-                    <Text style={styles.roundBadgeText}>{i + 1}</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.historyMeta, { color: theme.textMuted }]}>
-                      {match.names[r.winner]} 胡 {r.tai}台 · {r.selfDraw ? '自摸' : `${r.loser !== null ? match.names[r.loser] : ''}放槍`}
-                    </Text>
-                    <View style={styles.historyScores}>
-                      {r.scores.map((s, pi) => (
-                        <Text key={pi} style={styles.historyScore}>
-                          <Text style={[styles.historyName, { color: theme.textMuted }]}>{match.names[pi]} </Text>
-                          <Text style={{ color: s > 0 ? '#2d8765' : s < 0 ? '#c2456a' : theme.hint }}>
-                            {s > 0 ? '+' : ''}
-                            {s}
-                          </Text>
+
+            {!selfDraw && (
+              <>
+                <Text style={[styles.sectionTitle, { color: theme.text }]}>誰放槍</Text>
+                <View style={styles.pickRow}>
+                  {PLAYERS.filter((i) => i !== winner).map((idx) => {
+                    const active = loser === idx;
+                    return (
+                      <TouchableOpacity
+                        key={idx}
+                        style={[styles.pickBtn, { backgroundColor: theme.cardBg }, active && styles.pickBtnLoser]}
+                        onPress={() => {
+                          haptics.selection();
+                          setLoser(idx);
+                        }}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={[styles.pickText, { color: theme.text }, active && styles.pickTextLoser]} numberOfLines={1}>
+                          {match.names[idx]}
                         </Text>
-                      ))}
-                    </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </>
+            )}
+
+            {/* 台數總計 */}
+            <View style={styles.totalCard}>
+              <Text style={styles.totalLabel}>本局台數</Text>
+              <Text style={styles.totalValue}>
+                {totalTai}
+                <Text style={styles.totalUnit}> 台</Text>
+              </Text>
+              {base > 0 && totalTai > 0 && (
+                <Text style={styles.totalPoints}>每家 ${pointsPerLoser.toLocaleString()}</Text>
+              )}
+            </View>
+
+            {SECTIONS.map((section) => (
+              <View key={section.title} style={styles.section}>
+                <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
+                <View style={[styles.itemList, { backgroundColor: theme.cardBg }]}>
+                  {section.items.map((item) => {
+                    const active = selected.has(item.id);
+                    return (
+                      <TouchableOpacity
+                        key={item.id}
+                        style={[styles.itemRow, active && styles.itemRowActive]}
+                        onPress={() => toggle(item.id)}
+                        activeOpacity={0.7}
+                      >
+                        <View style={[styles.checkBox, active && styles.checkBoxActive]}>
+                          {active && <Check size={14} color="#fff" weight="bold" />}
+                        </View>
+                        <Text style={[styles.itemLabel, { color: theme.text }, active && styles.itemLabelActive]}>
+                          {item.label}
+                        </Text>
+                        <View style={[styles.taiBadge, { backgroundColor: theme.divider }, active && styles.taiBadgeActive]}>
+                          <Text style={[styles.taiTextBadge, { color: theme.textMuted }, active && styles.taiTextActive]}>
+                            {item.tai} 台
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+            ))}
+
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>連莊 / 花牌</Text>
+              {[
+                { label: '連莊台數', value: chain, set: setChain, max: 20, hint: '連 N 拉 N，直接填總台' },
+                { label: '花牌數量', value: flowers, set: setFlowers, max: 8, hint: '每朵相應花 1 台' },
+              ].map((s) => (
+                <View key={s.label} style={[styles.stepperCard, { backgroundColor: theme.cardBg }]}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.stepperLabel, { color: theme.text }]}>{s.label}</Text>
+                    <Text style={[styles.stepperHint, { color: theme.textMuted }]}>{s.hint}</Text>
                   </View>
-                  <TouchableOpacity
-                    onPress={() => handleRemove(r.id)}
-                    style={styles.deleteBtn}
-                    activeOpacity={0.6}
-                    hitSlop={8}
-                  >
-                    <Trash size={18} color={theme.hint} weight="bold" />
-                  </TouchableOpacity>
+                  <View style={styles.stepperRow}>
+                    <TouchableOpacity
+                      style={[styles.stepBtn, s.value <= 0 && styles.stepBtnDisabled]}
+                      onPress={() => {
+                        haptics.selection();
+                        s.set(Math.max(0, s.value - 1));
+                      }}
+                      activeOpacity={0.7}
+                      disabled={s.value <= 0}
+                    >
+                      <Minus size={18} color="#6a3da8" weight="bold" />
+                    </TouchableOpacity>
+                    <Text style={[styles.stepperValue, { color: theme.text }]}>{s.value}</Text>
+                    <TouchableOpacity
+                      style={[styles.stepBtn, s.value >= s.max && styles.stepBtnDisabled]}
+                      onPress={() => {
+                        haptics.selection();
+                        s.set(Math.min(s.max, s.value + 1));
+                      }}
+                      activeOpacity={0.7}
+                      disabled={s.value >= s.max}
+                    >
+                      <Plus size={18} color="#6a3da8" weight="bold" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               ))}
             </View>
+
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>每台底注</Text>
+              <View style={[styles.baseCard, { backgroundColor: theme.cardBg }]}>
+                <Text style={[styles.basePrefix, { color: theme.hint }]}>$</Text>
+                <FocusInput
+                  style={[styles.baseInput, { color: theme.text }]}
+                  value={basePerTai}
+                  onChangeText={setBasePerTai}
+                  placeholder="10"
+                  placeholderTextColor={theme.hint}
+                  keyboardType="decimal-pad"
+                  maxLength={6}
+                />
+                <Text style={[styles.baseSuffix, { color: theme.hint }]}>/ 台</Text>
+              </View>
+            </View>
+
+            {canRecord ? (
+              <TouchableOpacity style={styles.recordBtn} onPress={handleRecord} activeOpacity={0.85}>
+                <TrendUp size={20} color="#fff" weight="bold" />
+                <Text style={styles.recordBtnText}>
+                  記錄這局（{match.names[winner]} +{roundScores[winner]}）
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.hintCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+                <Text style={[styles.hintText, { color: theme.hint }]}>
+                  {base <= 0
+                    ? '請填每台底注'
+                    : totalTai <= 0
+                    ? '請勾選台數（至少 1 台）'
+                    : '放槍時請選誰放槍'}
+                </Text>
+              </View>
+            )}
+          </>
+        ) : (
+          <>
+            {/* 累計統計 */}
+            <View style={[styles.statsCard, { backgroundColor: C.accentBg }]}>
+              <View style={styles.statsHead}>
+                <Mascot expression={mascotExpr} color={C.accent} size={48} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.statsTitle}>累計戰績</Text>
+                  <Text style={styles.statsSub}>
+                    共 {match.rounds.length} 局
+                    {stats.leader >= 0 ? ` · ${match.names[stats.leader]} 領先` : ''}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.statsGrid}>
+                {PLAYERS.map((idx) => {
+                  const total = stats.totals[idx];
+                  const isLeader = stats.leader === idx;
+                  return (
+                    <View key={idx} style={[styles.statCell, isLeader && styles.statCellLeader]}>
+                      <View style={styles.statNameRow}>
+                        {isLeader && <Crown size={13} color="#8d6e00" weight="fill" />}
+                        <Text style={[styles.statName, isLeader && styles.statNameLeader]} numberOfLines={1}>
+                          {match.names[idx]}
+                        </Text>
+                      </View>
+                      <Text
+                        style={[
+                          styles.statTotal,
+                          { color: total > 0 ? '#2d8765' : total < 0 ? '#c2456a' : C.accent },
+                        ]}
+                      >
+                        {total > 0 ? '+' : ''}
+                        {total}
+                      </Text>
+                      <Text style={styles.statWins}>{stats.wins[idx]} 胡</Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+
+            {/* 歷史紀錄 */}
+            {match.rounds.length > 0 ? (
+              <>
+                <View style={styles.historyHead}>
+                  <Text style={[styles.sectionTitle, { color: theme.text, marginBottom: 0 }]}>歷史紀錄</Text>
+                  <TouchableOpacity onPress={handleClear} activeOpacity={0.7}>
+                    <Text style={styles.clearText}>結束本局</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={[styles.historyCard, { backgroundColor: theme.cardBg }]}>
+                  {match.rounds.map((r, i) => (
+                    <View
+                      key={r.id}
+                      style={[styles.historyRow, i > 0 && { borderTopWidth: 1, borderTopColor: theme.divider }]}
+                    >
+                      <View style={styles.roundBadge}>
+                        <Text style={styles.roundBadgeText}>{i + 1}</Text>
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={[styles.historyMeta, { color: theme.textMuted }]}>
+                          {match.names[r.winner]} 胡 {r.tai}台 · {r.selfDraw ? '自摸' : `${r.loser !== null ? match.names[r.loser] : ''}放槍`}
+                        </Text>
+                        <View style={styles.historyScores}>
+                          {r.scores.map((s, pi) => (
+                            <Text key={pi} style={styles.historyScore}>
+                              <Text style={[styles.historyName, { color: theme.textMuted }]}>{match.names[pi]} </Text>
+                              <Text style={{ color: s > 0 ? '#2d8765' : s < 0 ? '#c2456a' : theme.hint }}>
+                                {s > 0 ? '+' : ''}
+                                {s}
+                              </Text>
+                            </Text>
+                          ))}
+                        </View>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => handleRemove(r.id)}
+                        style={styles.deleteBtn}
+                        activeOpacity={0.6}
+                        hitSlop={8}
+                      >
+                        <Trash size={18} color={theme.hint} weight="bold" />
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+              </>
+            ) : (
+              <View style={[styles.emptyCard, { backgroundColor: theme.cardBg, borderColor: theme.divider }]}>
+                <Mascot expression="sleepy" color={theme.hint} size={48} />
+                <Text style={[styles.emptyText, { color: theme.hint }]}>還沒有紀錄，去「計分」記第一局吧</Text>
+              </View>
+            )}
           </>
         )}
       </ScrollView>
@@ -509,8 +558,41 @@ const cardShadow = {
 
 const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
-  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 6, textAlign: 'center' },
-  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14, marginBottom: 22, textAlign: 'center' },
+  // header
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 18,
+    gap: 12,
+  },
+  headerText: { flex: 1 },
+  title: { fontFamily: 'Fredoka_700Bold', fontSize: 32, letterSpacing: -0.5, marginBottom: 4 },
+  subtitle: { fontFamily: 'Fredoka_400Regular', fontSize: 14 },
+  // tabs
+  tabBar: {
+    flexDirection: 'row',
+    borderRadius: 16,
+    padding: 4,
+    marginBottom: 20,
+    gap: 4,
+  },
+  tabPill: {
+    flex: 1,
+    paddingVertical: 11,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  tabPillActive: {
+    backgroundColor: C.accent,
+    shadowColor: C.accent,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  tabText: { fontFamily: 'Fredoka_600SemiBold', fontSize: 15 },
+  tabTextActive: { color: '#fff', fontFamily: 'Fredoka_700Bold' },
   sectionTitle: { fontFamily: 'Fredoka_700Bold', fontSize: 15, marginBottom: 10, marginLeft: 4 },
   // stats
   statsCard: {
@@ -666,6 +748,16 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   hintText: { fontFamily: 'Fredoka_500Medium', fontSize: 13, textAlign: 'center' },
+  // empty state (history tab)
+  emptyCard: {
+    borderRadius: 24,
+    padding: 36,
+    alignItems: 'center',
+    gap: 12,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+  },
+  emptyText: { fontFamily: 'Fredoka_500Medium', fontSize: 14, textAlign: 'center' },
   // history
   historyHead: {
     flexDirection: 'row',

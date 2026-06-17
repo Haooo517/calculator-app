@@ -13,11 +13,13 @@ export type Big2Round = {
 export type Big2Match = {
   names: [string, string, string, string];
   rounds: Big2Round[];
+  // 全域開關：任一玩家該輪剩牌 ≥10 張，其罰分 ×2
+  tenCardDouble: boolean;
 };
 
 const DEFAULT_NAMES: [string, string, string, string] = ['玩家1', '玩家2', '玩家3', '玩家4'];
 
-const emptyMatch = (): Big2Match => ({ names: [...DEFAULT_NAMES], rounds: [] });
+const emptyMatch = (): Big2Match => ({ names: [...DEFAULT_NAMES], rounds: [], tenCardDouble: false });
 
 let matchState: Big2Match = emptyMatch();
 let listeners: Array<(m: Big2Match) => void> = [];
@@ -27,6 +29,7 @@ let hydrating: Promise<void> | null = null;
 const snapshot = (): Big2Match => ({
   names: [...matchState.names],
   rounds: matchState.rounds.map((r) => ({ ...r, scores: [...r.scores] as Big2Round['scores'] })),
+  tenCardDouble: matchState.tenCardDouble,
 });
 
 const notify = () => {
@@ -68,7 +71,8 @@ const hydrate = () => {
       if (raw !== null) {
         const parsed = JSON.parse(raw);
         if (isValid(parsed)) {
-          matchState = parsed;
+          // 容錯：舊資料沒有 tenCardDouble 欄位時補預設 false
+          matchState = { ...parsed, tenCardDouble: parsed.tenCardDouble === true };
           notify();
         }
       }
@@ -118,10 +122,16 @@ export function useBig2Match() {
   }, []);
 
   const clearMatch = useCallback(() => {
-    matchState = { names: [...matchState.names], rounds: [] };
+    matchState = { names: [...matchState.names], rounds: [], tenCardDouble: matchState.tenCardDouble };
     notify();
     persist();
   }, []);
 
-  return { match, setName, addRound, removeRound, clearMatch };
+  const setTenCardDouble = useCallback((val: boolean) => {
+    matchState = { ...matchState, tenCardDouble: val };
+    notify();
+    persist();
+  }, []);
+
+  return { match, setName, addRound, removeRound, clearMatch, setTenCardDouble };
 }
